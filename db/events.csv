@@ -1,0 +1,7 @@
+date,event_type,invoice,received_date,received
+2012-05-12,Inventory,,,FALSE
+2012-05-22,Product Order,70596,,FALSE
+2012-03-26,Product Order,69618,,FALSE
+2012-04-17,Product Order,70008,,FALSE
+2012-05-15,Product Order,70486,,FALSE
+2012-05-24,Product Order,,,FALSE

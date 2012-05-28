@@ -1,0 +1,14 @@
+class EventsController < ApplicationController
+	def new
+		@event=Event.new
+		Product.all.count.times do
+    	question = @event.product_counts.build
+  	end
+  end
+  
+  def create
+  	@event = Event.new(params[:event])
+    @event.save
+    redirect_to root_path
+  end
+end

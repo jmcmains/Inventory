@@ -1,0 +1,4 @@
+class OfferingProduct < ActiveRecord::Base
+  belongs_to :offerings, :class_name => "Offering"
+  belongs_to :products, :class_name => "Product"
+end

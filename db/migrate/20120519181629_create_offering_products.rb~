@@ -1,0 +1,11 @@
+class CreateOfferingProducts < ActiveRecord::Migration
+  def change
+    create_table :offering_products do |t|
+      t.integer :offering_id
+      t.integer :product_id
+      t.integer :quantity
+
+      t.timestamps
+    end
+  end
+end

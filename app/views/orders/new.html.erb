@@ -1,0 +1,9 @@
+<%= form_for :order,:url=>{:controller=>"orders", :action=>"create"}, do |f| %>
+
+  <%= f.file_field :file %><br />
+	<%= f.label :type %><br />
+	<%= f.radio_button :type, "Amazon US", checked: true %>Amazon US<br>
+	<%= f.radio_button :type, "Amazon Canada" %>Amazon Canada<br>
+	<%= f.radio_button :type, "Rubberbanditz Website" %>Rubberbanditz Website<br>
+  <%= f.submit "Load Data" %>
+<% end %>

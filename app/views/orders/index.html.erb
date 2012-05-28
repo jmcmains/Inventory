@@ -1,0 +1,8 @@
+<% @order_months.sort.each do |month, orders| %>
+  <h2><%= month.strftime('%B, %Y') %>, <%= orders.count %></h2>
+  <% for order in orders %>
+    <div class="order">
+      <%= order.order_number %>, <%= order.date %>, <%= order.offering.name %>, <%= order.quantity %>
+    </div>
+  <% end %>
+<% end %>

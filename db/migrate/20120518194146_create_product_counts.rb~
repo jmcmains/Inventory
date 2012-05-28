@@ -1,0 +1,12 @@
+class CreateProductCounts < ActiveRecord::Migration
+  def change
+    create_table :product_counts do |t|
+      t.integer :event_id
+      t.integer :product_id
+      t.float :count
+      t.boolean :is_box
+
+      t.timestamps
+    end
+  end
+end

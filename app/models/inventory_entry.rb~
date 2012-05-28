@@ -1,0 +1,3 @@
+class InventoryEntry < ActiveRecord::Base
+  attr_accessible :date, :entry_type
+end

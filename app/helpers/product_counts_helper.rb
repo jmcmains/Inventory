@@ -1,0 +1,2 @@
+module ProductCountsHelper
+end

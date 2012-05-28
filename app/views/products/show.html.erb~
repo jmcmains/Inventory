@@ -1,0 +1,45 @@
+<h1><%= @product.name %></h1>
+<p><%= @product.description %></p>
+<p><%= @product.per_box %> bands/box</p>
+
+<h2>Latest Inventory:</h2>
+Done on: <%= @product.get_last("Inventory").date %> <br>
+<% glc=@product.get_last_count("Inventory") %>
+<%= glc.count %>
+<% if glc.is_box %>
+	boxes
+<% else %>
+	bands
+<% end %><br><br>
+
+<h2>Orders Currently Out:</h2>
+<% oco = 0 %>
+<% @product.get_current_shipments.each do |co| %>
+	Order Made on: <%= co.date %> <br>
+	<% pc=co.product_counts.find_by_product_id(@product) %>
+	Quantity ordered: <%= pc.count %> 
+	<% if pc.is_box %>
+		boxes
+		<% oco = oco + (pc.count*@product.per_box) %>
+	<% else %>
+		bands
+		<% oco = oco + pc.count %>
+	<% end %>
+<br><br>
+<% end %>
+<%= oco %>
+<h2> Weekly Customer Orders: </h2>
+<% o=@product.get_cust_orders.group_by { |t| t.date.beginning_of_week } %>
+<% y = [] %>
+		<% o.sort.each do |week, orders| %>
+			<% c=0 %>
+			<%= week %> - 
+			<% orders.each do |order| %>
+				<% c=c+(order.quantity * order.offering.offering_products.find_by_product_id(self).quantity) %>
+			<% end %>
+			<%= c %><br>
+<% end %>
+<h2>Amount Needed to Order: </h2>
+
+Need2: <%= pn=@product.need %>
+Boxes: <%= (pn/@product.per_box).ceil %>

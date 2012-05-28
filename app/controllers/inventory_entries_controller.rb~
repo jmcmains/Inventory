@@ -1,0 +1,2 @@
+class InventoryEntriesController < ApplicationController
+end

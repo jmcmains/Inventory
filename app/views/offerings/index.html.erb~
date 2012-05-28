@@ -1,0 +1,7 @@
+<% for offer in Offering.all %>
+<%= offer.name %> includes: <br>
+<% for product in offer.products %>
+<%= OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity %> <%= product.name %><br>
+<% end %>
+<br>
+<% end %>

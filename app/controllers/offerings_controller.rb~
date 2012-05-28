@@ -1,0 +1,15 @@
+class OfferingsController < ApplicationController
+  def new
+  end
+
+  def edit
+  	@offering=Offering.find(params[:id])
+  end
+	def update
+		@offering = Offering.find(params[:id])
+    @offering.update_attributes(params[:offering])
+    redirect_to root_path
+	end
+  def index
+  end
+end

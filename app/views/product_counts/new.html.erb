@@ -1,0 +1,19 @@
+<%= form_for :event do |f| %>
+      <div class="field">
+				<%= f.label :date %><br />
+				<%= f.text_field :date %>
+			</div>
+			<div class="field">
+				<%= f.label :type %><br />
+				<%= f.text_field :type %>
+			</div>
+			<div class="field">
+				<%= f.label :invoice_number %><br />
+				<%= f.text_field :invoice_number %>
+			</div>
+    <% f.fields_for :product_count do |pc| %>  
+      <p>  
+      test
+      </p>  
+    <% end %> 
+<% end %>

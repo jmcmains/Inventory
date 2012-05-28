@@ -186,7 +186,7 @@ CSV.foreach(Rails.root.join('db/2012-04-canada.txt'), headers: true, col_sep: "\
 end
 
 puts "Importing website until 5/26/2012..."
-CSV.foreach(Rails.root.join('db/Cart66Report.csv'), headers: true) do |row|
+CSV.foreach(Rails.root.join('db/cart66Report.csv'), headers: true) do |row|
   Order.create! do |p|
     p.order_number = row[1]
     if row[2].blank?

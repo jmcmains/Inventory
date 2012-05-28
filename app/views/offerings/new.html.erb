@@ -1,0 +1,16 @@
+<%= form_for @offering do |f| %>
+	<div class="field">
+		<%= f.label :name %><br />
+		<%= f.text_field :name %>
+	</div>
+	<% n=1 %>
+	<%= f.fields_for :offering_products do |po| %>  
+		<div class="field">
+			<%= Product.all.first(n).last.name %><br>
+			<%= Product.all.first(n).last.description %><br>
+			<%= pc.hidden_field :product_id, value: Product.all.first(n).last.id %>
+			<%= pc.text_field :quantity %><br>
+		<% n = n+1 %>
+	<% end %> 
+	<p><%= f.submit "Submit" %></p>
+<% end %>

@@ -1,0 +1,34 @@
+<%= form_for @event do |f| %>
+	<div class="field">
+		<%= f.label :event_type %><br />
+		<%= @event.event_type %>
+	</div>
+	<div class="field">
+		<%= f.label :date %><br />
+		<%= f.date_select :date %>
+	</div>
+	<% if @event.event_type == "Product Order" %>
+		Was this Order Recieved?<br>
+			<%= pc.radio_button :received, "true" %> yes 
+			<%= pc.radio_button :received, "false" %> no <br>
+		If so, when was it receieved?<br>
+		<%= f.date_select :received_date %>
+	<% end %>
+	<div class="field">
+		<%= f.label :invoice %><br />
+		<%= f.text_field :invoice %>
+	</div>
+	<% n=1 %>
+	<%= f.fields_for :product_counts do |pc| %>  
+		<div class="field">
+			<%= Product.all.first(n).last.name %><br>
+			<%= Product.all.first(n).last.description %><br>
+			<%= pc.hidden_field :product_id, value: Product.all.first(n).last.id %>
+			<%= pc.text_field :count %><br>
+			<%= pc.radio_button :is_box, "true" %> box 
+			<%= pc.radio_button :is_box, "false" %> pieces 
+		</div> 
+		<% n = n+1 %>
+	<% end %> 
+	<p><%= f.submit "Submit" %></p>
+<% end %>

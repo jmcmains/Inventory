@@ -1,0 +1,25 @@
+<h1>All Products</h1>
+
+<table>
+<tr>
+	<td>
+		Modify
+	</td>
+	<td>
+		Name
+	</td>
+	<td>
+		Description
+	</td>
+	<td>
+		Quantity per Box
+	</td>
+	<td>
+		Need
+	</td>
+</tr>
+	<%= render Product.all %>
+</table>
+
+
+<%= link_to 'New Product', new_product_path %>

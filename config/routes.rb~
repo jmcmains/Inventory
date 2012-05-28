@@ -1,8 +1,13 @@
 Inventory::Application.routes.draw do
+  get "offerings/new"
+
+  get "offerings/edit"
+
+  get "offerings/index"
+
 	root to: 'StaticPages#home'
 	resources :products
 	resources :product_counts
 	resources :events
 	resources :orders
-	resources :offerings
 end
