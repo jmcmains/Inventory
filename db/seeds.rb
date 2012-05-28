@@ -190,7 +190,7 @@ CSV.foreach(Rails.root.join('db/Cart66Report.csv'), headers: true) do |row|
   Order.create! do |p|
     p.order_number = row[1]
     if row[2].blank?
-  		old_order=Order.find_or_initialize_by_name(p.order_number)
+  		old_order=Order.find_by_order_number(p.order_number)
   		p.date = old_order.date
   	else
   		p.date = row[2]
