@@ -23,54 +23,6 @@ ActiveRecord::Schema.define(:version => 20120528183626) do
     t.datetime "updated_at",    :null => false
   end
 
-  create_table "inventory_entries", :force => true do |t|
-    t.date     "date"
-    t.string   "entry_type"
-    t.string   "invoice_number"
-    t.float    "light_count"
-    t.boolean  "light_box"
-    t.float    "medium_count"
-    t.boolean  "medium_box"
-    t.float    "heavy_count"
-    t.boolean  "heavy_box"
-    t.float    "robust_count"
-    t.boolean  "robust_box"
-    t.float    "power_count"
-    t.boolean  "power_box"
-    t.float    "strong_count"
-    t.boolean  "strong_box"
-    t.float    "monster_count"
-    t.boolean  "monster_box"
-    t.float    "agility_count"
-    t.boolean  "agility_box"
-    t.float    "explosive_count"
-    t.boolean  "explosive_box"
-    t.float    "hand_grip_count"
-    t.boolean  "hand_grip_box"
-    t.float    "ankle_grip_count"
-    t.boolean  "ankle_grip_box"
-    t.float    "door_strap_count"
-    t.boolean  "door_strap_box"
-    t.float    "small_metal_biner_count"
-    t.boolean  "small_metal_biner_box"
-    t.float    "small_rb_biner_count"
-    t.boolean  "small_rb_biner_box"
-    t.float    "large_biner_count"
-    t.boolean  "large_biner_box"
-    t.float    "hand_strap_count"
-    t.boolean  "hand_strap_box"
-    t.float    "travel_bag_count"
-    t.boolean  "travel_bag_box"
-    t.float    "dvd_count"
-    t.boolean  "dvd_box"
-    t.float    "sleeve_count"
-    t.boolean  "sleeve_box"
-    t.float    "manual_count"
-    t.boolean  "manual_box"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
-  end
-
   create_table "offering_products", :force => true do |t|
     t.integer  "offering_id"
     t.integer  "product_id"
@@ -97,8 +49,6 @@ ActiveRecord::Schema.define(:version => 20120528183626) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
-
-  add_index "orders", ["order_number", "offering_id"], :name => "index_orders_on_order_number_and_offering_id", :unique => true
 
   create_table "product_counts", :force => true do |t|
     t.integer  "event_id"
