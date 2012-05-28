@@ -8,6 +8,16 @@ class Product < ActiveRecord::Base
 		self.events.find_all_by_event_type(event_name).last
 	end
 	
+	def image
+		base = "http://rubberbanditz.com/wp-content/themes/rubberbanditzNew/proImg/"
+		if self.name == "Light Band"
+			im = "band_Small_new.jpg"
+		elsif self.name == "Medium Band"
+			im = "band_Medium_new.jpg"
+		end
+		return base+im
+	end
+	
 	def get_last_count(event_name)
 		e=get_last(event_name)
 		e.product_counts.find_by_product_id(self)
@@ -36,10 +46,11 @@ class Product < ActiveRecord::Base
 		# Orders from Suppliers
 		oco = 0
 		self.get_current_shipments.each do |co|
-			if co.product_counts.find_by_product_id(self).is_box
-				oco = oco + (co.product_counts.find_by_product_id(self).count*co.product_counts.find_by_product_id(self).per_box)
+			pc=co.product_counts.find_by_product_id(self)
+			if pc.is_box
+				oco = oco + (pc.count*self.per_box)
 			else
-				oco = oco + co.product_counts.find_by_product_id(self).count
+				oco = oco + pc.count
 			end
 		end
 		# Customer Orders

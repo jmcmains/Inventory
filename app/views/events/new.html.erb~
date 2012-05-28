@@ -1,29 +1,35 @@
+<h1> <%= @title %> </h1>
 <%= form_for @event do |f| %>
-	<div class="field">
-		<%= f.label :event_type %><br />
-		<%= f.radio_button :event_type, "Inventory", checked: true %>Inventory<br>
-		<%= f.radio_button :event_type, "Product Order Placed" %>Product Order Placed<br>
-	</div>
-	
-	<div class="field">
-		<%= f.label :date %><br />
+	<p>
+		<strong><%= f.label :date %></strong><br />
 		<%= f.date_select :date %>
-	</div>
-	<div class="field">
-		<%= f.label :invoice %><br />
+	</p>
+	<% if @event.event_type == "Product Order" %>
+	<p>
+		<strong><%= f.label :invoice %></strong><br />
 		<%= f.text_field :invoice %>
-	</div>
+	</p>
+	<% end %>
 	<% n=1 %>
 	<%= f.fields_for :product_counts do |pc| %>  
-		<div class="field">
-			<%= Product.all.first(n).last.name %><br>
-			<%= Product.all.first(n).last.description %><br>
+		<div style="width:300px;height:300px;float:left;margin:10px;border:1px solid #000;text-align:center;valign:middle">
+		<% product = Product.all.first(n).last %>
+		<strong><%= product.name %></strong><br>
+			<% if !product.description.blank? %>
+			<%= product.description %><br>
+			<% end %>
 			<%= pc.hidden_field :product_id, value: Product.all.first(n).last.id %>
-			<%= pc.text_field :count %><br>
+			<%= pc.text_field :count, value: "0" %><br>
 			<%= pc.radio_button :is_box, "true", checked: true %> boxes
 			<%= pc.radio_button :is_box, "false" %> pieces 
+			<% if !product.imloc.blank? %>
+				<%= image_tag product.imloc, style: "width:200px;max-width:200 px;max-height:200 px" %>
+			<% end %>
 		</div> 
 		<% n = n+1 %>
 	<% end %> 
-	<p><%= f.submit "Submit" %></p>
+	<div style="width:300px;float:left;text-align:center;margin:10px;"><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;" %></div>
 <% end %>
+
+
+

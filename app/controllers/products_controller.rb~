@@ -1,15 +1,13 @@
 class ProductsController < ApplicationController
 
 	def new
-		@product = Product.find(params[:id])
-		@title = @product.name
+		@product = Product.new
+		@title = "New Product"
 	end
 	
 	def show
 		@product = Product.find(params[:id])
-		@orders = @product.get_cust_orders
-		@order_months = @orders.group_by { |t| t.date.beginning_of_month }
-		@title = "New Product"
+		@title = @product.name
 	end
 	
 	def create
@@ -20,6 +18,7 @@ class ProductsController < ApplicationController
 	
 	def edit
 		@title = "Edit Product"
+		@product = Product.find(params[:product])
 	end
 	
 	def update

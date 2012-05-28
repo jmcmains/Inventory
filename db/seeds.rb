@@ -29,6 +29,7 @@ CSV.foreach(Rails.root.join('db/offering_products.csv'), headers: true) do |row|
     p.offering_id = row[0]
     p.product_id = row[1]
     p.quantity = row[2]
+    p.imloc = row[3]
   end
 end
 
@@ -179,7 +180,7 @@ puts "Importing amazon canada 4/2012..."
 CSV.foreach(Rails.root.join('db/2012-04-canada.txt'), headers: true, col_sep: "\t") do |row|
   Order.create! do |p|
     p.order_number = row[0]
-    p.date = row[2]
+    p.date = row[2]locl
    	p.quantity = row[9]
    	p.offering_id = Offering.find_or_initialize_by_name(row[8]).id
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120519181629) do
+ActiveRecord::Schema.define(:version => 20120528183626) do
 
   create_table "events", :force => true do |t|
     t.date     "date"
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20120519181629) do
     t.integer  "per_box"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.string   "imloc"
   end
 
 end

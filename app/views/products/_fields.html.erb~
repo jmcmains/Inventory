@@ -8,6 +8,17 @@
 </div>
 <div class="field">
 	Quantity per Box<br/>
-	<%= f.password_field :per_box %>
+	<%= f.text_field :per_box %>
+</div>
+<div class="field">
+	Product Image<br/>
+	<%= f.text_field :imloc, class: "imname" %><br>
 </div>
 
+<script>
+$(function() {
+	$(".imname").change(function () {
+		$(".imloc").attr("src",$(this).value);
+   });
+});   
+</script>

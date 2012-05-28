@@ -1,0 +1,22 @@
+<h1><%= @events.first.event_type %></h1>
+
+<% @events.each do |event| %>
+	Date: <%= event.date %> <br/>
+		<% if event.event_type == "Product Order" %>
+			Invoice: <%= event.invoice %><br/>
+		<% end %>
+	Product Counts:<br>
+	<ul>
+	<% event.product_counts.each do |pc| %>
+		<li><%= pc.product.name %>: <%= pc.count %> 
+		<% if pc.is_box %>
+			boxes
+		<% else %>
+			pieces
+		<% end %>
+		</li>
+	<% end %>
+	</ul>
+<% end %>
+
+

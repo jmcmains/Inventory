@@ -8,6 +8,12 @@ class Product < ActiveRecord::Base
 		self.events.find_all_by_event_type(event_name).last
 	end
 	
+	def image
+		base = "http://rubberbanditz.com/wp-content/themes/rubberbanditzNew/proImg/"
+
+		return base+im
+	end
+	
 	def get_last_count(event_name)
 		e=get_last(event_name)
 		e.product_counts.find_by_product_id(self)
