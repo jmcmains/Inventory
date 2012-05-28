@@ -37,7 +37,7 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 			<% orders.each do |order| %>
 				<% c=c+(order.quantity * order.offering.offering_products.find_by_product_id(@product).quantity) %>
 			<% end %>
-			<%= c %><br>
+			<%= c %><br/>
 <% end %>
 <h2>Amount Needed to Order: </h2>
 

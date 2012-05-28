@@ -112,7 +112,9 @@ body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, 
 table {
 	width:100%;border-collapse:separate;border-spacing:0;
 }
-
+table tr {
+	border:1px solid #000;
+}
 table tr td {
 	border:1px solid #000;
 }
