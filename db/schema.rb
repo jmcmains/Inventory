@@ -98,6 +98,8 @@ ActiveRecord::Schema.define(:version => 20120528183626) do
     t.datetime "updated_at",   :null => false
   end
 
+  add_index "orders", ["order_number", "offering_id"], :name => "index_orders_on_order_number_and_offering_id", :unique => true
+
   create_table "product_counts", :force => true do |t|
     t.integer  "event_id"
     t.integer  "product_id"

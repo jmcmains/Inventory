@@ -1,6 +1,5 @@
 <h1> RubberBanditz Inventory Launching Page </h1>
 <h2>What would you like to do?</h2>
-For OE:
 <ul>
 <li><%= link_to "Do an inventory count", new_inventory_events_path %></li>
 <li><%= link_to "See previous inventory counts", inventory_events_path %></li>
@@ -11,9 +10,6 @@ For OE:
 <li> <%= link_to "#{event.invoice} - #{event.date}", edit_event_path(event) %></li>
 <% end %>
 </ul>
-</ul>
-For Jason/Ari:
-<ul>
 <li><%= link_to "Place an order from suppliers", new_po_events_path %></li>
 <li><%= link_to "See orders currently out", po_events_path %></li>
 </ul>

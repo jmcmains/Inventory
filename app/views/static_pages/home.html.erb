@@ -3,6 +3,9 @@
 <ul>
 <li><%= link_to "Do an inventory count", new_inventory_events_path %></li>
 <li><%= link_to "See previous inventory counts", inventory_events_path %></li>
+
+<li><%= link_to "Place an order from suppliers", new_po_events_path %></li>
+<li><%= link_to "See orders currently out", po_events_path %></li>
 <li>Recieve a shipment</li>
 <% ev=Event.find_all_by_event_type("Product Order") %>
 <ul>
@@ -10,7 +13,5 @@
 <li> <%= link_to "#{event.invoice} - #{event.date}", edit_event_path(event) %></li>
 <% end %>
 </ul>
-<li><%= link_to "Place an order from suppliers", new_po_events_path %></li>
-<li><%= link_to "See orders currently out", po_events_path %></li>
 </ul>
 
