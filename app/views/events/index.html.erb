@@ -1,6 +1,6 @@
 <h1><%= @events.first.event_type %></h1>
 
-<% @events.each do |event| %>
+<% @events.sort_by { |e| e.date}.each do |event| %>
 	Date: <%= event.date %> <br/>
 	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{event.event_type}" %><br/>
