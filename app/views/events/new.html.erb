@@ -1,12 +1,12 @@
 <h1> <%= @title %> </h1>
 <%= form_for @event do |f| %>
 	<p>
-		<strong><%= f.label :date %></strong><br />
-		<%= f.date_select :date %>
+		<strong><%= f.label :date %></strong>
+		<%= f.date_select :date, order: [:month, :day, :year] %>
 	</p>
 	<% if @event.event_type == "Product Order" %>
 	<p>
-		<strong><%= f.label :invoice %></strong><br />
+		<strong><%= f.label :invoice %></strong>
 		<%= f.text_field :invoice %>
 	</p>
 	<% end %>
@@ -29,7 +29,7 @@
 		<% n = n+1 %>
 	<% end %> 
 	<br/>
-	<div style="width:300px;float:left;text-align:center;margin:10px;"><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;" %></div>
+	<center><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;text-align:center" %></center>
 <% end %>
 
 

@@ -1,36 +1,24 @@
 <h1><%= @events.first.event_type %></h1>
-<table>
-<tr>
-<td>
-Date
-</td>
-<% if @events.first.event_type == "Product Order" %>
-<td>
-	Invoice #
-</td>
-<% end %>
-<% Product.all.each do |p| %>
-	<td>
-	<%= p.name %>
-	</td>
-<% end %>
-</tr>
+
 <% @events.each do |event| %>
-	<tr>
-		<td><%= event.date %></td>
-			<% if event.event_type == "Product Order" %>
-				<td><%= event.invoice %></td>
-			<% end %>
-		<% event.product_counts.each do |pc| %>
-			<td><%= pc.count %>  
-			<% if pc.is_box %>
-				boxes
-			<% else %>
-				pieces
-			<% end %>
-			</td>
+	Date: <%= event.date %> <br/>
+	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "delete", event, :method => :delete, :confirm => "You sure?",
+                                :title => "Delete #{event.event_type}" %><br/>
+		<% if event.event_type == "Product Order" %>
+			Invoice: <%= event.invoice %><br/>
 		<% end %>
-	</tr>
+	Product Counts:<br>
+	<ul>
+	<% event.product_counts.each do |pc| %>
+		<li><%= pc.product.name %>: <%= pc.count %> 
+		<% if pc.is_box %>
+			boxes
+		<% else %>
+			pieces
+		<% end %>
+		</li>
+	<% end %>
+	</ul>
 <% end %>
-</table>
+
 

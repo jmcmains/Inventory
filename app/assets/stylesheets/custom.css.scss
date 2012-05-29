@@ -1,121 +1,57 @@
 @import "bootstrap";
-html,body,div,h1,h2,h3,h4,h5,h6,p,img,dl,dt,dd,ol,ul,li,table,caption,tbody,tfoot,thead,tr,th,td,form,fieldset,embed,object,applet{
-margin:0;
-padding:0;
-border:0;
+/* universal */
+
+html {
+  overflow-y: scroll;
 }
 
-body{
-	font-size:62.5%;
-	font-family:Arial,sans-serif;
-	color:#000;background:#fff
+body {
+  padding-top: 60px;
 }
 
-a{
-	color:#00c;
-	&:active{
-		color:#f00
-	}
-	&:visited{
-		color:#551a8b
-	}
+section {
+  overflow: auto;
 }
 
-table{
-	border-collapse:collapse;
-	border-width:0;
-	empty-cells:show
-}
-ul{
-	padding:0 0 1em 1em
+textarea {
+  resize: vertical;
 }
 
-ol{
-	padding:0 0 1em 1.3em
+.center {
+  text-align: center;
 }
 
-li{
-	line-height:1.5em;
-	padding:0 0 .5em 0
+.center h1 {
+  margin-bottom: 10px;
 }
 
-p{
-	padding:0 0 1em 0
+.container {
+	width:1000px;
+
+}
+/* typography */
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1;
 }
 
-h1,h2,h3,h4,h5{
-	padding:0 0 1em 0
+h1 {
+  font-size: 3em;
+  letter-spacing: -2px;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
-h1,h2{
-	font-size:1.3em
+h2 {
+  font-size: 1.7em;
+  letter-spacing: -1px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: normal;
+  color: #999;
 }
 
-h3{
-	font-size:1.1em
-}
-
-h4,h5,table{
-	font-size:1em
-}
-
-sup,sub{
-	font-size:.7em
-}
-
-input,select,textarea,option{
-	font-family:inherit;
-	font-size:inherit
-}
-
-.g-doc,.g-doc-1024,.g-doc-800{
-font-size:130%
-}
-
-.ss-base-body{
-font-size:.8em
-}
-.ss-textarea{max-width:99%}
-
-.ss-choice-item{margin:0;line-height:1.3em;padding-bottom:.5em}
-
-.ss-form-entry input{vertical-align:middle;margin-top:0}
-
-.g{color:#666}.i{display:inline}
-
-.ss-form-desc{font:inherit;width:99%;margin:0}
-
-.ss-q-title{display:block;font-weight:bold}
-
-.ss-q-help{display:block;color:#666;margin:.1em 0 .25em 0}
-
-.ss-q-long{max-width:90%}
-
-.ss-form-entry{margin-bottom:1.5em;zoom:1;}
-
-.ss-choices{list-style:none;margin:.5em 0 0 0;padding:0}
-
-.ss-powered-by{display:block;clear:left;color:#666;margin:1em 0.2em 0.2em}
-
-.ss-powered-by a:link,.ss-powered-by a:visited{color:#666}
-
-.ss-terms{display:block;clear:left;margin:1em 0.2em 0.2em}
-
-.ss-required-asterisk{color:#c43b1d}
-
-.ss-section-title{background-color:#eee;padding:0.4em;margin:2em -0.4em 0}.ss-section-description{margin-top:0.5em}.ss-no-ignore-whitespace{white-space:pre-wrap;white-space:-moz-pre-wrap;word-wrap:break-word}.ss-page-title{margin:0;padding:0}.ss-confirmation-header{font-size:140%;padding-bottom:1em}.ss-gridnumbers{text-align:center;border-bottom:1px solid #d3d8d3}.ss-gridnumber{display:block;padding:0.5em 0 .5em}.ss-gridrow{text-align:center;color:#666;border-bottom:1px solid #d3d8d3;padding:.5em .25em}.ss-grid-row-even{background-color:#fff}.ss-grid-row-odd{background-color:#f2f2f2}.ss-gridrow-leftlabel{padding:0 1em}.ss-grideditor-columns input{line-height:150%}.ss-grideditor-editor .ss-magiclist-ul span.ss-header{font-weight:bold;padding-right:1em}.ss-grid .errorbox-component .errorbox-good,.ss-grid .errorbox-component .errorbox-bad{display:none}.ss-scalenumbers{text-align:center}.ss-scalenumber{display:block;padding:0.5em 0 .5em}.ss-scalerow{text-align:center;color:#666;border:1px solid #d3d8d3;border-left:0;border-right:0;padding:.5em .25em}td.ss-leftlabel{text-align:right;padding-left:0}td.ss-rightlabel{text-align:left;padding-right:0}body{padding:0.5em 1em;background-color:#e8eef7}h1{font-size:1.8em;padding:0}label{display:block;cursor:pointer}ul label{display:inline}hr{border:0;height:1px;background-color:#ddd}table{border-collapse:collapse}.ss-response-cell{background-color:#fff;border:1px solid #ccc;padding:.1em .5em}.ss-responses-header{background-color:#969696;color:#fff;padding:.2em .5em}.ss-form-container{width:45em;background-color:#fff;border:1px solid #ccc;margin:0 auto;padding:1em}.ss-confirmation-banner{background-color:#ffff87}.ss-old-form-response{background-color:#ffff3d;font-weight:bold}.errorbox-bad{border:2px solid #c43b1d;background-color:#ffe6cc;padding:2px}.errorheader{color:#c43b1d}.ss-no-ignore-whitespace{*white-space:pre}
-/* Image by iStockphoto, credit: bluestocking (http://www.istockphoto.com/googleimages.php?id=3655794&platform=docs) */
-@import url(//themes.googleusercontent.com/fonts/css?kit=POVDFY-UUf0WFR9DIMCU8g);
-body{background:#d0e0f9;color:#172c3f;font-family:'Droid Sans','Trebuchet MS',Tahoma,Verdana,Arial,sans-serif;margin:0;padding:0}a{color:#003c72}br{display:none}div.ss-form-container{background:#fff url('//themes.googleusercontent.com/image?id=1O6qprvss8HVLazrafora2tSIp6EGKE8fb0kXNZPr8nydFPHkX_jSEUjscY0dAb3f628Q&tw=800&th=300&crop=TOP') top center no-repeat;border:1px solid #a4bfdd;border-width:0 1px;line-height:1.6em;max-width:760px;padding:300px 20px 20px;width:75%}h1.ss-form-title{background:#003c72;color:#fff;font-size:24px;line-height:30px;margin:0 -20px;padding:10px 20px}.ss-required-asterisk{color:#954781}div.errorbox-bad{background:none;border:none;padding:0}div.errorheader,div.errorbox-bad div.ss-form-entry{background:#954781;border:none;color:#fff;margin:0 -20px 10px;padding:10px 20px}div.errorbox-bad div.ss-form-entry label.ss-q-help{color:#aaa}div.ss-section-header,div.ss-page-break{margin:10px 0}h2.ss-section-title,h2.ss-page-title{background:#003c72;color:#fff;font-size:18px;line-height:24px;margin:0 -20px 10px;padding:10px 20px}td.ss-scalenumbers{border-color:#a4bfdd}td.ss-scalerow{border-color:#a4bfdd}td.ss-gridnumbers{border-color:#a4bfdd}tr.ss-grid-row-odd{background:#eff6ff}tr.ss-grid-row-even{background:#fff}td.ss-gridrow{border-color:#a4bfdd}
-
-body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, dialog, figure, footer, header, hgroup, nav, section {margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
-
-table {
-	width:100%;border-collapse:separate;border-spacing:0;
-}
-table tr {
-	border:1px solid #000;
-}
-table tr td {
-	border:1px solid #000;
+p {
+  font-size: 1.1em;
+  line-height: 1.7em;
 }

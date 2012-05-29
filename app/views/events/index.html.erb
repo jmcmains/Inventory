@@ -2,6 +2,8 @@
 
 <% @events.each do |event| %>
 	Date: <%= event.date %> <br/>
+	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",
+                                :title => "Delete #{event.event_type}" %><br/>
 		<% if event.event_type == "Product Order" %>
 			Invoice: <%= event.invoice %><br/>
 		<% end %>
