@@ -28,18 +28,24 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 <br><br>
 <% end %>
 <%= oco %>
+
 <h2> Weekly Customer Orders: </h2>
 <% o=@product.get_cust_orders.group_by { |t| t.date.beginning_of_week } %>
+<% pq = @product.offering_products %>
 <% y = [] %>
-		<% o.sort.each do |week, orders| %>
-			<% c=0 %>
-			<%= week %> - 
-			<% orders.each do |order| %>
-				<% c=c+(order.quantity * order.offering.offering_products.find_by_product_id(@product).quantity) %>
-			<% end %>
-			<%= c %><br>
+<% o.sort.each do |week, orders| %>
+	<% c=0 %>
+	<%= week %> -
+	<% orders.each do |order| %>
+		<% c = c+(order.quantity*pq.find_by_offering_id(order.offering_id).quantity) %>
+	<% end %>
+	<%= c %><br/>
 <% end %>
 <h2>Amount Needed to Order: </h2>
-
+<%
+=begin %>
 Need2: <%= pn=@product.need %>
 Boxes: <%= (pn/@product.per_box).ceil %>
+
+<%
+=end %>

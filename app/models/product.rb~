@@ -10,11 +10,7 @@ class Product < ActiveRecord::Base
 	
 	def image
 		base = "http://rubberbanditz.com/wp-content/themes/rubberbanditzNew/proImg/"
-		if self.name == "Light Band"
-			im = "band_Small_new.jpg"
-		elsif self.name == "Medium Band"
-			im = "band_Medium_new.jpg"
-		end
+
 		return base+im
 	end
 	
@@ -56,10 +52,12 @@ class Product < ActiveRecord::Base
 		# Customer Orders
 		o=self.get_cust_orders.group_by { |t| t.date.beginning_of_week }
 		y = []
+		pq=self.offering_products;
 		o.sort.each do |week, orders|
 			c=0
-			for order in orders
-				c=c+(order.quantity * order.offering.offering_products.find_by_product_id(self).quantity)
+			orders.sum {
+			orders.each do |order|
+				c=c+order.quant(pq)
 			end
 			y = y << c
 		end

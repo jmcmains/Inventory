@@ -52,10 +52,12 @@ class Product < ActiveRecord::Base
 		# Customer Orders
 		o=self.get_cust_orders.group_by { |t| t.date.beginning_of_week }
 		y = []
+		pq=self.offering_products;
 		o.sort.each do |week, orders|
 			c=0
-			for order in orders
-				c=c+(order.quantity * order.offering.offering_products.find_by_product_id(self).quantity)
+
+			orders.each do |order|
+				c=c+order.quant(pq)
 			end
 			y = y << c
 		end

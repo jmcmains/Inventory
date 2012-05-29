@@ -14,6 +14,9 @@ class Order < ActiveRecord::Base
  		self.date.year
  	end
  	
+ 	def quant(pq)
+ 		return self.quantity * pq.find_by_offering_id(self.offering).quantity
+ 	end
  	def find_by_month(month,year)
  		Order.find(:all, :conditions => ["MONTH(order) = ? AND YEAR(order) = ?", month, year])
  	end
