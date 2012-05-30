@@ -1,6 +1,6 @@
 <h1> <%= @title %> </h1>
 <%= form_for @event do |f| %>
-	<p>
+	<p>			<%= pc.hidden_field :event_type, value: @event.event_type %>
 		<strong><%= f.label :date %></strong>
 		<%= f.date_select :date, order: [:month, :day, :year] %>
 	</p>
@@ -24,7 +24,7 @@
 			<%= pc.radio_button :is_box, "true", checked: true %> boxes
 			<%= pc.radio_button :is_box, "false" %> pieces 
 			<% if !product.imloc.blank? %>
-				<%= image_tag product.imloc, style: "height:100px;max-height:100 px" %>
+				<br><%= image_tag product.imloc, style: "height:150px;max-height:100 px" %>
 			<% end %>
 		</div> 
 		<% n = n+1 %>

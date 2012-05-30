@@ -42,10 +42,7 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 	<%= c %><br/>
 <% end %>
 <h2>Amount Needed to Order: </h2>
-<%
-=begin %>
+
 Need2: <%= pn=@product.need %>
 Boxes: <%= (pn/@product.per_box).ceil %>
 
-<%
-=end %>

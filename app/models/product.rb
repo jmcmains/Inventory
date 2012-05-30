@@ -24,14 +24,17 @@ class Product < ActiveRecord::Base
 	end
 	
 	def get_cust_orders
-		a =[]
-		self.offerings.each do |o|
-			a= a + o.orders
-		end
-		return a
+		return Order.joins(:offering => {:offering_products => :product}).where(["products.id = ? AND offering_products.quantity > 0",self])
 	end
 	
-	def need
+	def get_trend
+		sql = ActiveRecord::Base.connection()
+		d=sql.execute("SELECT sum('orders'.'quantity' *'offering_products'.'quantity') FROM 'orders' INNER JOIN 'offerings' ON 'offerings'.'id' = 'orders'.'offering_id' INNER JOIN 'offering_products' ON 'offering_products'.'offering_id' = 'offerings'.'id' INNER JOIN 'products' ON 'products'.'id' = 'offering_products'.'product_id' WHERE (products.id = #{self.id}) GROUP BY strftime('%Y-%W', 'orders'.'date')")
+		y=d.map { |a| a[0] }
+		return y
+	end
+	
+	def get_Inventory
 		# Inventory
 		last_inv=self.get_last_count("Inventory");
 		if last_inv.is_box
@@ -39,6 +42,10 @@ class Product < ActiveRecord::Base
 		else
 			li = last_inv.count
 		end
+		return li
+	end
+
+	def get_orders
 		# Orders from Suppliers
 		oco = 0
 		self.get_current_shipments.each do |co|
@@ -49,18 +56,14 @@ class Product < ActiveRecord::Base
 				oco = oco + pc.count
 			end
 		end
+		return oco
+	end
+	
+	def need
+		li = self.get_Inventory
+		oco = self.get_orders
 		# Customer Orders
-		o=self.get_cust_orders.group_by { |t| t.date.beginning_of_week }
-		y = []
-		pq=self.offering_products;
-		o.sort.each do |week, orders|
-			c=0
-
-			orders.each do |order|
-				c=c+order.quant(pq)
-			end
-			y = y << c
-		end
+		y=self.get_trend
 		x =(1..y.length).to_a
 		lineFit = LineFit.new
 		lineFit.setData(x,y)
@@ -71,4 +74,5 @@ class Product < ActiveRecord::Base
 		needed = -li - oco + pu + omi
 		return needed
 	end
+
 end
