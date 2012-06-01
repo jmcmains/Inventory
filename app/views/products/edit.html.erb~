@@ -1,4 +1,3 @@
-<h1>Edit User</h1>
 
 <%= form_for(@product) do |f| %>
 	<%= render 'fields', :f => f %>

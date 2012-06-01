@@ -1,13 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Inventory</title>
+  <title><%= @title %></title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 <div class="container">
+<h1><%= @title %></h1>
+<h2><%= @subtitle %></h2>
+<div style="float:left;background-color: #eee;padding:10px;width:200px">
+<ul>
+<li><%= link_to "Do an inventory count", new_inventory_events_path %></li>
+<li><%= link_to "See previous inventory counts", inventory_events_path %></li>
+
+<li><%= link_to "Place an order from suppliers", new_po_events_path %></li>
+<li><%= link_to "See orders currently out", po_events_path %></li>
+<li>Recieve a shipment</li>
+<% ev=Event.find_all_by_event_type("Product Order") %>
+<ul>
+<% ev.sort_by { |e| e.date }.each do |event| %>
+	<li> <%= link_to "#{event.invoice} - #{event.date}", edit_event_path(event) %></li>
+<% end %>
+</ul>
+<li>View Product Line</li>
+<ul>
+<% Product.all.each do |p| %>
+	<li> <%= link_to p.name, product_path(p) %></li>
+<% end %>
+</ul>
+</ul>
+</div>
+<div style="position:relative;padding:10px;left:10px;">
 <%= yield %>
 </div>
 </body>

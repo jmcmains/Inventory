@@ -1,16 +1,17 @@
-<h1><%= @events.first.event_type %></h1>
-
 <% @events.sort_by { |e| e.date}.each do |event| %>
-	Date: <%= event.date %> <br/>
+	<p>
+	<h2>Date: <%= event.date %> </h2>
+
 	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{event.event_type}" %><br/>
 		<% if event.event_type == "Product Order" %>
 			Invoice: <%= event.invoice %><br/>
+			Suppier: <%= event.supplier %><br/>
 		<% end %>
 	Product Counts:<br>
 	<ul>
 	<% event.product_counts.each do |pc| %>
-		<li><%= pc.product.name %>: <%= pc.count %> 
+		<li><%= link_to pc.product.name, edit_product_path(pc.product) %>: <%= pc.count %> 
 		<% if pc.is_box %>
 			boxes
 		<% else %>
@@ -19,6 +20,7 @@
 		</li>
 	<% end %>
 	</ul>
+	</p>
 <% end %>
 
 

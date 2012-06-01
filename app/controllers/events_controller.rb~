@@ -10,6 +10,7 @@ class EventsController < ApplicationController
   	@event=Event.new
   	@event.event_type="Inventory"
   	@title="Inventory Log"
+  	@subtitle=""
 		Product.all.count.times do
     	question = @event.product_counts.build
   	end
@@ -20,6 +21,7 @@ class EventsController < ApplicationController
   	@event=Event.new
   	@event.event_type="Product Order"
   	@title="New Product Order"
+  	@subtitle=""
 		Product.all.count.times do
     	question = @event.product_counts.build
   	end
@@ -28,11 +30,12 @@ class EventsController < ApplicationController
   
   def inventory
   	@events=Event.find_all_by_event_type("Inventory")
+  	@title= @events.first.event_type
   	render :index
   end
   
   def po
-  	@events=Event.find_all_by_event_type("Product Order")
+  	@events=Event.find_all_by_event_type("Product @title= @events.first.event_type
   	render :index
   end
   

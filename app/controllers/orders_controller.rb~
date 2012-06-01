@@ -28,7 +28,7 @@ require 'csv'
   end
 
 	def index
-		@orders = Order.find(:all, :order => 'date, id', :limit => 50)
+		@orders = Order.find(:all, :order => 'date, id')
 		@order_months = @orders.group_by { |t| t.date.beginning_of_month }
 	end
 

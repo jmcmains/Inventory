@@ -1,23 +1,22 @@
-<h1> Edit <%= @event.event_type %> </h1>
 <%= form_for @event do |f| %>
-	<p>
+	<p><%= f.hidden_field :event_type, value: @event.event_type %>
 		<strong><%= f.label :date %></strong>
 		<%= f.date_select :date, order: [:month, :day, :year] %>
-	</p>
 	<% if @event.event_type == "Product Order" %>
-	<p>
 		<strong><%= f.label :invoice %></strong>
 		<%= f.text_field :invoice %><br />
+		<strong><%= f.label :supplier %></strong>
+		<%= f.text_field :supplier %><br />
 		<strong><%= f.label :received_date %></strong>
 		<%= f.date_select :received_date, order: [:month, :day, :year] %><br/>
 		<%= f.radio_button :received, "true" %> received
-			<%= f.radio_button :received, "false" %> not yet received
-	</p>
+		<%= f.radio_button :received, "false" %> not yet received
 	<% end %>
+	</p>
 	<% n=1 %>
-	<div style="width:100%">
+		<h2>Products</h2>
 	<%= f.fields_for :product_counts do |pc| %>  
-		<div style="width:300px;height:300px;float:left;margin:10px;border:1px solid #000;text-align:center;valign:middle;">
+		<div style="width:300px;height:300px;float:left;margin:10px;border:1px solid #000;text-align:center;valign:middle;border-radius: 10px;">
 		<% product = @event.product_counts.first(n).last.product %>
 		<strong><%= product.name %></strong><br>
 			<% if !product.description.blank? %>
@@ -34,8 +33,7 @@
 		</div> 
 		<% n = n+1 %>
 	<% end %>
-	</div><br/>
-	<center><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;text-align:center" %></center>
+	<center><div style="width:500px"><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;text-align:center" %></div></center>
 <% end %>
 
 

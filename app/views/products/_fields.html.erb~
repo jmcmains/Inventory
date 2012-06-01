@@ -1,10 +1,10 @@
 <div class="field">
-	<%= f.label :name %><br />
+	Name:<br />
 	<%= f.text_field :name %>
 </div>
 <div class="field">
-	<%= f.label :description %><br />
-	<%= f.text_field :description %>
+	Description:<br />
+	<%= f.text_area :description, size: "10x4" %>
 </div>
 <div class="field">
 	Quantity per Box<br/>
@@ -12,13 +12,14 @@
 </div>
 <div class="field">
 	Product Image<br/>
-	<%= f.text_field :imloc, class: "imname" %><br>
+	<%= f.text_field :imloc, class: "imname", id: "imageloc" %><br>
+	<% image_tag "http://www.runningasmallbusinessinc.com/wp-content/uploads/2011/05/product-development.gif", id: "imshow" %>
+	<div class="test"></div>
 </div>
-
 <script>
-$(function() {
-	$(".imname").change(function () {
-		$(".imloc").attr("src",$(this).value);
-   });
-});   
+$(function () {  
+    $('#imageloc').bind('blur', function () {
+        $('div.test').text($(this).value);
+    });
+});
 </script>

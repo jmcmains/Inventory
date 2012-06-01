@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
   def new
-
+		@title ="Upload Order Files"
   end
   
 require 'csv'

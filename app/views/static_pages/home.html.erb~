@@ -9,8 +9,14 @@
 <li>Recieve a shipment</li>
 <% ev=Event.find_all_by_event_type("Product Order") %>
 <ul>
-<% evsort_by { |e| e.date }.each do |event| %>
-<li> <%= link_to "#{event.invoice} - #{event.date}", edit_event_path(event) %></li>
+<% ev.sort_by { |e| e.date }.each do |event| %>
+	<li> <%= link_to "#{event.invoice} - #{event.date}", edit_event_path(event) %></li>
+<% end %>
+</ul>
+<li>View Product Line</li>
+<ul>
+<% Product.all.each do |p| %>
+	<li> <%= link_to p.name, product_path(p) %></li>
 <% end %>
 </ul>
 </ul>
