@@ -17,7 +17,7 @@
 
 <li><%= link_to "Place an order from suppliers", new_po_events_path %></li>
 <li><%= link_to "See orders currently out", po_events_path %></li>
-<li>Recieve a shipment</li>
+<li>Receive a shipment</li>
 <% ev=Event.find_all_by_event_type("Product Order") %>
 <ul>
 <% ev.sort_by { |e| e.date }.each do |event| %>

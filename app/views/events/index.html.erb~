@@ -1,9 +1,11 @@
 <% @events.sort_by { |e| e.date}.each do |event| %>
+	<p>
 	<h2>Date: <%= event.date %> </h2>
 
 	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{event.event_type}" %><br/>
 		<% if event.event_type == "Product Order" %>
+			Expected Delivery (order date+60 days): <%= event.date + 60 %>
 			Invoice: <%= event.invoice %><br/>
 			Suppier: <%= event.supplier %><br/>
 		<% end %>

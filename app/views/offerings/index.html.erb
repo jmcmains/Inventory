@@ -1,9 +1,13 @@
 <% for offer in Offering.all %>
 	<%= offer.name %> includes: <br>
+	<%= link_to 'Edit', edit_offering_path(offer) %> | <%= link_to "Delete", offer, :method => :delete, :confirm => "You sure?",
+                                :title => "Delete #{offer.name}" %><br/>
+  <ul>
 	<% for product in offer.products %>
 		<% if OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity > 0 %>
-			<%= OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity %> <%= product.name %><br>
+			<li><%= pluralize(OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity, product.name) %></li>
 		<% end %>
 	<% end %>
+	</ul>
 <br>
 <% end %>

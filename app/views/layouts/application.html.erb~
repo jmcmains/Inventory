@@ -32,7 +32,7 @@
 </ul>
 </ul>
 </div>
-<div style="position:relative;padding:10px;left:10px;">
+<div style="position:absolute;padding:10px;left:230px;right:0">
 <%= yield %>
 </div>
 </body>
