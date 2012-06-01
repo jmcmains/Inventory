@@ -29,7 +29,13 @@ class Product < ActiveRecord::Base
 	
 	def get_trend
 		sql = ActiveRecord::Base.connection()
-		d=sql.execute("SELECT sum('orders'.'quantity' *'offering_products'.'quantity') FROM 'orders' INNER JOIN 'offerings' ON 'offerings'.'id' = 'orders'.'offering_id' INNER JOIN 'offering_products' ON 'offering_products'.'offering_id' = 'offerings'.'id' INNER JOIN 'products' ON 'products'.'id' = 'offering_products'.'product_id' WHERE (products.id = #{self.id}) GROUP BY strftime('%Y-%W', 'orders'.'date')")
+		d=sql.execute("SELECT sum('orders'.'quantity' *'offering_products'.'quantity')" +
+		" FROM 'orders'" +
+		" INNER JOIN 'offerings' ON 'offerings'.'id' = 'orders'.'offering_id'" +
+		" INNER JOIN 'offering_products' ON 'offering_products'.'offering_id' = 'offerings'.'id'" +
+		" INNER JOIN 'products' ON 'products'.'id' = 'offering_products'.'product_id'" +
+		" WHERE (products.id = #{self.id})" +
+		" GROUP BY strftime('%Y-%W', 'orders'.'date')")
 		y=d.map { |a| a[0] }
 		return y
 	end
