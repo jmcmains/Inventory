@@ -4,6 +4,7 @@
   <title><%= @title %></title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "jquery-1.4.2.min", "rails", "highcharts" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -12,12 +13,9 @@
 <h2><%= @subtitle %></h2>
 <div style="float:left;background-color: #eee;padding:10px;width:200px">
 <ul>
-	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Inventory <b class="caret"></b></a>
-		<ul class="dropdown-menu">
+
 			<li><%= link_to "Do an inventory count", new_inventory_events_path %></li>
 			<li><%= link_to "See previous inventory counts", inventory_events_path %></li>
-		</ul>
-	</li>
 
 	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Supplier Orders<b class="caret"></b></a>
 		<ul class="dropdown-menu">

@@ -32,6 +32,8 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 <%= oco %>
 
 <h2> Weekly Customer Orders: </h2>
+
+
 <% sql = ActiveRecord::Base.connection() %>
 <% if Rails.env == "production" %>
 	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) GROUP BY year, week ORDER BY year, week ") %>
@@ -44,13 +46,66 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 <% end %>
 <% n=0 %>
 <% d2.each do |a| %>
-	<%= d2[n] %> - <%= y[n] %><br>
+	<% d2[n] %><% y[n] %>
 	<% n=n+1 %>
 <% end %>
 <br/>
-
+<% x =(1..y.length).to_a %>
+<% lineFit = LineFit.new %>
+<% lineFit.setData(x,y) %>
+<% b, m = lineFit.coefficients %>
+<% y.length %>
+<% startX = m+b %>
+<% endX = (y.length*m)+b %>
+<% preX = (y.length+15)*m+b %>
+<% prediction_x = (y.length..(y.length+15)).to_a %>
+<% prediction_y = prediction_x.map { |x| x*m+b } %>
+<div id="orders_chart" style="width:560px; height:300px;"></div>
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    new Highcharts.Chart({
+     chart: { renderTo: 'orders_chart' },
+		  title: { text: 'Orders by week' },
+		  xAxis: { type: 'float', text: "Week Number" },
+		  yAxis: {
+		    title: { text: 'Orders'}
+		  },
+		  series: [{
+				type: 'line',
+				name: 'Regression Line',
+				data: [[1,<%= startX %>], [<%= y.length %>,<%= endX %>]],
+				marker: {
+					enabled: false
+				},
+				states: {
+					hover: {
+						lineWidth: 0
+					}
+				},
+				enableMouseTracking: false
+			},{
+				type: 'line',
+				name: 'Prediction Line',
+				pointInterval: 1,
+				pointStart: <%= y.length %>,
+				data: <%= prediction_y %>,
+				marker: {
+					enabled: false
+				},
+				dashStyle: 'shortdot'
+			},{
+				name: 'Weekly Sales',
+		  	pointInterval: 1,
+		  	pointStart: 1,
+		    data: <%= y %>
+		  }]
+    });
+  });
+</script>
+Orders current until the week of: <%= d2.last %>
 <h2>Amount Needed to Order: </h2>
-
+Assuming a 90 day lead time
 Need2: <%= pn=@product.need %>
 Boxes: <%= (pn/@product.per_box).ceil %>
+
 

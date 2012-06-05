@@ -2,10 +2,15 @@ class Order < ActiveRecord::Base
   # attr_accessible :title, :body
   belongs_to :offering, :class_name => "Offering"
   default_scope order: 'orders.date DESC'
+  scope :amzus, where(origin: "Amazon US")
+  scope :amzca, where(origin: "Amazon Canada")
+  scope :website, where(origin: "Website")
   def month
   	self.date.month
  	end
- 	
+ 	def self.total_on(pdate)
+ 		where("date(date) = ?",pdate).sum(:quantity)
+ 	end
  	def day
   	self.date.day
  	end
