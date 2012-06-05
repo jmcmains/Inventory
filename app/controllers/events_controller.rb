@@ -34,6 +34,16 @@ class EventsController < ApplicationController
   	render :index
   end
   
+  def destroy
+  	if Event.find(params[:id]).event_type == "Inventory"
+  		Event.find(params[:id]).destroy
+  	  redirect_to inventory_events_path
+  	else
+  		Event.find(params[:id]).destroy
+  	  redirect_to po_events_path
+  	end
+  end
+  
   def po
   	@events=Event.find_all_by_event_type("Product Order")
   	@title= @events.first.event_type
@@ -43,12 +53,17 @@ class EventsController < ApplicationController
   def create
   	@event = Event.new(params[:event])
     @event.save
-    redirect_to root_path
+		if @event.event_type == "Inventory"
+  	  redirect_to inventory_events_path
+  	else
+  	  redirect_to po_events_path
+  	end
   end
   
   def edit
   	@event=Event.find(params[:id])
   	@title = "Edit Event"
+
   end
   
   def update
