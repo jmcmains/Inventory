@@ -1,7 +1,7 @@
 class Order < ActiveRecord::Base
   # attr_accessible :title, :body
   belongs_to :offering, :class_name => "Offering"
-  
+  default_scope order: 'orders.date DESC'
   def month
   	self.date.month
  	end
@@ -37,7 +37,7 @@ class Order < ActiveRecord::Base
     	date = row[2]
 			offering_id=row[8]
 			quantity = row[9]
-    else
+    elsif type == "Website"
     	order_number = row[1]
     	if row[2].blank?
     		old_order=Order.find_by_order_number(order_number)
@@ -50,7 +50,7 @@ class Order < ActiveRecord::Base
     end
     offering=Offering.find_or_initialize_by_name(offering_id)
     offering.save
-    order= Order.create(order_number: order_number, date: date,offering_id: offering.id,quantity: quantity)
+    order= Order.create(order_number: order_number, date: date,offering_id: offering.id,quantity: quantity, origin: type)
     return order
   end
 end
