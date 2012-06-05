@@ -1,5 +1,5 @@
 Inventory::Application.routes.draw do
-	root to: 'StaticPages#home'
+	root to: 'events#new_inventory'
 	resources :products
 	resources :product_counts
 	resources :events do
@@ -10,6 +10,10 @@ Inventory::Application.routes.draw do
 			get :new_po
 		end
 	end
-	resources :orders
+	resources :orders do
+		collection do
+			get :new_phone
+		end
+	end
 	resources :offerings
 end

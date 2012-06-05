@@ -3,7 +3,7 @@
 		<strong><%= f.label :date %></strong>
 		<%= f.date_select :date, order: [:month, :day, :year] %>
 	<% if @event.event_type == "Product Order" %>
-		<strong><%= f.label :invoice %></strong>
+		<strong>Invoice # (PO#):</strong>
 		<%= f.text_field :invoice %>
 		<strong><%= f.label :supplier %></strong>
 		<%= f.text_field :supplier %><br />
@@ -20,7 +20,7 @@
 			<% end %>
 			<%= product.per_box %> pc/box <br>
 						Product Count:
-			<%= pc.hidden_field :product_id, value: Product.all.first(n).last.id %>
+			<%= pc.hidden_field :product_id, value: product = Product.id %>
 			<%= pc.text_field :count, value: "0" %><br>
 			<%= pc.radio_button :is_box, "true", checked: true %> boxes
 			<%= pc.radio_button :is_box, "false" %> pieces 

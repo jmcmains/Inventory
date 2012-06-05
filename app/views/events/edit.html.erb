@@ -1,9 +1,9 @@
 <%= form_for @event do |f| %>
 	<p><%= f.hidden_field :event_type, value: @event.event_type %>
 		<strong><%= f.label :date %></strong>
-		<%= f.date_select :date, order: [:month, :day, :year] %>
+		<%= f.date_select :date, order: [:month, :day, :year] %><br/>
 	<% if @event.event_type == "Product Order" %>
-		<strong>Invoice # (PO#):</strong>
+		<strong><%=f.label :invoice, "Invoice # (PO#):" %></strong>
 		<%= f.text_field :invoice %><br />
 		<strong><%= f.label :supplier %></strong>
 		<%= f.text_field :supplier %><br />

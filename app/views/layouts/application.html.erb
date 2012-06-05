@@ -12,24 +12,38 @@
 <h2><%= @subtitle %></h2>
 <div style="float:left;background-color: #eee;padding:10px;width:200px">
 <ul>
-<li><%= link_to "Do an inventory count", new_inventory_events_path %></li>
-<li><%= link_to "See previous inventory counts", inventory_events_path %></li>
 
-<li><%= link_to "Place an order from suppliers", new_po_events_path %></li>
-<li><%= link_to "See orders currently out", po_events_path %></li>
-<li>Receive a shipment</li>
-<% ev=Event.find_all_by_event_type("Product Order") %>
-<ul>
-<% ev.sort_by { |e| e.date }.each do |event| %>
-	<li> <%= link_to "#{event.invoice} - #{event.date}", edit_event_path(event) %></li>
-<% end %>
-</ul>
-<li>View Product Line</li>
-<ul>
-<% Product.all.each do |p| %>
-	<li> <%= link_to p.name, product_path(p) %></li>
-<% end %>
-</ul>
+			<li><%= link_to "Do an inventory count", new_inventory_events_path %></li>
+			<li><%= link_to "See previous inventory counts", inventory_events_path %></li>
+
+	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Supplier Orders<b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<li><%= link_to "Place an order from suppliers", new_po_events_path %></li>
+			<li><%= link_to "See orders currently out", po_events_path %></li>
+		</ul>
+	</li>
+	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Customer Orders <b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<li><%= link_to "Add Web Orders via csv", new_order_path %></li>
+			<li><%= link_to "Add a Phone Order", new_phone_orders_path %></li>
+		</ul>
+	</li>
+	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Receive a shipment<b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<% ev=Event.find_all_by_event_type("Product Order") %>
+			<% ev.sort_by { |e| e.date }.each do |event| %>
+				<li> <%= link_to "#{event.invoice} - #{event.date}", edit_event_path(event) %></li>
+			<% end %>
+		</ul>
+	</li>
+
+	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">View Product Line<b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<% Product.all.each do |p| %>
+				<li> <%= link_to p.name, product_path(p) %></li>
+			<% end %>
+		</ul>
+	</li>
 </ul>
 </div>
 <div style="position:absolute;padding:10px;left:230px;right:0">
