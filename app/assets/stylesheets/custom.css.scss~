@@ -45,6 +45,7 @@ h2 {
   font-size: 1.7em;
   letter-spacing: -1px;
   margin-bottom: 10px;
+  margin-top: 20px;
   text-align: left;
   font-weight: normal;
   color: #999;
@@ -53,4 +54,17 @@ h2 {
 p {
   font-size: 1.1em;
   line-height: 1.7em;
+}
+
+table.info {
+	text-align:center;
+	tr {
+		td {
+			border:1px solid #000;
+			padding:10px;
+			&.number {
+				text-align:right;
+			}
+		}
+	}
 }

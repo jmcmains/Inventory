@@ -1,6 +1,4 @@
-<h1>All Products</h1>
-
-<table>
+<table class="info">
 <tr>
 	<td>
 		Modify
@@ -14,8 +12,11 @@
 	<td>
 		Quantity per Box
 	</td>
+	<td>
+		Need
+	</td>
 </tr>
-	<%= render Product.all %>
+	<%= render @products %>
 </table>
 
 

@@ -34,7 +34,7 @@ class ProductsController < ApplicationController
 	
 	def index
 		@title = "All Products"
-    @products = Product.all
+    @products = Product.first(9)
 	end
 	
 	def destroy

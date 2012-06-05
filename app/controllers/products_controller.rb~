@@ -18,7 +18,7 @@ class ProductsController < ApplicationController
 	
 	def edit
 		@title = "Edit Product"
-		@product = Product.find(params[:product])
+		@product = Product.find(params[:id])
 	end
 	
 	def update
@@ -34,7 +34,7 @@ class ProductsController < ApplicationController
 	
 	def index
 		@title = "All Products"
-    @products = Product.all
+    @products = Product.first(16)
 	end
 	
 	def destroy
