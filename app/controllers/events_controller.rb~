@@ -29,7 +29,7 @@ class EventsController < ApplicationController
   end
   
   def inventory
-  	@events=Event.find_all_by_event_type("Inventory")
+  	@events=Event.find_all_by_event_type("Inventory").sort_by { |i| i.date }
   	@title= @events.first.event_type
   	render :index
   end
