@@ -69,6 +69,10 @@ class EventsController < ApplicationController
   def update
   	@event = Event.find(params[:id])
     @event.update_attributes(params[:event])
-    redirect_to root_path
+    if @event.event_type == "Inventory"
+  	  redirect_to inventory_events_path
+  	else
+  	  redirect_to po_events_path
+  	end
   end
 end
