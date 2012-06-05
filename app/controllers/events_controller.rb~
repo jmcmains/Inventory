@@ -53,7 +53,11 @@ class EventsController < ApplicationController
   def create
   	@event = Event.new(params[:event])
     @event.save
-    redirect_to inventory_events_path
+		if @event.event_type == "Inventory"
+  	  redirect_to inventory_events_path
+  	else
+  	  redirect_to po_events_path
+  	end
   end
   
   def edit
