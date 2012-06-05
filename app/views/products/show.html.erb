@@ -46,7 +46,7 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 <% end %>
 <% n=0 %>
 <% d2.each do |a| %>
-	<% d2[n] %><% y[n] %>
+	<%= d2[n] %> - <%= y[n] %> <br>
 	<% n=n+1 %>
 <% end %>
 <br/>

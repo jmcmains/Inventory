@@ -46,7 +46,7 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 <% end %>
 <% n=0 %>
 <% d2.each do |a| %>
-	<% d2[n] %><% y[n] %>
+	<%= d2[n] %> - <% y[n] %> <br>
 	<% n=n+1 %>
 <% end %>
 <br/>
@@ -102,7 +102,7 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
     });
   });
 </script>
-<%= d2.last %>
+Orders current until the week of: <%= d2.last %>
 <h2>Amount Needed to Order: </h2>
 Assuming a 90 day lead time
 Need2: <%= pn=@product.need %>
