@@ -22,9 +22,9 @@ class ProductsController < ApplicationController
 	end
 	
 	def update
-		@product = Product.find(params[:product])
+		@product = Product.find(params[:id])
 		@product.update_attributes(params[:product])
-		redirect_to products_path
+		redirect_to @product
 	end
 	
 	def show

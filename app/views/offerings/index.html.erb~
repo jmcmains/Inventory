@@ -1,13 +1,27 @@
-<% for offer in Offering.all %>
-	<%= offer.name %> includes: <br>
-	<%= link_to 'Edit', edit_offering_path(offer) %> | <%= link_to "Delete", offer, :method => :delete, :confirm => "You sure?",
-                                :title => "Delete #{offer.name}" %><br/>
-  <ul>
-	<% for product in offer.products %>
-		<% if OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity > 0 %>
-			<li><%= pluralize(OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity.to_i, product.name) %></li>
+<table class="info">
+	<tr>
+		<td>Modify</td>
+		<td>Offering Name</td>
+		<td>Products Included</td>
+		<td>Sales - Amazon US</td>
+		<td>Sales - Amazon Canada</td>
+		<td>Sales - Website</td>
+	</tr>
+<% Offering.all.sort_by(&:name).each do |offer| %>
+	<tr>
+	<td><%= link_to 'Edit', edit_offering_path(offer) %> | <%= link_to "Delete", offer, :method => :delete, :confirm => "You sure?",
+                                :title => "Delete #{offer.name}" %></td>
+  <td><%= offer.name %></td>
+	<td>
+		<ul>
+		<% for product in offer.products %>
+			<% if OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity > 0 %>
+				<li><%= pluralize(OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity, product.name) %></li>
+			<% end %>
 		<% end %>
-	<% end %>
-	</ul>
-<br>
+		</ul>
+	</td>
+	<td><%= offer.orders.amzus.count %></td>
+	<td><%= offer.orders.amzca.count %></td>
+	<td><%= offer.orders.website.count %></td>
 <% end %>

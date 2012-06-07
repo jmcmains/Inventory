@@ -104,7 +104,7 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 </script>
 Orders current until the week of: <%= d2.last %>
 <h2>Amount Needed to Order: </h2>
-Assuming a 90 day lead time
+Assuming a 75 day lead time
 Need2: <%= pn=@product.need %>
 Boxes: <%= (pn/@product.per_box).ceil %>
 

@@ -22,9 +22,8 @@ class ProductsController < ApplicationController
 	end
 	
 	def update
-		@product = Product.find(params[:product])
+		@product = Product.find(params[:id])
 		@product.update_attributes(params[:product])
-		redirect_to products_path
 	end
 	
 	def show
@@ -34,7 +33,7 @@ class ProductsController < ApplicationController
 	
 	def index
 		@title = "All Products"
-    @products = Product.first(16)
+    @products = Product.first(9)
 	end
 	
 	def destroy

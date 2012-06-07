@@ -74,7 +74,7 @@ class Product < ActiveRecord::Base
 		lineFit.setData(x,y)
 		b, m = lineFit.coefficients
 		omi = y[-4..-1].sum
-		weeks = (1..10).map { |w| w+y.length }
+		weeks = (1..13).map { |w| w+y.length }
 		pu = weeks.map { |x| m*x+b }.sum
 		needed = -li - oco + pu + omi
 		return needed
