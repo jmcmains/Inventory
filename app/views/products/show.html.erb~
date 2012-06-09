@@ -54,26 +54,30 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 <% lineFit = LineFit.new %>
 <% lineFit.setData(x,y) %>
 <% b, m = lineFit.coefficients %>
-<% y.length %>
-<% startX = m+b %>
-<% endX = (y.length*m)+b %>
-<% preX = (y.length+15)*m+b %>
-<% prediction_x = (y.length..(y.length+15)).to_a %>
+<% startY = m+b %>
+<% leadTime = 75 %>
+<% leadTimeWeeks = (leadTime/7).ceil %>
+<% endY = (y.length*m)+b %>
+<% preY = (y.length+leadTimeWeeks)*m+b %>
+<% prediction_x = (y.length..(y.length+leadTimeWeeks)).to_a %>
 <% prediction_y = prediction_x.map { |x| x*m+b } %>
+<% sigma = lineFit.sigma %>
 <div id="orders_chart" style="width:560px; height:300px;"></div>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
      chart: { renderTo: 'orders_chart' },
 		  title: { text: 'Orders by week' },
-		  xAxis: { type: 'float', text: "Week Number" },
+		  xAxis: { 
+		  	type: 'float', text: "Week Number" },
 		  yAxis: {
+		  	min: 0,
 		    title: { text: 'Orders'}
 		  },
 		  series: [{
 				type: 'line',
 				name: 'Regression Line',
-				data: [[1,<%= startX %>], [<%= y.length %>,<%= endX %>]],
+				data: [[1,<%= startY %>], [<%= y.length %>,<%= endY %>]],
 				marker: {
 					enabled: false
 				},
@@ -85,6 +89,34 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 				enableMouseTracking: false
 			},{
 				type: 'line',
+				name: 'Plus Sigma',
+				data: [[1,<%= startY+sigma %>], [<%= y.length+leadTimeWeeks %>,<%= prediction_y.last+sigma %>]],
+				marker: {
+					enabled: false
+				},
+				states: {
+					hover: {
+						lineWidth: 0
+					}
+				},
+				enableMouseTracking: false,
+				dashStyle: 'Dash'
+			},{
+				type: 'line',
+				name: 'Minus Sigma',
+				data: [[1,<%= startY-sigma %>], [<%= y.length+leadTimeWeeks %>,<%= prediction_y.last-sigma %>]],
+				marker: {
+					enabled: false
+				},
+				states: {
+					hover: {
+						lineWidth: 0
+					}
+				},
+				enableMouseTracking: false,
+				dashStyle: 'Dash'
+			},{
+				type: 'line',
 				name: 'Prediction Line',
 				pointInterval: 1,
 				pointStart: <%= y.length %>,
@@ -92,7 +124,7 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 				marker: {
 					enabled: false
 				},
-				dashStyle: 'shortdot'
+				dashStyle: 'Dash'
 			},{
 				name: 'Weekly Sales',
 		  	pointInterval: 1,
@@ -104,8 +136,25 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 </script>
 Orders current until the week of: <%= d2.last %>
 <h2>Amount Needed to Order: </h2>
-Assuming a 90 day lead time
-Need2: <%= pn=@product.need %>
-Boxes: <%= (pn/@product.per_box).ceil %>
+Assuming a <%= leadTime %> day lead time<br>
+
+
+Current Inventory: <%= @product.get_Inventory %><br>
+
+Sum of Orders Currently in the Pipeline: <%= @product.get_orders %><br>
+
+Slope of the Demand Line: <%= m %><br>
+
+Intercept of the Demand Line: <%= b %><br>
+StDev of the Orders: <%= lineFit.sigma %><br>
+
+StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd %><br>
+
+
+Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss %><br>
+Predicted Demand: <%= (prediction_y.sum - prediction_y[0]) %><br>
+
+Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= (prediction_y.sum - prediction_y[1]).round %> - (<%= @product.get_Inventory.round %> + <%= @product.get_orders.round %>) = <%= need = (ss + prediction_y.sum - prediction_y[1] - (@product.get_Inventory+@product.get_orders)).round %> peices <br>
+Need in boxes = <%= (need/@product.per_box).ceil %>
 
 

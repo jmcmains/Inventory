@@ -64,19 +64,21 @@ class Product < ActiveRecord::Base
 		return oco
 	end
 	
-	def need
-		li = self.get_Inventory
-		oco = self.get_orders
+	def need(leadTime)
+		currentInventory = self.get_Inventory
+		pipeLine = self.get_orders
 		# Customer Orders
 		y=self.get_trend
 		x =(1..y.length).to_a
 		lineFit = LineFit.new
 		lineFit.setData(x,y)
 		b, m = lineFit.coefficients
-		omi = y[-4..-1].sum
-		weeks = (1..13).map { |w| w+y.length }
-		pu = weeks.map { |x| m*x+b }.sum
-		needed = -li - oco + pu + omi
+		sigma = lineFit.sigma
+		leadTimeWeeks = (leadTime/7).ceil
+		averageNetInventory = 2*sigma*Math.sqrt(leadTimeWeeks)
+		weeks = (1..leadTimeWeeks).map { |w| w+y.length }
+		predictedDemand = weeks.map { |x| m*x+b }.sum
+		needed = averageNetInventory+predictedDemand - (currentInventory + pipeLine)
 		return needed
 	end
 

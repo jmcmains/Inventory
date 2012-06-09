@@ -14,10 +14,13 @@
 		Quantity per Box
 	</td>
 	<td>
-		Need
+		Need (lead Time: <%= leadTime=75 %> days)
+	</td>
+	<td>
+		Need (boxes)
 	</td>
 </tr>
-	<%= render @products %>
+	<%= render @products, leadTime: leadTime %>
 </table>
 </center>
 
