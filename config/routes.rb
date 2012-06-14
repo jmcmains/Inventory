@@ -1,5 +1,5 @@
 Inventory::Application.routes.draw do
-	root to: 'events#new_inventory'
+	root to: 'static_pages#home'
 	resources :products
 	resources :product_counts
 	resources :events do

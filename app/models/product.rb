@@ -76,8 +76,9 @@ class Product < ActiveRecord::Base
 		sigma = lineFit.sigma
 		leadTimeWeeks = (leadTime/7).ceil
 		averageNetInventory = 2*sigma*Math.sqrt(leadTimeWeeks)
-		weeks = (1..leadTimeWeeks).map { |w| w+y.length }
-		predictedDemand = weeks.map { |x| m*x+b }.sum
+		weeks = (0..leadTimeWeeks).map { |w| w+y.length }
+		predictedDemand = weeks.map { |x1| m*x1+b }
+		predictedDemand= predictedDemand - predictedDemand[0]
 		needed = averageNetInventory+predictedDemand - (currentInventory + pipeLine)
 		return needed
 	end

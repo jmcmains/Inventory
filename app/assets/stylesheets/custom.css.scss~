@@ -57,7 +57,6 @@ p {
 }
 
 table.info {
-	text-align:center;
 	tr {
 		td {
 			border:1px solid #000;
@@ -66,5 +65,14 @@ table.info {
 				text-align:right;
 			}
 		}
+	}
+}
+
+ul.home {
+	text-align:center;
+	li.top {
+		list-style:none;		
+		margin: 10px;
+		text-size:40em;
 	}
 }

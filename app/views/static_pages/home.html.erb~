@@ -1,23 +1,13 @@
-<h1> RubberBanditz Inventory Launching Page </h1>
-<h2>What would you like to do?</h2>
-<ul>
-<li><%= link_to "Do an inventory count", new_inventory_events_path %></li>
-<li><%= link_to "See previous inventory counts", inventory_events_path %></li>
-
-<li><%= link_to "Place an order from suppliers", new_po_events_path %></li>
-<li><%= link_to "See orders currently out", po_events_path %></li>
-<li>Recieve a shipment</li>
-<% ev=Event.find_all_by_event_type("Product Order") %>
-<ul>
-<% ev.sort_by { |e| e.date }.each do |event| %>
-	<li> <%= link_to "#{event.invoice} - #{event.date}", edit_event_path(event) %></li>
-<% end %>
-</ul>
-<li>View Product Line</li>
-<ul>
-<% Product.all.each do |p| %>
-	<li> <%= link_to p.name, product_path(p) %></li>
-<% end %>
-</ul>
+<center>
+<ul class="home">
+<li class="top">
+<%= link_to "Count Inventory", new_inventory_events_path, class: "btn btn-large btn-primary" %></li>
+<li id="fat-menu" class="dropdown top"><a href="#" class="dropdown-toggle btn btn-large btn-primary" data-toggle="dropdown">Receive Shipment <b class="caret"></b></a>
+		<ul class="dropdown-menu">
+		<% Event.product_order.each do |po| %>
+			<li><%= link_to po.invoice, edit_event_path(po) %></li>
+		<% end %>
+		</ul>
+	</li>
 </ul>
 
