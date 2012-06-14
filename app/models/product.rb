@@ -78,8 +78,8 @@ class Product < ActiveRecord::Base
 		averageNetInventory = 2*sigma*Math.sqrt(leadTimeWeeks)
 		weeks = (0..leadTimeWeeks).map { |w| w+y.length }
 		predictedDemand = weeks.map { |x1| m*x1+b }
-		predictedDemand= predictedDemand - predictedDemand[0]
-		needed = averageNetInventory+predictedDemand - (currentInventory + pipeLine)
+		predictedDemand2= predictedDemand.sum - predictedDemand[0]
+		needed = averageNetInventory+predictedDemand2 - (currentInventory + pipeLine)
 		return needed
 	end
 

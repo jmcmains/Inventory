@@ -16,6 +16,9 @@
 	<td>
 		Need (lead Time: <%= leadTime=75 %> days)
 	</td>
+	<td>
+		Need (boxes)
+	</td>
 </tr>
 	<%= render @products, leadTime: leadTime %>
 </table>
