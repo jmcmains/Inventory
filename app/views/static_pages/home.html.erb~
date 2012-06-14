@@ -1,4 +1,3 @@
-<center>
 <ul class="home">
 <li class="top">
 <%= link_to "Count Inventory", new_inventory_events_path, class: "btn btn-large btn-primary" %></li>

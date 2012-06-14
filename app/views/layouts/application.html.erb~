@@ -9,7 +9,6 @@
 <body>
 <div class="container">
 <h1><%= @title %></h1>
-<h2><%= @subtitle %></h2>
 <div style="float:left;background-color: #eee;padding:10px;width:200px">
 <ul>
 			<li><%= link_to "Do an inventory count", new_inventory_events_path %></li>
@@ -21,12 +20,6 @@
 			<li><%= link_to "See orders currently out", po_events_path %></li>
 		</ul>
 	</li>
-	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Customer Orders <b class="caret"></b></a>
-		<ul class="dropdown-menu">
-			<li><%= link_to "Add Web Orders via csv", new_order_path %></li>
-			<li><%= link_to "Add a Phone Order", new_phone_orders_path %></li>
-		</ul>
-	</li>
 	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Receive a shipment<b class="caret"></b></a>
 		<ul class="dropdown-menu">
 			<% ev=Event.find_all_by_event_type("Product Order") %>
@@ -35,6 +28,13 @@
 			<% end %>
 		</ul>
 	</li>
+	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Customer Orders <b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<li><%= link_to "Add Web Orders via csv", new_order_path %></li>
+			<li><%= link_to "Add a Phone Order", new_phone_orders_path %></li>
+		</ul>
+	</li>
+
 
 	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">View Product Line<b class="caret"></b></a>
 		<ul class="dropdown-menu">

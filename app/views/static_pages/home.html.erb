@@ -3,7 +3,7 @@
 <%= link_to "Count Inventory", new_inventory_events_path, class: "btn btn-large btn-primary" %></li>
 <li id="fat-menu" class="dropdown top"><a href="#" class="dropdown-toggle btn btn-large btn-primary" data-toggle="dropdown">Receive Shipment <b class="caret"></b></a>
 		<ul class="dropdown-menu">
-		<% Event.product_order.each do |po| %>
+		<% Event.unreceived.each do |po| %>
 			<li><%= link_to po.invoice, edit_event_path(po) %></li>
 		<% end %>
 		</ul>

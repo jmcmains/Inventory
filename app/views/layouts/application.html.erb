@@ -14,16 +14,10 @@
 			<li><%= link_to "Do an inventory count", new_inventory_events_path %></li>
 			<li><%= link_to "See previous inventory counts", inventory_events_path %></li>
 
-	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Supplier Orders<b class="caret"></b></a>
+	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Supplier Shipments<b class="caret"></b></a>
 		<ul class="dropdown-menu">
 			<li><%= link_to "Place an order from suppliers", new_po_events_path %></li>
-			<li><%= link_to "See orders currently out", po_events_path %></li>
-		</ul>
-	</li>
-	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Customer Orders <b class="caret"></b></a>
-		<ul class="dropdown-menu">
-			<li><%= link_to "Add Web Orders via csv", new_order_path %></li>
-			<li><%= link_to "Add a Phone Order", new_phone_orders_path %></li>
+			<li><%= link_to "See shipments in transit", po_events_path %></li>
 		</ul>
 	</li>
 	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Receive a shipment<b class="caret"></b></a>
@@ -34,6 +28,13 @@
 			<% end %>
 		</ul>
 	</li>
+	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Customer Orders <b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<li><%= link_to "Add Web Orders via csv", new_order_path %></li>
+			<li><%= link_to "Add a Phone Order", new_phone_orders_path %></li>
+		</ul>
+	</li>
+
 
 	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">View Product Line<b class="caret"></b></a>
 		<ul class="dropdown-menu">
