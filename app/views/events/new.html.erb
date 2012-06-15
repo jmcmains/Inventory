@@ -7,6 +7,7 @@
 		<%= f.text_field :invoice %>
 		<strong><%= f.label :supplier %></strong>
 		<%= f.text_field :supplier %><br />
+		<%= f.hidden_field :received, value: false %>
 	<% end %>
 	</p>
 	<% n=1 %>

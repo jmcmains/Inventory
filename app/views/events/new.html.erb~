@@ -7,25 +7,30 @@
 		<%= f.text_field :invoice %>
 		<strong><%= f.label :supplier %></strong>
 		<%= f.text_field :supplier %><br />
+		<%= f.hidden_field :received, "false" %>
 	<% end %>
 	</p>
+	<% n=1 %>
 	<h2>Products</h2>
-	<%= hidden_field_tag "event[product_ids][]", nil %>
-	<% Product.all.each do |product| %>
-		<div style="width:300px;height:300px;float:left;margin:10px;border:1px solid #000;text-align:center;valign:middle;border-radius: 10px;">
+	<%= f.fields_for :product_counts do |pc| %>  
+		<div style="width:300px;height:300px;float:left;margin:10px;border:1px solid #000;text-align:center;valign:middle; border-radius: 10px;">
+		<% product = Product.all.first(n).last %>
 		<strong><%= product.name %></strong><br>
-		<% if !product.description.blank? %>
+			<% if !product.description.blank? %>
 			<%= product.description %> - 
-		<% end %>
-		<%= product.per_box %> pc/box <br>
-		Product Count:
-		<%= hidden_field_tag "event[product_counts][product_id][]", product.id %>
-		<%= text_field_tag "event[product_counts][count][]" %><br>
-		<% if !product.imloc.blank? %>
-			<br><%= image_tag product.imloc, style: "height:150px;max-height:100 px" %>
-		<% end %>
-		</div>
-	<% end %>
+			<% end %>
+			<%= product.per_box %> pc/box <br>
+						Product Count:
+			<%= pc.hidden_field :product_id, value: product.id %>
+			<%= pc.text_field :count, value: "0" %><br>
+			<%= pc.radio_button :is_box, "true", checked: true %> boxes
+			<%= pc.radio_button :is_box, "false" %> pieces 
+			<% if !product.imloc.blank? %>
+				<br><%= image_tag product.imloc, style: "height:150px;max-height:100 px" %>
+			<% end %>
+		</div> 
+		<% n = n+1 %>
+	<% end %> 
 	<center><div style="width:500px"><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;text-align:center" %></div></center>
 <% end %>
 
