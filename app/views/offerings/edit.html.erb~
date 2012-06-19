@@ -1,6 +1,6 @@
 <%= form_for @offering do |f| %>
 	<div class="field">
-		<%= f.label :name %><br />
+		<%= f.label :name %>
 		<%= f.text_field :name %>
 	</div>
 	<% n=1 %>

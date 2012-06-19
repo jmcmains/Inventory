@@ -15,8 +15,10 @@
 	<td>
 		<ul>
 		<% for product in offer.products %>
-			<% if OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity > 0 %>
-				<li><%= pluralize(OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity, product.name) %></li>
+			<% if OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity %>
+				<% if OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity > 0 %>
+					<li><%= pluralize(OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity, product.name) %></li>
+				<% end %>
 			<% end %>
 		<% end %>
 		</ul>

@@ -12,7 +12,7 @@ class OfferingsController < ApplicationController
 	def update
 		@offering = Offering.find(params[:id])
     @offering.update_attributes(params[:offering])
-    redirect_to root_path
+    redirect_to offerings_path
 	end
   def index
     	@title = "Current Offerings and their products"
