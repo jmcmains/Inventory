@@ -55,7 +55,7 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 <% lineFit.setData(x,y) %>
 <% b, m = lineFit.coefficients %>
 <% startY = m+b %>
-<% leadTime = 75 %>
+<% leadTime = 120 %>
 <% leadTimeWeeks = (leadTime/7).ceil %>
 <% endY = (y.length*m)+b %>
 <% preY = (y.length+leadTimeWeeks)*m+b %>
@@ -136,7 +136,42 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 </script>
 Orders current until the week of: <%= d2.last %>
 <h2>Amount Needed to Order: </h2>
-Assuming a <%= leadTime %> day lead time<br>
+Assuming a <%= leadTime = 60 %> day lead time<br>
+<% leadTimeWeeks = (leadTime/7).ceil %>
+Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders %><%= pl. round %><br>
+Slope of the Demand Line: <%= m.round %><br>
+Intercept of the Demand Line: <%= b.round %><br>
+StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
+
+StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
+
+
+Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
+Predicted Demand: <% pd=(prediction_y.sum - prediction_y[0]) %><%= pd.round %><br>
+
+Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <%= need = (ss + pd - (ci+pl)).round %> peices <br>
+Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
+
+Assuming a <%= leadTime = 90 %> day lead time<br>
+<% leadTimeWeeks = (leadTime/7).ceil %>
+Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders %><%= pl. round %><br>
+Slope of the Demand Line: <%= m.round %><br>
+Intercept of the Demand Line: <%= b.round %><br>
+StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
+
+StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
+
+
+Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
+Predicted Demand: <% pd=(prediction_y.sum - prediction_y[0]) %><%= pd.round %><br>
+
+Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <%= need = (ss + pd - (ci+pl)).round %> peices <br>
+Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
+
+Assuming a <%= leadTime = 120 %> day lead time<br>
+<% leadTimeWeeks = (leadTime/7).ceil %>
 Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
 Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders %><%= pl. round %><br>
 Slope of the Demand Line: <%= m.round %><br>

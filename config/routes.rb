@@ -13,7 +13,9 @@ Inventory::Application.routes.draw do
 	resources :orders do
 		collection do
 			get :new_phone
+			get :create_phone
 		end
+
 	end
 	resources :offerings
 end

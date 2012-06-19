@@ -1,0 +1,9 @@
+<div class="fields">
+<%= label_tag "Offering" %>
+<%= select_tag "orders[offering_ids][]", options_from_collection_for_select(Offering.all, :id, :name) %>
+<%= label_tag "Quantity" %>
+<%= text_field_tag "orders[quantity][]" %>
+<%= label_tag "Cost" %>
+<%= text_field_tag "orders[cost][]" %>
+<%= link_to_remove_fields "remove", f %>
+</div>

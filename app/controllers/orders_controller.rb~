@@ -1,12 +1,10 @@
 class OrdersController < ApplicationController
   def new
 		@title ="Upload Order Files"
-
   end
   
 require 'csv'
   def create
-  
   	if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Website"
 			infile = params[:order][:file].read
 			order2=[]
@@ -37,9 +35,12 @@ require 'csv'
   end
 	
 	def new_phone
-		@order = Order.new
+
 	end
  
+ 	def create_phone
+ 	
+ 	end
 	def index
 		@orders = Order.find(:all, :order => 'date, id')
 		@order_months = @orders.group_by { |t| t.date.beginning_of_month }

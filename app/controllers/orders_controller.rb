@@ -1,7 +1,6 @@
 class OrdersController < ApplicationController
   def new
 		@title ="Upload Order Files"
-
   end
   
 require 'csv'
@@ -36,9 +35,12 @@ require 'csv'
   end
 	
 	def new_phone
-		@order = Order.new
+		@order=Order.new
 	end
  
+ 	def create_phone
+ 	
+ 	end
 	def index
 		@orders = Order.find(:all, :order => 'date, id')
 		@order_months = @orders.group_by { |t| t.date.beginning_of_month }
