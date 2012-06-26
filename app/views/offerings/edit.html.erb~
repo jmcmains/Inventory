@@ -1,13 +1,16 @@
 <%= form_for @offering do |f| %>
 	<div class="field">
 		<%= f.label :name %>
-		<%= f.text_field :name %>
+		<%= f.text_area :name, size: "100x3" %>
 	</div>
 	<% n=1 %>
 <h2>Products</h2>
 	<%= f.fields_for :offering_products do |pc| %>  
 		<div style="width:300px;height:300px;float:left;margin:10px;border:1px solid #000;text-align:center;valign:middle;border-radius: 10px;">
 		<% product = @offering.offering_products.first(n).last.product %>
+		<% if product.nil? %>
+			<% product = Product.first(n).last %>
+		<% end %>
 		<strong><%= product.name %></strong><br>
 			<% if !product.description.blank? %>
 				<%= product.description %> - 

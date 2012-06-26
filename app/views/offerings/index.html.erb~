@@ -1,13 +1,33 @@
+Search
+<%= form_tag offerings_path, method: :get do %>
+	<p>
+  	<%= text_field_tag :search, params[:search], placeholder: "Search Offerings", class: "search" %>
+  	<%= submit_tag :submit %>
+   </p>
+<% end %>
+
 <table class="info">
 	<tr>
 		<td>Modify</td>
 		<td>Offering Name</td>
-		<td>Products Included</td>
-		<td>Sales - Amazon US</td>
-		<td>Sales - Amazon Canada</td>
-		<td>Sales - Website</td>
+		<td>Products Included
+		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "pc_ASC", style: "display:inline"  %><%= submit_tag "v", style: "display:inline" %><% end %>
+		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "pc_DESC", style: "display:inline"  %><%= submit_tag "^", style: "display:inline" %><% end %>
+		</td>
+		<td>Sales - Amazon US
+		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "US_ASC", style: "display:inline"  %><%= submit_tag "v", style: "display:inline" %><% end %>
+		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "US_DESC", style: "display:inline"  %><%= submit_tag "^", style: "display:inline" %><% end %>
+</td>
+		<td>Sales - Amazon Canada
+		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "CA_ASC" %><%= submit_tag "v", style: "display:inline" %><% end %>
+		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "CA_DESC" %><%= submit_tag "^", style: "display:inline" %><% end %>
+		</td>
+		<td>Sales - Website
+		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "WS_ASC" %><%= submit_tag "v", style: "display:inline" %><% end %>
+		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "WS_DESC" %><%= submit_tag "^", style: "display:inline" %><% end %>
+		</td>
 	</tr>
-<% Offering.all.each do |offer| %>
+<% @offerings.each do |offer| %>
 	<tr>
 	<td><%= link_to 'Edit', edit_offering_path(offer) %> | <%= link_to "Delete", offer, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{offer.name}" %></td>
@@ -15,7 +35,7 @@
 	<td>
 		<ul>
 		<% for product in offer.products %>
-			<% if OfferingProduct.find_by_product_id_and_offering_id(product,offer) %>
+			<% if OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity %>
 				<% if OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity > 0 %>
 					<li><%= pluralize(OfferingProduct.find_by_product_id_and_offering_id(product,offer).quantity, product.name) %></li>
 				<% end %>

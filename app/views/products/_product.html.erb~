@@ -13,14 +13,18 @@
 		<%= product.per_box %>
 	</td>
 	<td class="number">
-		<%= product.need(leadTime).round %>
+		<%= product.get_Inventory %>
 	</td>
 	<td class="number">
-	<% need=(product.need(leadTime)/product.per_box).ceil %>
-	<% if need > 0 %>
-		<%= (product.need(leadTime)/product.per_box).ceil %>
-	<% else %>
-		0
-	<% end %>
+		<%= product.get_orders %>
+	</td>
+	<td class="number">
+		<%= product.need(60).round %>
+	</td>
+	<td class="number">
+		<%= product.need(90).round %>
+	</td>
+	<td class="number">
+		<%= product.need(120).round %>
 	</td>
 </tr>

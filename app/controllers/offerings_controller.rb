@@ -15,6 +15,20 @@ class OfferingsController < ApplicationController
     redirect_to offerings_path
 	end
   def index
-    	@title = "Current Offerings and their products"
+    @title = "Current Offerings and their products"
+  	@offerings = Offering.search(params[:search])
+  	if params[:sort_by] == "US_ASC"
+  		@offerings=@offerings.sort_by {|o| o.orders.amzus.count }
+  	elsif params[:sort_by] == "US_DESC"
+  	  @offerings=@offerings.sort_by {|o| o.orders.amzus.count }.reverse
+  	elsif params[:sort_by] == "CA_ASC"
+  	  @offerings=@offerings.sort_by {|o| o.orders.amzca.count }
+  	elsif params[:sort_by] == "CA_DESC"
+  	  @offerings=@offerings.sort_by {|o| o.orders.amzca.count }.reverse
+  	elsif params[:sort_by] == "WS_ASC"
+  		@offerings=@offerings.sort_by {|o| o.orders.website.count }
+  	elsif params[:sort_by] == "WS_DESC"
+  		@offerings=@offerings.sort_by {|o| o.orders.website.count }.reverse
+  	end
   end
 end
