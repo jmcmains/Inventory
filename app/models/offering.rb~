@@ -7,7 +7,7 @@ class Offering < ActiveRecord::Base
   
   def self.search(search)
   	if search
-  		all(conditions: ['offerings.name LIKE ?',"%#{search}%"])
+  		all(conditions: ['lower(name) LIKE ?',"%#{search.downcase}%"])
   	else
   		return find(:all)
   	end

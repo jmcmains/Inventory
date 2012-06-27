@@ -1,8 +1,8 @@
 Search
-<%= form_tag offerings_path, method: :get do %>
+<%= form_tag offerings_path, method: :get, class: "form-search" do %>
 	<p>
   	<%= text_field_tag :search, params[:search], placeholder: "Search Offerings", class: "search" %>
-  	<%= submit_tag :submit %>
+  	<%= submit_tag :submit, class: "btn" %>
    </p>
 <% end %>
 
@@ -12,17 +12,17 @@ Search
 		<td>Offering Name</td>
 		<td>Products Included
 		</td>
-		<td>Sales - Amazon US
-		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "US_ASC", style: "display:inline"  %><%= submit_tag "v", style: "display:inline" %><% end %>
-		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "US_DESC", style: "display:inline"  %><%= submit_tag "^", style: "display:inline" %><% end %>
+		<td>Sales - Amazon US<br>
+		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "US_ASC", style: "display:inline"  %><%= submit_tag "v", class: "btn", style: "display:inline" %><% end %>
+		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "US_DESC", style: "display:inline"  %><%= submit_tag "^", class: "btn", style: "display:inline" %><% end %>
 </td>
-		<td>Sales - Amazon Canada
-		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "CA_ASC" %><%= submit_tag "v", style: "display:inline" %><% end %>
-		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "CA_DESC" %><%= submit_tag "^", style: "display:inline" %><% end %>
+		<td>Sales - Amazon Canada<br>
+		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "CA_ASC", style: "display:inline"  %><%= submit_tag "v", class: "btn", style: "display:inline" %><% end %>
+		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "CA_DESC", style: "display:inline"  %><%= submit_tag "^", class: "btn", style: "display:inline" %><% end %>
 		</td>
-		<td>Sales - Website
-		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "WS_ASC" %><%= submit_tag "v", style: "display:inline" %><% end %>
-		<%= form_tag offerings_path, method: :get do %><%= hidden_field_tag :sort_by, "WS_DESC" %><%= submit_tag "^", style: "display:inline" %><% end %>
+		<td>Sales - Website<br>
+		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "WS_ASC", style: "display:inline"  %><%= submit_tag "v", class: "btn", style: "display:inline" %><% end %>
+		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "WS_DESC", style: "display:inline"  %><%= submit_tag "^", class: "btn", style: "display:inline" %><% end %>
 		</td>
 	</tr>
 <% @offerings.each do |offer| %>
