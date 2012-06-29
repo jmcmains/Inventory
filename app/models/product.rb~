@@ -12,8 +12,8 @@ class Product < ActiveRecord::Base
 		self.events.inventory
 	end
 	
-	def product_order
-		self.events.product_order
+	def product_orders
+		self.events.product_orders
 	end
 	def image
 		base = "http://rubberbanditz.com/wp-content/themes/rubberbanditzNew/proImg/"
@@ -36,14 +36,52 @@ class Product < ActiveRecord::Base
 	
 	def get_trend
 		sql = ActiveRecord::Base.connection()
+		data= {}
 		if Rails.env == "production"
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year, week ORDER BY year, week ")
-			y=d.map { |a| a["sum"].to_i }
+			data["y"]=d.map { |a| a["sum"].to_i }
+			data["dates"] = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) }
 		else
-			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year")
-			y=d.map { |a| a[0] }
+			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year") 
+			data["y"]=d.map { |a| a[0] }
+			data["dates"]=d.map{ |a| a[2].to_date.beginning_of_week }
 		end
-		return y
+		return data
+	end
+	
+	def forcast_demand
+		start=Date.today.beginning_of_week
+		inv=get_last_count("Inventory")
+		if inv.is_box
+			inventory = inv.count*self.per_box
+		else
+			inventory = inv.count
+		end
+		max_lead_time=130;
+		y=self.get_trend["y"]
+		dates=self.get_trend["dates"]
+		
+		x =(1..y.length).to_a
+		lineFit = LineFit.new
+		lineFit.setData(x,y)
+		b, m = lineFit.coefficients
+		levels=[inventory]
+		curdate = Date.today.beginning_of_week + 7
+		while curdate < start+max_lead_time
+			levels << levels.last
+			levels[-1] -= m
+			product_orders.each do |po|
+				if po.expected_date.beginning_of_week == curdate
+					if po.product_counts.find_by_product_id(self).is_box
+						levels[-1] += po.product_counts.find_by_product_id(self).count*self.per_box
+					else
+						levels[-1] += po.product_counts.find_by_product_id(self).count
+					end
+				end
+			end
+			curdate += 7
+		end
+		return levels
 	end
 	
 	def get_Inventory
@@ -75,7 +113,7 @@ class Product < ActiveRecord::Base
 		currentInventory = self.get_Inventory
 		pipeLine = self.get_orders
 		# Customer Orders
-		y=self.get_trend
+		y=self.get_trend[y]
 		x =(1..y.length).to_a
 		lineFit = LineFit.new
 		lineFit.setData(x,y)

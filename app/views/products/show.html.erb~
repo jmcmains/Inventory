@@ -5,15 +5,8 @@
 <p><%= @product.per_box %> bands/box</p>
 <% sql = ActiveRecord::Base.connection() %>
 
-<% if Rails.env == "production" %>
-	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) GROUP BY year, week ORDER BY year, week ") %>
-	<% y = d.map { |a| a["sum"].to_i } %>
-	<% d2 = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) } %>
-<% else %>
-	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) GROUP BY year") %>
-	<% y = d.map{ |a| a[0]} %>
-	<% d2 = d.map{ |a| a[2].to_date.beginning_of_week } %>
-<% end %>
+<% y = @product.get_trend["y"] %>
+<% d2 = @product.get_trend["dates"] %>
 
 <h2>Latest Inventory:</h2>
 Done on: <%= @product.inventory.last.date %> <br>
@@ -40,7 +33,7 @@ Done on: <%= @product.inventory.last.date %> <br>
 	<% end %>
 <br><br>
 <% end %>
-<%= oco %>
+<%= oco %><br>
 
 <% n=0 %>
 <% d2.each do |a| %>
@@ -153,7 +146,7 @@ Done on: <%= @product.inventory.last.date %> <br>
   $(function () {
     new Highcharts.Chart({
      	chart: { renderTo: 'orders_chart1' },
-		  title: { text: 'Inventory and Orders' },
+		  title: { text: 'Inventory and Supplier Orders' },
 		  xAxis: { 
 		  	type: 'datetime',
 				maxZoom: 14 * 24 * 3600000,
@@ -194,6 +187,11 @@ Done on: <%= @product.inventory.last.date %> <br>
     });
   });
 </script>
+
+inventory = 
+
+
+
 Orders current until the week of: <%= d2.last %>
 
 <h2>Amount Needed to Order: </h2>

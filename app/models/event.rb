@@ -5,4 +5,5 @@ class Event < ActiveRecord::Base
   scope :inventory, where(event_type: "Inventory")
   scope :unreceived, where(event_type: "Product Order", received: false)
   scope :product_orders, where(event_type: "Product Order")
+
 end
