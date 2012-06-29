@@ -153,7 +153,6 @@ Done on: <%= @product.inventory.last.date %> <br>
 		  	text: "Week Number",
 		  },
 		  yAxis: {
-		  	min: 0,
 		    title: { text: 'Orders'}
 		  },
 		  series: [{
@@ -161,35 +160,31 @@ Done on: <%= @product.inventory.last.date %> <br>
 				type: 'column',
 				data: [
 					<% @product.product_orders.each do |po| %>
-					 [Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),
 					 <% if po.product_counts.find_by_product_id(@product).is_box %>
-					  <%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]
+					  [Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if po != @product.product_orders.last %>
 					 <% else %>
-					  <%= po.product_counts.find_by_product_id(@product).count %>]
+					  [Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]<%= "," if po != @product.product_orders.last %>
 					 <% end %>
-					 <%= "," if po != @product.product_orders.last %>
 					<% end %>
 				]
 		  },{
 				name: 'Inventory',
 				data: [
 					<% @product.inventory.each do |inv| %>
-					 [Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),
 					 <% if inv.product_counts.find_by_product_id(@product).is_box %>
-					  <%= inv.product_counts.find_by_product_id(@product).count*@product.per_box %>]
+					  [Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if inv != @product.inventory.last %>
 					 <% else %>
-					  <%= inv.product_counts.find_by_product_id(@product).count %>]
+					  [Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count %>]<%= "," if inv != @product.inventory.last %>
 					 <% end %>
-					 <%= "," if inv != @product.product_orders.last %>
 					<% end %>
 				]
 		  },{
-				type: 'line',
-				name: 'Prediction Line',
-				pointInterval: 7* 24 * 3600 * 1000,
-			pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day %>),
-				data: <%= @product.forcast_demand %>,
-				marker: {
+		  	type: 'line',
+		  	name: 'Prediction Line',
+		  	pointInterval: 7 * 24 * 3600 * 1000,
+		  	pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day %>),
+		  	data: <%= @product.forcast_demand %>,
+		  	marker: {
 					enabled: false
 				},
 				dashStyle: 'Dash'
