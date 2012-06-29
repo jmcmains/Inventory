@@ -8,6 +8,13 @@ class Product < ActiveRecord::Base
 		self.events.find_all_by_event_type(event_name).last
 	end
 	
+	def inventory
+		self.events.inventory
+	end
+	
+	def product_order
+		self.events.product_order
+	end
 	def image
 		base = "http://rubberbanditz.com/wp-content/themes/rubberbanditzNew/proImg/"
 
@@ -74,7 +81,7 @@ class Product < ActiveRecord::Base
 		lineFit.setData(x,y)
 		b, m = lineFit.coefficients
 		sigma = lineFit.sigma
-		leadTimeWeeks = (leadTime/7).ceil
+		leadTimeWeeks = (leadTime/7.0).ceil
 		averageNetInventory = 2*sigma*Math.sqrt(leadTimeWeeks)
 		weeks = (0..leadTimeWeeks).map { |w| w+y.length }
 		predictedDemand = weeks.map { |x1| m*x1+b }

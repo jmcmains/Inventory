@@ -3,9 +3,20 @@
                                 :title => "Delete #{@product.name}" %><br/>
 <p><%= @product.description %></p>
 <p><%= @product.per_box %> bands/box</p>
+<% sql = ActiveRecord::Base.connection() %>
+
+<% if Rails.env == "production" %>
+	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) GROUP BY year, week ORDER BY year, week ") %>
+	<% y = d.map { |a| a["sum"].to_i } %>
+	<% d2 = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) } %>
+<% else %>
+	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) GROUP BY year") %>
+	<% y = d.map{ |a| a[0]} %>
+	<% d2 = d.map{ |a| a[2].to_date.beginning_of_week } %>
+<% end %>
 
 <h2>Latest Inventory:</h2>
-Done on: <%= @product.get_last("Inventory").date %> <br>
+Done on: <%= @product.inventory.last.date %> <br>
 <% glc=@product.get_last_count("Inventory") %>
 <%= glc.count %>
 <% if glc.is_box %>
@@ -19,7 +30,7 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 <% @product.get_current_shipments.each do |co| %>
 	Order Made on: <%= co.date %> <br>
 	<% pc=co.product_counts.find_by_product_id(@product) %>
-	Quantity ordered: <%= pc.count %> 
+	Quantity ordered: <%= pc.count %>
 	<% if pc.is_box %>
 		boxes
 		<% oco = oco + (pc.count*@product.per_box) %>
@@ -31,19 +42,6 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 <% end %>
 <%= oco %>
 
-<h2> Weekly Customer Orders: </h2>
-
-
-<% sql = ActiveRecord::Base.connection() %>
-<% if Rails.env == "production" %>
-	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) GROUP BY year, week ORDER BY year, week ") %>
-	<% y = d.map { |a| a["sum"].to_i } %>
-	<% d2 = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) } %>
-<% else %>
-	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) GROUP BY year") %>
-	<% y = d.map{ |a| a[0]} %>
-	<% d2 = d.map{ |a| a[2].to_date.beginning_of_week } %>
-<% end %>
 <% n=0 %>
 <% d2.each do |a| %>
 	<%= d2[n] %> - <%= y[n] %> <br>
@@ -66,18 +64,32 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
-     chart: { renderTo: 'orders_chart' },
+     	chart: { renderTo: 'orders_chart' },
 		  title: { text: 'Orders by week' },
 		  xAxis: { 
-		  	type: 'float', text: "Week Number" },
+		  	type: 'datetime',
+				maxZoom: 14 * 24 * 3600000,
+		  	text: "Week Number",
+		  	min: Date.UTC(<%= d2.first.year %>,<%= d2.first.month-1 %>,<%= d2.first.day %>),
+		  	max: Date.UTC(<%= (d2.last+leadTime).year %>,<%= (d2.last+leadTime).month-1 %>,<%= (d2.last+leadTime).day %>),
+		  },
 		  yAxis: {
 		  	min: 0,
 		    title: { text: 'Orders'}
 		  },
 		  series: [{
+				name: 'Weekly Sales',
+		    data: [ <% (0..(d2.length-1)).each do |n| %>
+		    	[Date.UTC(<%= d2[n].year %>, <%= d2[n].month-1 %>, <%= d2[n].day %>), <%= y[n] %> ]<%= "," if n != (d2.length-1) %>
+		    <% end %>
+		    ]
+		  },{
 				type: 'line',
 				name: 'Regression Line',
-				data: [[1,<%= startY %>], [<%= y.length %>,<%= endY %>]],
+				data: [
+					[Date.UTC(<%= d2.first.year %>, <%= d2.first.month-1 %>, <%= d2.first.day %>),<%= startY %>],
+					[Date.UTC(<%= d2.last.year %>, <%= d2.last.month-1 %>, <%= d2.last.day %>),<%= endY %>]
+				],
 				marker: {
 					enabled: false
 				},
@@ -90,7 +102,10 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 			},{
 				type: 'line',
 				name: 'Plus Sigma',
-				data: [[1,<%= startY+sigma %>], [<%= y.length+leadTimeWeeks %>,<%= prediction_y.last+sigma %>]],
+				data: [
+					[Date.UTC(<%= d2.first.year %>, <%= d2.first.month-1 %>, <%= d2.first.day %>),<%= startY+sigma %>],
+					[Date.UTC(<%= (d2.last+leadTime).year %>, <%= (d2.last+leadTime).month-1 %>, <%= (d2.last+leadTime).day %>),<%= prediction_y.last+sigma %>]
+				],
 				marker: {
 					enabled: false
 				},
@@ -104,7 +119,10 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 			},{
 				type: 'line',
 				name: 'Minus Sigma',
-				data: [[1,<%= startY-sigma %>], [<%= y.length+leadTimeWeeks %>,<%= prediction_y.last-sigma %>]],
+				data: [
+					[Date.UTC(<%= d2.first.year %>, <%= d2.first.month-1 %>, <%= d2.first.day %>),<%= startY-sigma %>],
+					[Date.UTC(<%= (d2.last+leadTime).year %>, <%= (d2.last+leadTime).month-1 %>, <%= (d2.last+leadTime).day %>),<%= prediction_y.last-sigma %>]
+				],
 				marker: {
 					enabled: false
 				},
@@ -118,18 +136,60 @@ Done on: <%= @product.get_last("Inventory").date %> <br>
 			},{
 				type: 'line',
 				name: 'Prediction Line',
-				pointInterval: 1,
-				pointStart: <%= y.length %>,
-				data: <%= prediction_y %>,
+				data: [
+					[Date.UTC(<%= d2.last.year %>, <%= d2.last.month-1 %>, <%= d2.last.day %>),<%= prediction_y.first %>],
+					[Date.UTC(<%= (d2.last+leadTime).year %>, <%= (d2.last+leadTime).month-1 %>, <%= (d2.last+leadTime).day %>),<%= prediction_y.last %>]
+					],
 				marker: {
 					enabled: false
 				},
 				dashStyle: 'Dash'
-			},{
-				name: 'Weekly Sales',
-		  	pointInterval: 1,
-		  	pointStart: 1,
-		    data: <%= y %>
+			}]
+    });
+  });
+</script>
+<div id="orders_chart1" style="width:560px; height:300px;"></div>
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    new Highcharts.Chart({
+     	chart: { renderTo: 'orders_chart1' },
+		  title: { text: 'Inventory and Orders' },
+		  xAxis: { 
+		  	type: 'datetime',
+				maxZoom: 14 * 24 * 3600000,
+		  	text: "Week Number",
+		  },
+		  yAxis: {
+		  	min: 0,
+		    title: { text: 'Orders'}
+		  },
+		  series: [{
+				name: 'Product Orders',
+				type: 'column',
+				data: [
+					<% @product.product_orders.each do |po| %>
+					 [Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),
+					 <% if po.product_counts.find_by_product_id(@product).is_box %>
+					  <%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]
+					 <% else %>
+					  <%= po.product_counts.find_by_product_id(@product).count %>]
+					 <% end %>
+					 <%= "," if po != @product.product_orders.last %>
+					<% end %>
+				]
+		  },{
+				name: 'Inventory',
+				data: [
+					<% @product.inventory.each do |inv| %>
+					 [Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),
+					 <% if inv.product_counts.find_by_product_id(@product).is_box %>
+					  <%= inv.product_counts.find_by_product_id(@product).count*@product.per_box %>]
+					 <% else %>
+					  <%= inv.product_counts.find_by_product_id(@product).count %>]
+					 <% end %>
+					 <%= "," if inv != @product.product_orders.last %>
+					<% end %>
+				]
 		  }]
     });
   });
@@ -156,7 +216,7 @@ Predicted Demand:
 <%= pd.round %><br>
 
 Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %>peices <br>
-Need in boxes = <%= (need/@product.per_box).ceil %><br>><br>
+Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
 
 Assuming a <%= leadTime = 90 %> day lead time<br>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>

@@ -29,7 +29,7 @@ class EventsController < ApplicationController
   end
   
   def inventory
-  	@events=Event.find_all_by_event_type("Inventory").sort_by { |i| i.date }.reverse
+  	@events=Event.inventory.sort_by { |i| i.date }.reverse
   	@title= @events.first.event_type
   	render :index
   end
@@ -45,7 +45,7 @@ class EventsController < ApplicationController
   end
   
   def po
-  	@events=Event.find_all_by_event_type("Product Order")
+  	@events=Event.unreceived
   	@title= @events.first.event_type
   	render :index
   end

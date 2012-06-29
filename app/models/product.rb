@@ -8,6 +8,13 @@ class Product < ActiveRecord::Base
 		self.events.find_all_by_event_type(event_name).last
 	end
 	
+	def inventory
+		self.events.inventory
+	end
+	
+	def product_orders
+		self.events.product_orders
+	end
 	def image
 		base = "http://rubberbanditz.com/wp-content/themes/rubberbanditzNew/proImg/"
 

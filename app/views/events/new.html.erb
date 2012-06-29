@@ -3,10 +3,12 @@
 		<strong><%= f.label :date %></strong>
 		<%= f.date_select :date, order: [:month, :day, :year] %>
 	<% if @event.event_type == "Product Order" %>
-		<strong>Invoice # (PO#):</strong>
+		<strong><%= f.label :invoice, "Invoice # (PO#)" %></strong>
 		<%= f.text_field :invoice %>
 		<strong><%= f.label :supplier %></strong>
 		<%= f.text_field :supplier %><br />
+		<strong><%= f.label :expected_date %></strong>
+		<%= f.date_select :expected_date, order: [:month, :day, :year] %><br />
 		<%= f.hidden_field :received, value: false %>
 	<% end %>
 	</p>
