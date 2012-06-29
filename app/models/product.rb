@@ -57,7 +57,7 @@ class Product < ActiveRecord::Base
 		else
 			inventory = inv.count
 		end
-		max_lead_time=130;
+		max_lead_time=130.0;
 		y=self.get_trend["y"]
 		dates=self.get_trend["dates"]
 		x =(1..y.length).to_a
@@ -69,7 +69,7 @@ class Product < ActiveRecord::Base
 		while curdate < start+max_lead_time
 			levels << levels.last
 			levels[-1] -= m
-			product_orders.each do |po|
+			unreceived.each do |po|
 				if po.expected_date.beginning_of_week == curdate
 					if po.product_counts.find_by_product_id(self).is_box
 						levels[-1] += po.product_counts.find_by_product_id(self).count*self.per_box

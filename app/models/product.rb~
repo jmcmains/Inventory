@@ -57,10 +57,9 @@ class Product < ActiveRecord::Base
 		else
 			inventory = inv.count
 		end
-		max_lead_time=130;
+		max_lead_time=130.0;
 		y=self.get_trend["y"]
 		dates=self.get_trend["dates"]
-		
 		x =(1..y.length).to_a
 		lineFit = LineFit.new
 		lineFit.setData(x,y)
