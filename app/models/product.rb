@@ -66,9 +66,14 @@ class Product < ActiveRecord::Base
 		b, m = lineFit.coefficients
 		levels=[inventory]
 		curdate = Date.today.beginning_of_week + 7
+		if Date.today.beginning_of_week == dates.last
+			n = x.last+1
+		else
+			n = x.last+2
+		end
 		while curdate < start+max_lead_time
 			levels << levels.last
-			levels[-1] -= m
+			levels[-1] -= (m*n+b)
 			events.unreceived.each do |po|
 				if po.expected_date.beginning_of_week == curdate
 					if po.product_counts.find_by_product_id(self).is_box
@@ -79,6 +84,7 @@ class Product < ActiveRecord::Base
 				end
 			end
 			curdate += 7
+			n += 1
 		end
 		return levels
 	end
