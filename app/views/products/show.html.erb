@@ -183,17 +183,7 @@ Done on: <%= @product.inventory.last.date %> <br>
 					 <%= "," if inv != @product.product_orders.last %>
 					<% end %>
 				]
-		  },{
-				type: 'line',
-				name: 'Prediction Line',
-				pointInterval: 7* 24 * 3600 * 1000,
-			pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day %>),
-				data: <%= @product.forcast_demand %>,
-				marker: {
-					enabled: false
-				},
-				dashStyle: 'Dash'
-			}]
+		  }]
     });
   });
 </script>
