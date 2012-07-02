@@ -14,7 +14,10 @@ class OfferingsController < ApplicationController
 	def update
 		@offering = Offering.find(params[:id])
     @offering.update_attributes(params[:offering])
-    redirect_to offerings_path
+    respond_to do |format|
+			format.html { redirect_to offerings_path }
+			format.js
+		end
 	end
 	
 	def autocomplete
@@ -49,5 +52,6 @@ class OfferingsController < ApplicationController
   		@offerings=@offerings.sort_by {|o| o.orders.website.count }.reverse
   	end
   	@offerings=@offerings.paginate(:page => params[:page], :per_page => 10)
+  	
   end
 end

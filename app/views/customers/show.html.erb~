@@ -22,9 +22,9 @@
 	<tr>
 	<td><%= o.offering.name %></td>
 	<td><%= o.quantity %></td>
-	<td><%= o.offering.price.blank ? 0 | number_to_currency(o.offering.price) %></td>
-	<td><%= o.offering.price.blank ? 0 | number_to_currency(o.offering.price*o.quantity) %></td>
-	<% total_price += o.offering.price.blank ? 0 | o.offering.price*o.quantity %>
+	<td><%= o.offering.price.blank? ? 0 : number_to_currency(o.offering.price) %></td>
+	<td><%= o.offering.price.blank? ? 0 : number_to_currency(o.offering.price*o.quantity) %></td>
+	<% total_price += o.offering.price.blank? ? 0 : o.offering.price*o.quantity %>
 	</tr>
 <% end %>
 	<tr>
