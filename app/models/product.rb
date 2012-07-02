@@ -46,14 +46,9 @@ class Product < ActiveRecord::Base
 			data["y"]=d.map { |a| a[0] }
 			data["dates"]=d.map{ |a| a[2].to_date.beginning_of_week }
 		end
-		n=0;
-		while n < data["y"].length
-			if data["dates"][n] >= Date.today.beginning_of_week
-				data["dates"].delete_at(n)
-				data["y"].delete_at(n)
-			else
-				n += 1
-			end
+		if data["dates"].last == Date.today.beginning_of_week
+			data["dates"].pop
+			data["y"].pop	
 		end
 		return data
 	end
