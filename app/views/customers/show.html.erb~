@@ -1,15 +1,15 @@
-<p>Address<br>
+<p><strong>Address</strong><br>
 <%= raw @customer.address %>
 </p>
 <p><strong>E-mail</strong><br>
 <%= @customer.email %></p>
-<p>Total Cost<br>
+<p><strong>Total Cost</strong><br>
 <%= @customer.total_cost %></p>
-<p>Payment Method<br>
+<p><strong>Payment Method</strong><br>
 <%= @customer.payment_method %></p>
-<p>Transaction<br>
+<p><strong>Transaction</strong><br>
 <%= link_to @customer.transaction_number, "https://www.paypal.com/us/vst/id=#{@customer.transaction_number}" %></p>
-<p>Products Ordered<br>
+<p><strong>Products Ordered</strong><br>
 <table class="table table-condensed">
 <tr>
 	<td>Product</td>
@@ -22,9 +22,9 @@
 	<tr>
 	<td><%= o.offering.name %></td>
 	<td><%= o.quantity %></td>
-	<td><%= number_to_currency(o.offering.price) %></td>
-	<td><%= number_to_currency(o.offering.price*o.quantity) %></td>
-	<% total_price += o.offering.price*o.quantity %>
+	<td><%= o.offering.price.blank ? 0 | number_to_currency(o.offering.price) %></td>
+	<td><%= o.offering.price.blank ? 0 | number_to_currency(o.offering.price*o.quantity) %></td>
+	<% total_price += o.offering.price.blank ? 0 | o.offering.price*o.quantity %>
 	</tr>
 <% end %>
 	<tr>
