@@ -22,7 +22,7 @@
 	</li>
 	<li id="fat-menu" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Receive a shipment<b class="caret"></b></a>
 		<ul class="dropdown-menu">
-			<% ev=Event.find_all_by_event_type("Product Order") %>
+			<% ev=Event.find_all_by_event_type_and_received("Product Order",false) %>
 			<% ev.sort_by { |e| e.date }.each do |event| %>
 				<li> <%= link_to "#{event.invoice} - #{event.date}", edit_event_path(event) %></li>
 			<% end %>
@@ -41,7 +41,7 @@
 		<ul class="dropdown-menu">
 			<li><%= link_to "All Bands", products_path %></li>
 			<li class="divider"></li>
-			<% Product.all.each do |p| %>
+			<% Product.all.sort_by { |p| p.id }.each do |p| %>
 				<li><%= link_to p.name, product_path(p) %></li>
 			<% end %>
 		</ul>
