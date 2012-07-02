@@ -46,7 +46,7 @@ class Product < ActiveRecord::Base
 			data["y"]=d.map { |a| a[0] }
 			data["dates"]=d.map{ |a| a[2].to_date.beginning_of_week }
 		end
-		if data["dates"].last == Date.today.beginning_of_week
+		if data["dates"].last >= Date.today.beginning_of_week-1
 			data["dates"].pop
 			data["y"].pop	
 		end
@@ -122,7 +122,7 @@ class Product < ActiveRecord::Base
 		currentInventory = self.get_Inventory
 		pipeLine = self.get_orders
 		# Customer Orders
-		y=self.get_trend[y]
+		y=self.get_trend["y"]
 		x =(1..y.length).to_a
 		lineFit = LineFit.new
 		lineFit.setData(x,y)
