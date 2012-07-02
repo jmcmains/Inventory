@@ -148,6 +148,7 @@ Done on: <%= @product.inventory.last.date %> <br>
 		  title: { text: 'Inventory and Supplier Orders' },
 		  xAxis: { 
 		  	type: 'datetime',
+		  	min: Date.UTC(@product.product_orders.sort_by(&:date).first.date.year,@product.product_orders.sort_by(&:date).first.date.month,@product.product_orders.sort_by(&:date).first.date.day),
 				maxZoom: 14 * 24 * 3600000,
 		  	text: "Week Number",
 		  },
@@ -159,22 +160,26 @@ Done on: <%= @product.inventory.last.date %> <br>
 				type: 'column',
 				data: [
 					<% @product.product_orders.sort_by(&:date).each do |po| %>
-					 <% if po.product_counts.find_by_product_id(@product).is_box %>
-					  [Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if po != @product.product_orders.last %>
-					 <% else %>
-					  [Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]<%= "," if po != @product.product_orders.last %>
-					 <% end %>
+						<% if po.product_counts.find_by_product_id(@product).count > 0 %>
+							<% if po.product_counts.find_by_product_id(@product).is_box %>
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if po != @product.product_orders.last %>
+							<% else %>
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]<%= "," if po != @product.product_orders.last %>
+							<% end %>
+						<% end %>
 					<% end %>
 				]
 		  },{
 				name: 'Inventory',
 				data: [
 					<% @product.inventory.sort_by(&:date).each do |inv| %>
-					 <% if inv.product_counts.find_by_product_id(@product).is_box %>
-					  [Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if inv != @product.inventory.last %>
-					 <% else %>
-					  [Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count %>]<%= "," if inv != @product.inventory.last %>
-					 <% end %>
+						<% if inv.product_counts.find_by_product_id(@product).count > 0 %>
+							<% if inv.product_counts.find_by_product_id(@product).is_box %>
+							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if inv != @product.inventory.last %>
+							<% else %>
+							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count %>]<%= "," if inv != @product.inventory.last %>
+							<% end %>
+						<% end %>
 					<% end %>
 				]
 		  },{
