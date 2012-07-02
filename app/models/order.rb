@@ -1,6 +1,7 @@
 class Order < ActiveRecord::Base
   # attr_accessible :title, :body
   belongs_to :offering, :class_name => "Offering"
+  belongs_to :customer
   default_scope order: 'orders.date DESC'
   scope :amzus, where(origin: "Amazon US")
   scope :amzca, where(origin: "Amazon Canada")
@@ -57,5 +58,13 @@ class Order < ActiveRecord::Base
     offering.save
     order= Order.create(order_number: order_number, date: date,offering_id: offering.id,quantity: quantity, origin: type)
     return order
+  end
+  
+  def offering_name
+  	offering.try(:name)
+  end
+  
+  def offering_name=(name)
+  	self.offering = Offering.find_or_create_by_name(name) if name.present?
   end
 end

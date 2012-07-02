@@ -3,7 +3,6 @@
                                 :title => "Delete #{@product.name}" %><br/>
 <p><%= @product.description %></p>
 <p><%= @product.per_box %> bands/box</p>
-<% sql = ActiveRecord::Base.connection() %>
 
 <% y = @product.get_trend["y"] %>
 <% d2 = @product.get_trend["dates"] %>

@@ -1,0 +1,14 @@
+please send:
+
+<% @customer.orders.each do |o| %>
+<%= pluralize o.quantity, o.offering.name %>
+<% end %>
+
+to:
+
+<%= @customer.first_name %> <%= @customer.last_name %>
+<%= @customer.address %>
+<%= @customer.email %>
+
+Thanks,
+Jason

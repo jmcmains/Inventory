@@ -1,4 +1,5 @@
 class OfferingsController < ApplicationController
+  require 'will_paginate/array'
   def new
   end
 
@@ -9,11 +10,28 @@ class OfferingsController < ApplicationController
   			@offering_products = Array.new(Product.all.count) { @offering.offering_products.build }
   	end
   end
+  
 	def update
 		@offering = Offering.find(params[:id])
     @offering.update_attributes(params[:offering])
     redirect_to offerings_path
 	end
+	
+	def autocomplete
+		@offerings = Offering.search(params[:term])
+		render json: @offerings.map(&:name)
+	end
+	
+	def price
+		@offerings = Offering.search(params[:term])
+		render json: @offerings.map(&:price)
+	end
+	
+	def blank
+		@offerings=Offering.all(:include => :products, :conditions => "products.id IS NULL").paginate(:page => params[:page], :per_page => 10)
+		render :index
+	end
+	
   def index
     @title = "Current Offerings and their products"
   	@offerings = Offering.search(params[:search])
@@ -30,5 +48,6 @@ class OfferingsController < ApplicationController
   	elsif params[:sort_by] == "WS_DESC"
   		@offerings=@offerings.sort_by {|o| o.orders.website.count }.reverse
   	end
+  	@offerings=@offerings.paginate(:page => params[:page], :per_page => 10)
   end
 end

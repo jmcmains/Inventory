@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  first_name: MyString
+  last_name: MyString
+  address: MyString
+  email: MyString
+  total_cost: 1.5
+  payment_method: MyString
+  transaction_number: MyString
+
+two:
+  first_name: MyString
+  last_name: MyString
+  address: MyString
+  email: MyString
+  total_cost: 1.5
+  payment_method: MyString
+  transaction_number: MyString

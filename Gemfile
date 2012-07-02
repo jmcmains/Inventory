@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails'
 gem 'linefit'
 gem 'bootstrap-sass'
+gem 'will_paginate'
 group :development, :test do
   gem 'sqlite3'
 end

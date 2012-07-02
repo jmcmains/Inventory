@@ -45,7 +45,7 @@
 			<% end %>
 		</ul>
 	</li>
-	<li><%= link_to "All Product Offerings", offerings_path %></a>
+	<li><%= link_to "All Product Offerings", offerings_path %></li>
 </ul>
 </div>
 <div style="position:absolute;padding:10px;left:230px;right:0">

@@ -7,9 +7,14 @@ class Offering < ActiveRecord::Base
   
   def self.search(search)
   	if search
-  		all(conditions: ['lower(name) LIKE ?',"%#{search.downcase}%"])
+			words = search.to_s.strip.split
+		  words.inject(scoped) do |combined_scope, word|
+		    combined_scope.where('LOWER(name) LIKE ?',"%#{word.downcase}%"])
+		  end
   	else
   		return find(:all)
   	end
   end
+  
+
 end

@@ -1,28 +1,32 @@
-Search
 <%= form_tag offerings_path, method: :get, class: "form-search" do %>
 	<p>
   	<%= text_field_tag :search, params[:search], placeholder: "Search Offerings", class: "search" %>
   	<%= submit_tag :submit, class: "btn" %>
    </p>
 <% end %>
-
+<%= link_to "Display Offerings with no products", blank_offerings_path %>
+<div class="pagination">
+     <%= will_paginate @offerings, :container => false %>
+</div>
+<%= @offerings.total_entries %>
 <table class="info">
 	<tr>
 		<td>Modify</td>
-		<td>Offering Name</td>
-		<td>Products Included
+		<td style="width:300px">Offering Name</td>
+		<td>Price</td>
+		<td style="width:150px">Products Included
 		</td>
 		<td>Sales - Amazon US<br>
-		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "US_ASC", style: "display:inline"  %><%= submit_tag "v", class: "btn", style: "display:inline" %><% end %>
-		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "US_DESC", style: "display:inline"  %><%= submit_tag "^", class: "btn", style: "display:inline" %><% end %>
-</td>
+			<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "US_ASC"  %><%= submit_tag "^" %><% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "US_DESC"  %>	<%= submit_tag "v" %><% end %>
+		</td>
 		<td>Sales - Amazon Canada<br>
-		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "CA_ASC", style: "display:inline"  %><%= submit_tag "v", class: "btn", style: "display:inline" %><% end %>
-		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "CA_DESC", style: "display:inline"  %><%= submit_tag "^", class: "btn", style: "display:inline" %><% end %>
+		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "CA_ASC"  %><%= submit_tag "^" %><% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "CA_DESC"  %>	<%= submit_tag "v" %><% end %>
 		</td>
 		<td>Sales - Website<br>
-		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "WS_ASC", style: "display:inline"  %><%= submit_tag "v", class: "btn", style: "display:inline" %><% end %>
-		<%= form_tag offerings_path, method: :get, style: "display:inline", class: "form-inline" do %><%= hidden_field_tag :sort_by, "WS_DESC", style: "display:inline"  %><%= submit_tag "^", class: "btn", style: "display:inline" %><% end %>
+		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "WS_ASC"  %><%= submit_tag "^" %><% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "WS_DESC"  %>	<%= submit_tag "v" %><% end %>
 		</td>
 	</tr>
 <% @offerings.each do |offer| %>
@@ -30,6 +34,15 @@ Search
 	<td><%= link_to 'Edit', edit_offering_path(offer) %> | <%= link_to "Delete", offer, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{offer.name}" %></td>
   <td><%= offer.name %></td>
+  <td>
+  <% if offer.price.blank? %>
+		<%= form_for(offer, :class => "form-inline", :style => "display:inline") do |f| %>
+				<%= f.text_field :price, placeholder: "enter price", :class => "input-small", style: "display:inline" %>
+		<% end %>
+  <% else %>
+    <%= offer.price %>
+  <% end %>
+  </td>
 	<td>
 		<ul>
 		<% for product in offer.products %>
@@ -44,4 +57,7 @@ Search
 	<td><%= offer.orders.amzus.count %></td>
 	<td><%= offer.orders.amzca.count %></td>
 	<td><%= offer.orders.website.count %></td>
+	</tr>
 <% end %>
+</table>
+

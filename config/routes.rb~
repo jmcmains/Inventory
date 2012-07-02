@@ -1,4 +1,9 @@
 Inventory::Application.routes.draw do
+	resources :customers do
+		member do
+			get :send_email
+		end
+	end
 	root to: 'static_pages#home'
 	resources :products
 	resources :product_counts
@@ -15,9 +20,12 @@ Inventory::Application.routes.draw do
 			get :new_phone
 			get :create_phone
 		end
-		member do
-			get :create_phone
+
+	end
+	resources :offerings do
+	collection do
+			get :blank
+			get :autocomplete
 		end
 	end
-	resources :offerings
 end

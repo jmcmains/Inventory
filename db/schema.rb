@@ -11,7 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120629190937) do
+ActiveRecord::Schema.define(:version => 20120702012507) do
+
+  create_table "customers", :force => true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "address"
+    t.string   "email"
+    t.float    "total_cost"
+    t.string   "payment_method"
+    t.string   "transaction_number"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
 
   create_table "events", :force => true do |t|
     t.date     "date"
@@ -41,6 +53,7 @@ ActiveRecord::Schema.define(:version => 20120629190937) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.float    "price"
   end
 
   create_table "orders", :force => true do |t|
@@ -51,6 +64,7 @@ ActiveRecord::Schema.define(:version => 20120629190937) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.string   "origin"
+    t.integer  "customer_id"
   end
 
   create_table "product_counts", :force => true do |t|
@@ -73,6 +87,8 @@ ActiveRecord::Schema.define(:version => 20120629190937) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.string   "imloc"
+    t.float    "weight_lbs"
+    t.float    "weight_oz"
   end
 
 end

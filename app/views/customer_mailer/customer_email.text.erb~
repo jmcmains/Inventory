@@ -1,0 +1,34 @@
+THIS IS A COPY OF THE RECEIPT
+
+Thanks for your successful order with Rubberbanditz!
+
+As we continue to grow a grassroots fitness rubberlution, we hope to connect with you at www.Facebook.com/RubberBanditz to exchange workout ideas and to hear about your progress!
+
+Also check out our collection of RB videos at http://www.youtube.com/user/Rubberbanditz.
+
+*NOTE: For immediate changes to your order, forward this email along with your request to orders@rubberbanditz.com and/or call 888-878-2464.
+----------------------------------
+
+ORDER NUMBER: <%= @customer.transaction_number %>
+
+<% @customer.orders.each do |o| %>
+Item: <%= o.offering.name %>
+Quantity: <%= o.quantity %>
+
+<% end %>
+
+TOTAL: <%= @customer.total_cost %>
+
+
+SHIPPING INFORMATION
+
+<%= @customer.first_name %> <%= @customer.last_name %>
+<%= @customer.address %>
+
+Delivery via: USPS Priority Mail
+
+Email: <%= @customer.email %>
+
+VIEW RECEIPT ONLINE
+Click the link below to view your receipt online.
+https://www.paypal.com/us/vst/id=<%= @customer.transaction_number %>
