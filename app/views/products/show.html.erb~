@@ -148,7 +148,6 @@ Done on: <%= @product.inventory.last.date %> <br>
 		  title: { text: 'Inventory and Supplier Orders' },
 		  xAxis: { 
 		  	type: 'datetime',
-		  	min: Date.UTC(@product.product_orders.sort_by(&:date).first.date.year,@product.product_orders.sort_by(&:date).first.date.month,@product.product_orders.sort_by(&:date).first.date.day),
 				maxZoom: 14 * 24 * 3600000,
 		  	text: "Week Number",
 		  },
