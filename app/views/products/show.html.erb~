@@ -159,11 +159,10 @@ Done on: <%= @product.inventory.last.date %> <br>
 				type: 'column',
 				data: [
 					<% @product.product_orders.sort_by(&:date).each do |po| %>
-							<% if po.product_counts.find_by_product_id(@product).is_box %>
+						<% if po.product_counts.find_by_product_id(@product).is_box %>
 							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if po != @product.product_orders.last %>
-							<% else %>
+						<% else %>
 							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]<%= "," if po != @product.product_orders.last %>
-							<% end %>
 						<% end %>
 					<% end %>
 				]
