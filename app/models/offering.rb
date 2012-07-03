@@ -16,5 +16,8 @@ class Offering < ActiveRecord::Base
   	end
   end
   
-
+	def total_weight
+		products.each do |p|
+		end
+	end
 end

@@ -1,23 +1,43 @@
 <% @customers.each do |customer| %>
-<h2><%= customer.first_name %> <%= customer.last_name %></h2>
-<p>Address<br>
-<%= raw customer.address %>
-</p>
-<p>E-mail<br>
-<%= customer.email %></p>
-<p>Total Cost<br>
-<%= customer.total_cost %></p>
-<p>Payment Method<br>
-<%= customer.payment_method %></p>
-<p>Transaction<br>
-<%= link_to customer.transaction_number, "https://www.paypal.com/us/vst/id=#{customer.transaction_number}" %></p>
-<p>Products Ordered<br>
-<% customer.orders.each do |o| %>
-	<%= pluralize o.quantity, o.offering.name %><br>
-<% end %>
-</p>
-<%= link_to 'Edit', edit_customer_path(customer) %> | <%= link_to "Delete", customer, :method => :delete, :confirm => "You sure?",
-                                :title => "Delete #{customer.first_name} #{customer.last_name}" %><br/>
-<%= link_to "send Order Confirmation email", send_email_customer_path(customer) %><br>
-
+	<h2><%= customer.first_name %> <% customer.last_name %></h2>
+	<%= link_to 'Edit', edit_customer_path(customer) %> | <%= link_to "delete", product, :method => :delete, :confirm => "You sure?",
+                                :title => "Delete #{customer.transaction_number}" %>
+	<blockquote><p><strong>Address</strong><br>
+	<%= raw customer.address %>
+	</p>
+	<p><strong>E-mail</strong><br>
+	<%= customer.email %></p>
+	<p><strong>Total Cost</strong><br>
+	<%= customer.total_cost %></p>
+	<p><strong>Payment Method</strong><br>
+	<%= customer.payment_method %></p>
+	<p><strong>Transaction</strong><br>
+	<%= link_to customer.transaction_number, "https://www.paypal.com/us/vst/id=#{customer.transaction_number}" %></p>
+	<p><strong>Products Ordered</strong><br>
+	<table class="table table-condensed", style="width:500px">
+	<tr>
+		<td>Product</td>
+		<td>Quantity</td>
+		<td>Cost(per)</td>
+		<td>Cost(total)</td>
+	</tr>
+	<% total_price = 0 %>
+	<% customer.orders.each do |o| %>
+		<tr>
+			<td><%= o.offering.name %></td>
+			<td><%= o.quantity %></td>
+			<td><%= o.offering.price.blank? ? 0 : number_to_currency(o.offering.price) %></td>
+			<td><%= o.offering.price.blank? ? 0 : number_to_currency(o.offering.price*o.quantity) %></td>
+			<% total_price += o.offering.price.blank? ? 0 : o.offering.price*o.quantity %>
+		</tr>
+	<% end %>
+		<tr>
+			<td></td>
+			<td></td>
+			<td>Subtotal</td>
+			<td><%= number_to_currency(total_price) %></td>
+		</tr>
+	</table>
+	</p>
+	<%= link_to "send Order Confirmation email", send_email_customer_path(customer) %></blockquote>
 <% end %>

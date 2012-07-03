@@ -72,9 +72,9 @@ class Product < ActiveRecord::Base
 		levels=[inventory]
 		curdate = Date.today.beginning_of_week + 1
 		if Date.today.beginning_of_week == dates.last
-			n = x.last+1
+			n = x.last + 1
 		else
-			n = x.last+2
+			n = x.last + 2
 		end
 		while curdate < start+max_lead_time
 			levels << levels.last

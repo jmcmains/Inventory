@@ -9,12 +9,14 @@ class Offering < ActiveRecord::Base
   	if search
 			words = search.to_s.strip.split
 		  words.inject(scoped) do |combined_scope, word|
-		    combined_scope.where('LOWER(name) LIKE ?',"%#{word.downcase}%"])
+		    combined_scope.where('LOWER(name) LIKE ?',"%#{word.downcase}%")
 		  end
   	else
   		return find(:all)
   	end
   end
   
-
+	def total_weight
+		products.each do |p|
+	end
 end
