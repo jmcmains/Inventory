@@ -35,7 +35,7 @@ class Product < ActiveRecord::Base
 	end
 	
 	def get_trend
-		sql = ActiveRecord::Base.connection()
+		sql = connection()
 		data= {}
 		if Rails.env == "production"
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year, week ORDER BY year, week ")
@@ -98,7 +98,7 @@ class Product < ActiveRecord::Base
 		# Inventory
 		last_inv=self.get_last_count("Inventory");
 		if last_inv.is_box
-			li = last_inv.count*self.per_box
+			li = last_inv.count*(self.per_box? ? self.per_box : 0 )
 		else
 			li = last_inv.count
 		end
@@ -111,7 +111,7 @@ class Product < ActiveRecord::Base
 		self.get_current_shipments.each do |co|
 			pc=co.product_counts.find_by_product_id(self)
 			if pc.is_box
-				oco = oco + (pc.count*self.per_box)
+				oco = oco + (pc.count*(self.per_box? ? self.per_box : 0 ))
 			else
 				oco = oco + pc.count
 			end
@@ -124,6 +124,9 @@ class Product < ActiveRecord::Base
 		pipeLine = self.get_orders
 		# Customer Orders
 		y=self.get_trend["y"]
+		(0..y.length-1).each do |n|
+			y[n] = 0 if !y[n]
+		end
 		x =(1..y.length).to_a
 		lineFit = LineFit.new
 		lineFit.setData(x,y)

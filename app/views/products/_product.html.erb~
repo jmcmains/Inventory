@@ -9,14 +9,17 @@
 	<td>
 		<%= product.description %>
 	</td>
+	<td>
+		<%= pluralize(product.weight,"lb") if product.weight >0 %>
+	</td>
 	<td class="number">
 		<%= product.per_box %>
 	</td>
 	<td class="number">
-		<%= product.get_Inventory %>
+		<%= product.get_Inventory.round %>
 	</td>
 	<td class="number">
-		<%= product.get_orders %>
+		<%= product.get_orders.round %>
 	</td>
 	<td class="number">
 		<%= product.need(60).round %>

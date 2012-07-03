@@ -1,0 +1,6 @@
+class AddWeightToProducts < ActiveRecord::Migration
+  def change
+    rename_column :products, :weight_lbs, :weight
+    remove_column :products, :weight_oz
+  end
+end

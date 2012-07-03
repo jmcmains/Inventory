@@ -15,6 +15,12 @@
 		Quantity per Box
 	</td>
 	<td>
+		Current Inventory
+	</td>
+	<td>
+		Amount in Transit
+	</td>
+	<td>
 		Need (lead Time: 60 days)
 	</td>
 		<td>

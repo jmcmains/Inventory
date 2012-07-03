@@ -1,4 +1,5 @@
 class Offering < ActiveRecord::Base
+	include ActionView::Helpers::TextHelper
   has_many :orders, :foreign_key => "offering_id"
   has_many :offering_products, :foreign_key => "offering_id", :dependent => :destroy
   has_many :products, through: :offering_products
@@ -17,7 +18,8 @@ class Offering < ActiveRecord::Base
   end
   
 	def total_weight
-		products.each do |p|
-		end
+		sql = connection()
+		d=sql.execute("SELECT SUM(products.weight * offering_products.quantity) FROM offerings INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (offerings.id = #{self.id})")
+		return d[0][0]
 	end
 end

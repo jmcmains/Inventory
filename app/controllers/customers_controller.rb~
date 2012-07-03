@@ -11,7 +11,7 @@ class CustomersController < ApplicationController
 		@customer.orders.each do |o|
 			o.update_attributes(date: convert_date(params[:date]),order_number: @customer.transaction_number, origin: "phone or email")
 		end
-    redirect_to 'index'
+    redirect_to @customer
   end
   
   def send_email
@@ -22,7 +22,7 @@ class CustomersController < ApplicationController
   end
   
   def index
-  	@customers = Customer.all
+		@offerings = Offering.search(params[:search])
   	@title = "All Phone/Email Orders"
   end
   

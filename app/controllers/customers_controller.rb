@@ -22,7 +22,7 @@ class CustomersController < ApplicationController
   end
   
   def index
-  	@customers = Customer.all
+		@customers = Customer.search(params[:search])
   	@title = "All Phone/Email Orders"
   end
   

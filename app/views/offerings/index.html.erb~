@@ -14,8 +14,8 @@
 		<td>Modify</td>
 		<td style="width:300px">Offering Name</td>
 		<td>Price</td>
-		<td style="width:150px">Products Included
-		</td>
+		<td>Total Weight</td>
+		<td style="width:150px">Products Included</td>
 		<td>Sales - Amazon US<br>
 			<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "US_ASC"  %><%= submit_tag "^" %><% end %>
 			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "US_DESC"  %>	<%= submit_tag "v" %><% end %>
@@ -37,7 +37,7 @@
   <td>
   <div id="price_<%= offer.id %>">
 		<% if offer.price.blank? %>
-			<%= form_for offer, :class => "form-inline", :style => "display:inline", method: :get, remote: true do |f| %>
+			<%= form_for offer, remote: true do |f| %>
 					<%= f.text_field :price, placeholder: "enter price", :class => "input-small", style: "display:inline" %>
 			<% end %>
 		<% else %>
@@ -45,6 +45,7 @@
 		<% end %>
   </div>
   </td>
+  <td><%= offer.total_weight %></td>
 	<td>
 		<ul>
 		<% for product in offer.products %>
