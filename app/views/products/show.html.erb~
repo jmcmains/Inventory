@@ -159,7 +159,6 @@ Done on: <%= @product.inventory.last.date %> <br>
 				type: 'column',
 				data: [
 					<% @product.product_orders.sort_by(&:date).each do |po| %>
-						<% if po.product_counts.find_by_product_id(@product).count > 0 %>
 							<% if po.product_counts.find_by_product_id(@product).is_box %>
 							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if po != @product.product_orders.last %>
 							<% else %>
@@ -172,12 +171,10 @@ Done on: <%= @product.inventory.last.date %> <br>
 				name: 'Inventory',
 				data: [
 					<% @product.inventory.sort_by(&:date).each do |inv| %>
-						<% if inv.product_counts.find_by_product_id(@product).count > 0 %>
-							<% if inv.product_counts.find_by_product_id(@product).is_box %>
+						<% if inv.product_counts.find_by_product_id(@product).is_box %>
 							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if inv != @product.inventory.last %>
-							<% else %>
+						<% else %>
 							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count %>]<%= "," if inv != @product.inventory.last %>
-							<% end %>
 						<% end %>
 					<% end %>
 				]
