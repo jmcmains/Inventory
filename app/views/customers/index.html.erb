@@ -1,5 +1,5 @@
 <% @customers.each do |customer| %>
-	<h2><%= customer.first_name %> <% customer.last_name %></h2>
+	<h2><%= customer.first_name %> <%= customer.last_name %></h2>
 	<%= link_to 'Edit', edit_customer_path(customer) %> | <%= link_to "delete", customer, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{customer.transaction_number}" %>
 	<blockquote><p><strong>Address</strong><br>
