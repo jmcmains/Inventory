@@ -68,8 +68,9 @@ class Product < ActiveRecord::Base
 		lineFit = LineFit.new
 		lineFit.setData(x,y)
 		b, m = lineFit.coefficients
+		m=m/7.0;
 		levels=[inventory]
-		curdate = Date.today.beginning_of_week + 7
+		curdate = Date.today.beginning_of_week + 1
 		if Date.today.beginning_of_week == dates.last
 			n = x.last+1
 		else
@@ -79,7 +80,7 @@ class Product < ActiveRecord::Base
 			levels << levels.last
 			levels[-1] -= (m*n+b)
 			events.unreceived.each do |po|
-				if po.expected_date.beginning_of_week == curdate
+				if po.expected_date == curdate
 					if po.product_counts.find_by_product_id(self).is_box
 						levels[-1] += po.product_counts.find_by_product_id(self).count*self.per_box
 					else
@@ -87,7 +88,7 @@ class Product < ActiveRecord::Base
 					end
 				end
 			end
-			curdate += 7
+			curdate += 1
 			n += 1
 		end
 		return levels

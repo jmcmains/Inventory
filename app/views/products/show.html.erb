@@ -152,10 +152,10 @@ Done on: <%= @product.inventory.last.date %> <br>
 		  	text: "Week Number",
 		  },
 		  yAxis: {
-		    title: { text: 'Orders'}
+		    title: { text: 'Inventory'}
 		  },
 		  series: [{
-				name: 'Product Orders',
+				name: 'Supplier Orders',
 				type: 'column',
 				data: [
 					<% @product.product_orders.sort_by(&:date).each do |po| %>
@@ -180,8 +180,8 @@ Done on: <%= @product.inventory.last.date %> <br>
 				]
 		  },{
 		  	type: 'line',
-		  	name: 'Prediction Line',
-		  	pointInterval: 7 * 24 * 3600 * 1000,
+		  	name: 'Predicted Inventory Line',
+		  	pointInterval: 24 * 3600 * 1000,
 		  	pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day %>),
 		  	data: <%= @product.forcast_demand %>,
 		  	marker: {

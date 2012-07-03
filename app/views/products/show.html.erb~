@@ -152,18 +152,19 @@ Done on: <%= @product.inventory.last.date %> <br>
 		  	text: "Week Number",
 		  },
 		  yAxis: {
-		    title: { text: 'Orders'}
+		    title: { text: 'Inventory'}
 		  },
 		  series: [{
-				name: 'Product Orders',
+				name: 'Supplier Orders',
 				type: 'column',
 				data: [
 					<% @product.product_orders.sort_by(&:date).each do |po| %>
 						<% if po.product_counts.find_by_product_id(@product).is_box %>
-							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if po != @product.product_orders.last %>
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]
 						<% else %>
-							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]<%= "," if po != @product.product_orders.last %>
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]
 						<% end %>
+						<%= "," if po != @product.product_orders.sort_by(&:date).last %>
 					<% end %>
 				]
 		  },{
@@ -179,7 +180,7 @@ Done on: <%= @product.inventory.last.date %> <br>
 				]
 		  },{
 		  	type: 'line',
-		  	name: 'Prediction Line',
+		  	name: 'Predicted Inventory Line',
 		  	pointInterval: 7 * 24 * 3600 * 1000,
 		  	pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day %>),
 		  	data: <%= @product.forcast_demand %>,

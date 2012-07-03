@@ -46,7 +46,7 @@ class Product < ActiveRecord::Base
 			data["y"]=d.map { |a| a[0] }
 			data["dates"]=d.map{ |a| a[2].to_date.beginning_of_week }
 		end
-		if data["dates"].last == Date.today.beginning_of_week
+		if data["dates"].last >= Date.today.beginning_of_week-1
 			data["dates"].pop
 			data["y"].pop	
 		end
@@ -68,8 +68,9 @@ class Product < ActiveRecord::Base
 		lineFit = LineFit.new
 		lineFit.setData(x,y)
 		b, m = lineFit.coefficients
+		m=m/7.0;
 		levels=[inventory]
-		curdate = Date.today.beginning_of_week + 7
+		curdate = Date.today.beginning_of_week + 1
 		if Date.today.beginning_of_week == dates.last
 			n = x.last+1
 		else
@@ -87,7 +88,7 @@ class Product < ActiveRecord::Base
 					end
 				end
 			end
-			curdate += 7
+			curdate += 1
 			n += 1
 		end
 		return levels
