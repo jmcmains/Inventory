@@ -38,11 +38,18 @@
 			<td><%= o.offering.total_weight * o.quantity %></td>
 			<td><%= o.offering.price.blank? ? 0 : number_to_currency(o.offering.price) %></td>
 			<td><%= o.offering.price.blank? ? 0 : number_to_currency(o.offering.price*o.quantity) %></td>
-			<% total_price += o.offering.price.blank? ? 0 : o.offering.price*o.quantity %>
-			<% total_weight += o.offering.total_weight*o.quantity %>
+			<% total_price += (o.offering.price ? 0 : o.offering.price)*o.quantity %>
 		</tr>
 	<% end %>
 		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>Shipping (<%= pluralize total_weight, "lbs" %>)</td>
+			<td><%= number_to_currency(total_price) %></td>
+		</tr>
+		<tr>
+			<td></td>
 			<td></td>
 			<td></td>
 			<td>Subtotal</td>

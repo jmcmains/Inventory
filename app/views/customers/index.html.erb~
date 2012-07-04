@@ -31,6 +31,7 @@
 		<td>Cost(total)</td>
 	</tr>
 	<% total_price = 0 %>
+		<% total_weight = 0 %>
 	<% customer.orders.each do |o| %>
 		<tr>
 			<td><%= o.offering.name %></td>
@@ -38,10 +39,19 @@
 			<td><%= o.offering.total_weight * o.quantity %></td>
 			<td><%= o.offering.price.blank? ? 0 : number_to_currency(o.offering.price) %></td>
 			<td><%= o.offering.price.blank? ? 0 : number_to_currency(o.offering.price*o.quantity) %></td>
-			<% total_price += o.offering.price.blank? ? 0 : o.offering.price*o.quantity %>
+			<% total_price += (o.offering.price ? 0 : o.offering.price)*o.quantity %>
+			<% total_weight += o.offering.total_weight ? 0 : o.offering.total_weight*o.quantity %>
 		</tr>
 	<% end %>
 		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>Shipping (<%= pluralize total_weight, "lbs" %>)</td>
+			<td><%= number_to_currency(total_price) %></td>
+		</tr>
+		<tr>
+			<td></td>
 			<td></td>
 			<td></td>
 			<td>Subtotal</td>
@@ -49,6 +59,7 @@
 		</tr>
 	</table>
 	</p>
+	<%= @customer.shipping_cost %>
 	<%= link_to "send Order Confirmation email", send_email_customer_path(customer) %></blockquote></div>
 <% end %>
 <script>

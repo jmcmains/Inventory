@@ -1,4 +1,6 @@
 class Customer < ActiveRecord::Base
+  require 'active_shipping'
+	include ActiveMerchant::Shipping
   has_many :orders, dependent: :destroy
   accepts_nested_attributes_for :orders
   
@@ -13,5 +15,17 @@ class Customer < ActiveRecord::Base
   	end
   end
   
-  def 
+  def shipping_cost
+		weight=0
+		orders.each do |o|
+				weight += o.offering.total_weight*o.quantity
+		end
+		package=Package.new(  (weight * 16),[],:units => :imperial)
+		origin = Location.new(:country => 'US',:state => 'NC',:city => 'Hillsborough',:zip => '27278')
+		destination = address
+    usps = USPS.new(:login => '970RUBBE0314')
+		response = usps.find_rates(origin, destination, package)
+		usps_rates = response.rates.sort_by(&:price).collect {|rate| [rate.service_name, rate.price]}
+		return usps_rates
+  end
 end

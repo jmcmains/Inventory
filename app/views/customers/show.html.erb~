@@ -18,6 +18,7 @@
 	<td>Cost(total)</td>
 </tr>
 <% total_price = 0 %>
+<% total_weight = 0 %>
 <% @customer.orders.each do |o| %>
 	<tr>
 	<td><%= o.offering.name %></td>
@@ -35,5 +36,5 @@
 	</tr>
 </table>
 </p>
-
+<%= @customer.shipping_cost %>
 <%= link_to "send Order Confirmation email", send_email_customer_path(@customer) %>
