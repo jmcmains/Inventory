@@ -6,61 +6,7 @@
 <% end %>
 <div id="accordion">
 <% @customers.each do |customer| %>
-<h3><a href="#"><%= customer.first_name %> <%= customer.last_name %></a></h3>
-<div><blockquote>
-	<%= link_to 'Edit', edit_customer_path(customer) %> | <%= link_to "delete", customer, :method => :delete, :confirm => "You sure?",
-                                :title => "Delete #{customer.transaction_number}" %>
-	<p><strong>Address</strong><br>
-	<%= raw customer.address %>
-	</p>
-	<p><strong>E-mail</strong><br>
-	<%= customer.email %></p>
-	<p><strong>Total Cost</strong><br>
-	<%= customer.total_cost %></p>
-	<p><strong>Payment Method</strong><br>
-	<%= customer.payment_method %></p>
-	<p><strong>Transaction</strong><br>
-	<%= link_to customer.transaction_number, "https://www.paypal.com/us/vst/id=#{customer.transaction_number}" %></p>
-	<p><strong>Products Ordered</strong><br>
-	<table class="table table-condensed", style="width:500px">
-	<tr>
-		<td>Product</td>
-		<td>Quantity</td>
-		<td>Weight</td>
-		<td>Cost(per)</td>
-		<td>Cost(total)</td>
-	</tr>
-	<% total_price = 0 %>
-		<% total_weight = 0 %>
-	<% customer.orders.each do |o| %>
-		<tr>
-			<td><%= o.offering.name %></td>
-			<td><%= o.quantity %></td>
-			<td><%= o.offering.total_weight * o.quantity %></td>
-			<td><%= o.offering.price.blank? ? 0 : number_to_currency(o.offering.price) %></td>
-			<td><%= o.offering.price.blank? ? 0 : number_to_currency(o.offering.price*o.quantity) %></td>
-			<% total_price += (o.offering.price ? 0 : o.offering.price)*o.quantity %>
-			<% total_weight += o.offering.total_weight ? 0 : o.offering.total_weight*o.quantity %>
-		</tr>
-	<% end %>
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td>Shipping (<%= pluralize total_weight, "lbs" %>)</td>
-			<td><%= number_to_currency(total_price) %></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td>Subtotal</td>
-			<td><%= number_to_currency(total_price) %></td>
-		</tr>
-	</table>
-	</p>
-	<%= @customer.shipping_cost %>
-	<%= link_to "send Order Confirmation email", send_email_customer_path(customer) %></blockquote></div>
+<%= render 'customer', customer: customer %>
 <% end %>
 <script>
 	$(function() {
