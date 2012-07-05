@@ -37,7 +37,7 @@ class Product < ActiveRecord::Base
 	def get_trend
 		sql = connection()
 		data= {}
-		if Rails.env == "production"
+		if Rails.env.production?
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year, week ORDER BY year, week ")
 			data["y"]=d.map { |a| a["sum"].to_i }
 			data["dates"] = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) }
@@ -68,7 +68,7 @@ class Product < ActiveRecord::Base
 		lineFit = LineFit.new
 		lineFit.setData(x,y)
 		b, m = lineFit.coefficients
-		m=m;
+		m=m/7.0;
 		levels=[inventory]
 		curdate = Date.today.beginning_of_week + 1
 		if Date.today.beginning_of_week == dates.last

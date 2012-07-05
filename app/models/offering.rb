@@ -20,6 +20,10 @@ class Offering < ActiveRecord::Base
 	def total_weight
 		sql = connection()
 		d=sql.execute("SELECT SUM(products.weight * offering_products.quantity) FROM offerings INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (offerings.id = #{self.id})")
-		return d[0][0]
+		if Rails.env.production?
+			return d.map { |a| a["sum"].to_i }[0]
+		else
+			return d[0][0]
+		end
 	end
 end
