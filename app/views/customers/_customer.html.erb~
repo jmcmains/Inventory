@@ -1,4 +1,3 @@
-<h3><a href="#"><%= customer.first_name %> <%= customer.last_name %></a></h3>
 <div><blockquote>
 	<%= link_to 'Edit', edit_customer_path(customer) %> | <%= link_to "delete", customer, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{customer.transaction_number}" %>
