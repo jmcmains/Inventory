@@ -11,26 +11,24 @@
 Done on: <%= @product.inventory.last.date %> <br>
 <% glc=@product.get_last_count("Inventory") %>
 <%= glc.count %>
-<% if glc.is_box %>
-	boxes
-<% else %>
-	bands
-<% end %><br><br>
+<%= glc.is_box? ? "boxes" : "bands" %><br><br>
 <h2>Orders Currently Out:</h2>
 <div>
 <% oco = 0 %>
 <% @product.get_current_shipments.each do |co| %>
-	Order Made on: <%= co.date %> <br>
 	<% pc=co.product_counts.find_by_product_id(@product) %>
-	Quantity ordered: <%= pc.count %>
-	<% if pc.is_box %>
-		boxes
-		<% oco = oco + (pc.count*@product.per_box) %>
-	<% else %>
-		bands
-		<% oco = oco + pc.count %>
+	<% if pc.count > 0 %>
+		Order Made on: <%= co.date %> <br>
+		Quantity ordered: <%= pc.count %>
+		<% if pc.is_box %>
+			boxes
+			<% oco = oco + (pc.count*@product.per_box) %>
+		<% else %>
+			bands
+			<% oco = oco + pc.count %>
+		<% end %>
+	<br><br>
 	<% end %>
-<br><br>
 <% end %>
 <%= oco %><br>
 <div id="accordion">
@@ -191,7 +189,7 @@ Done on: <%= @product.inventory.last.date %> <br>
 		  	type: 'line',
 		  	name: 'Predicted Inventory Line',
 		  	pointInterval: 24 * 3600 * 1000,
-		  	pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day %>),
+		  	pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day+1 %>),
 		  	data: <%= @product.forcast_demand %>,
 		  	marker: {
 					enabled: false
@@ -201,10 +199,6 @@ Done on: <%= @product.inventory.last.date %> <br>
     });
   });
 </script>
-
-inventory = 
-
-
 
 Orders current until the week of: <%= d2.last %>
 
