@@ -53,6 +53,25 @@ class Product < ActiveRecord::Base
 		return data
 	end
 	
+	def self.get_trend
+		sql = connection()
+		data= {}
+		if Rails.env.production?
+			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year, week ORDER BY year, week ")
+			data["y"]=d.map { |a| a["sum"].to_i }
+			data["dates"] = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) }
+		else
+			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year") 
+			data["y"]=d.map { |a| a[0] }
+			data["dates"]=d.map{ |a| a[2].to_date.beginning_of_week }
+		end
+		if data["dates"].last >= Date.today.beginning_of_week-1
+			data["dates"].pop
+			data["y"].pop	
+		end
+		return data
+	end
+	
 	def forcast_demand
 		start=Date.today.beginning_of_week
 		inv=get_last_count("Inventory")

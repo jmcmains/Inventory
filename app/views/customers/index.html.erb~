@@ -6,10 +6,11 @@
 <% end %>
 <div id="accordion">
 <% @customers.each do |customer| %>
-<%= render 'customer', customer: customer %>
+	<h3><a href="#"><%= customer.first_name %><%= customer.last_name %></a></h3>
+	<%= render 'customer', customer: customer %>
 <% end %>
 <script>
 	$(function() {
 		$("#accordion").accordion({ active: false, collapsible: true });
 	});
-	</script>
+</script>

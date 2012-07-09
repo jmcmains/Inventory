@@ -1,37 +1,121 @@
 <center>
+<% y = Product.get_trend["y"] %>
+<% d2 = Product.get_trend["dates"] %>
+<% x =(1..y.length).to_a %>
+<% lineFit = LineFit.new %>
+<% lineFit.setData(x,y) %>
+<% b, m = lineFit.coefficients %>
+<% startY = m+b %>
+<% leadTime = 120 %>
+<% leadTimeWeeks = (leadTime/7.0).ceil %>
+<% endY = (y.length*m)+b %>
+<% preY = (y.length+leadTimeWeeks)*m+b %>
+<% prediction_x = (y.length..(y.length+leadTimeWeeks)).to_a %>
+<% prediction_y = prediction_x.map { |x| x*m+b } %>
+<% sigma = lineFit.sigma %>
+<div id="orders_chart" style="width:560px; height:300px;"></div>
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    new Highcharts.Chart({
+     	chart: { renderTo: 'orders_chart' },
+		  title: { text: 'Orders by week' },
+		  xAxis: { 
+		  	type: 'datetime',
+				maxZoom: 14 * 24 * 3600000,
+		  	text: "Week Number",
+		  	min: Date.UTC(<%= d2.first.year %>,<%= d2.first.month-1 %>,<%= d2.first.day %>),
+		  	max: Date.UTC(<%= (d2.last+leadTime).year %>,<%= (d2.last+leadTime).month-1 %>,<%= (d2.last+leadTime).day %>),
+		  },
+		  yAxis: {
+		  	min: 0,
+		    title: { text: 'Orders'}
+		  },
+		  series: [{
+				name: 'Weekly Sales',
+		    data: [ <% (0..(d2.length-1)).each do |n| %>
+		    	[Date.UTC(<%= d2[n].year %>, <%= d2[n].month-1 %>, <%= d2[n].day %>), <%= y[n] %> ]<%= "," if n != (d2.length-1) %>
+		    <% end %>
+		    ]
+		  },{
+				type: 'line',
+				name: 'Regression Line',
+				data: [
+					[Date.UTC(<%= d2.first.year %>, <%= d2.first.month-1 %>, <%= d2.first.day %>),<%= startY %>],
+					[Date.UTC(<%= d2.last.year %>, <%= d2.last.month-1 %>, <%= d2.last.day %>),<%= endY %>]
+				],
+				marker: {
+					enabled: false
+				},
+				states: {
+					hover: {
+						lineWidth: 0
+					}
+				},
+				enableMouseTracking: false
+			},{
+				type: 'line',
+				name: 'Plus Sigma',
+				data: [
+					[Date.UTC(<%= d2.first.year %>, <%= d2.first.month-1 %>, <%= d2.first.day %>),<%= startY+sigma %>],
+					[Date.UTC(<%= (d2.last+leadTime).year %>, <%= (d2.last+leadTime).month-1 %>, <%= (d2.last+leadTime).day %>),<%= prediction_y.last+sigma %>]
+				],
+				marker: {
+					enabled: false
+				},
+				states: {
+					hover: {
+						lineWidth: 0
+					}
+				},
+				enableMouseTracking: false,
+				dashStyle: 'Dash'
+			},{
+				type: 'line',
+				name: 'Minus Sigma',
+				data: [
+					[Date.UTC(<%= d2.first.year %>, <%= d2.first.month-1 %>, <%= d2.first.day %>),<%= startY-sigma %>],
+					[Date.UTC(<%= (d2.last+leadTime).year %>, <%= (d2.last+leadTime).month-1 %>, <%= (d2.last+leadTime).day %>),<%= prediction_y.last-sigma %>]
+				],
+				marker: {
+					enabled: false
+				},
+				states: {
+					hover: {
+						lineWidth: 0
+					}
+				},
+				enableMouseTracking: false,
+				dashStyle: 'Dash'
+			},{
+				type: 'line',
+				name: 'Prediction Line',
+				data: [
+					[Date.UTC(<%= d2.last.year %>, <%= d2.last.month-1 %>, <%= d2.last.day %>),<%= prediction_y.first %>],
+					[Date.UTC(<%= (d2.last+leadTime).year %>, <%= (d2.last+leadTime).month-1 %>, <%= (d2.last+leadTime).day %>),<%= prediction_y.last %>]
+					],
+				marker: {
+					enabled: false
+				},
+				dashStyle: 'Dash'
+			}]
+    });
+  });
+</script>
 <% leadTime=75 %>
 <table class="info">
 <tr>
-	<td>
-		Modify
-	</td>
-	<td>
-		Name
-	</td>
-	<td>
-		Description
-	</td>
-	<td>
-		Quantity per Box
-	</td>
-	<td>
-		Current Inventory
-	</td>
-	<td>
-		Amount in Transit
-	</td>
-	<td>
-		Need (lead Time: 60 days)
-	</td>
-		<td>
-		Need (lead Time: 90 days)
-	</td>
-		<td>
-		Need (lead Time: 120 days)
-	</td>
+	<td>Modify</td>
+	<td>Name</td>
+	<td>Description</td>
+	<td>Weight</td>
+	<td>Quantity per Box</td>
+	<td>Current Inventory</td>
+	<td>Amount in Transit</td>
+	<td>Need (lead Time: 60 days)</td>
+	<td>Need (lead Time: 90 days)</td>
+	<td>Need (lead Time: 120 days)</td>
 </tr>
 	<%= render @products, leadTime: leadTime %>
 </table>
 </center>
-
 <%= link_to 'New Product', new_product_path %>

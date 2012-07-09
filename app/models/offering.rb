@@ -10,7 +10,7 @@ class Offering < ActiveRecord::Base
   	if search
 			words = search.to_s.strip.split
 		  words.inject(scoped) do |combined_scope, word|
-		    combined_scope.where('LOWER(name) LIKE ?',"%#{word.downcase}%")
+		    combined_scope.where('LOWER(name) LIKE ? AND price > 0',"%#{word.downcase}%")
 		  end
   	else
   		return find(:all)
@@ -21,7 +21,7 @@ class Offering < ActiveRecord::Base
 		sql = connection()
 		d=sql.execute("SELECT SUM(products.weight * offering_products.quantity) FROM offerings INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (offerings.id = #{self.id})")
 		if Rails.env.production?
-			return d.map { |a| a["sum"].to_i }[0]
+			return d.map { |a| a["sum"].to_f }[0]
 		else
 			return d[0][0]
 		end

@@ -16,7 +16,7 @@
 	<h2>Products</h2>
 	<%= f.fields_for :product_counts do |pc| %>  
 		<div style="width:300px;height:300px;float:left;margin:10px;border:1px solid #000;text-align:center;valign:middle; border-radius: 10px;">
-		<% product = Product.all.first(n).last %>
+		<% product = Product.all.sort_by { |a| a.id }.first(n).last.product %>
 		<strong><%= product.name %></strong><br>
 			<% if !product.description.blank? %>
 			<%= product.description %> - 
