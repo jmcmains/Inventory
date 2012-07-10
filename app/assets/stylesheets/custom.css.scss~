@@ -1,10 +1,6 @@
 @import "bootstrap";
 /* universal */
-@mixin box_sizing {
-  -moz-box-sizing: border-box; 
-  -webkit-box-sizing: border-box; 
-  box-sizing: border-box;
-}
+
 html {
   overflow-y: scroll;
 }
@@ -32,6 +28,36 @@ textarea {
 .container {
 	width:100%;
 }
+/* header */
+
+.title {
+	position:absolute;
+	top:10px;
+  width:30%;
+  left: 35%;
+  right: 35%;
+  font-size:large;
+  font-weight:bold;
+  color:#fff;
+  text-transform:uppercase;
+}
+#logo {
+	float: left;
+	margin-right: 10px;
+	margin-left: 10px;
+	font-size:1.7em;
+	color: #fff;
+	text-transform:uppercase;
+	letter-spacing: -1px;
+	padding-top: 9px;
+	font-weight: bold;
+	line-height: 1;
+	&:hover {
+		color: #fff;
+		text-decoration:none;
+	}
+}
+
 /* typography */
 
 h1, h2, h3, h4, h5, h6 {
@@ -144,13 +170,3 @@ ul.ui-autocomplete {
       padding: 0.1em 0.25em;}}
 }
 
-/* forms */
-
-input, textarea, select, .uneditable-input {
-  border: 1px solid #bbb;
-  width: 100%;
-  padding: 10px;
-  height: auto;
-  margin-bottom: 15px;
-  @include box_sizing;
-}

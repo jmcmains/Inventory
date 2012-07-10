@@ -7,8 +7,12 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+	<%= render 'layouts/header' %>
 <div class="container">
-<h1><%= @title %></h1>
+<% flash.each do |key, value| %>
+	<%= content_tag(:div, value, class: "alert alert-#{key}") %>
+<% end %>
+<# if signed_in? %>
 <div style="float:left;background-color: #eee;padding:10px;width:200px">
 <ul>
 			<li><%= link_to "Do an inventory count", new_inventory_events_path %></li>
@@ -52,5 +56,22 @@
 <div style="position:absolute;padding:10px;left:230px;right:0">
 <%= yield %>
 </div>
+<# else %>
+<%
+=begin %>
+<div class="row">
+	<div class="span6 offset3">
+		<%= form_for(:session, url: sessions_path) do |f| %>
+			<%= f.label :email %>
+			<%= f.text_field :email %>
+			<%= f.label :password %>
+			<%= f.text_field :password %><br>
+			<%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
+		<% end %>
+	</div>
+</div>
+<% end %>
+<% 
+=end %>
 </body>
 </html>
