@@ -5,6 +5,7 @@ gem 'linefit'
 gem 'bootstrap-sass'
 gem 'will_paginate'
 gem 'active_shipping'
+gem 'bcrypt-ruby'
 group :development, :test do
   gem 'sqlite3'
 end

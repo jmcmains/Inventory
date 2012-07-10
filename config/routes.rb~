@@ -1,4 +1,6 @@
 Inventory::Application.routes.draw do
+  get "users/new"
+	resources :users
 	resources :customers do
 		member do
 			get :send_email
@@ -26,6 +28,7 @@ Inventory::Application.routes.draw do
 	collection do
 			get :blank
 			get :autocomplete
+			get :price
 		end
 	end
 end
