@@ -124,15 +124,18 @@ class Product < ActiveRecord::Base
 		return li
 	end
 
-	def get_orders
+	def get_orders(leadTime)
+		before_date=Date.today + leadTime
 		# Orders from Suppliers
 		oco = 0
 		self.get_current_shipments.each do |co|
 			pc=co.product_counts.find_by_product_id(self)
-			if pc.is_box
-				oco = oco + (pc.count*(self.per_box? ? self.per_box : 0 ))
-			else
-				oco = oco + pc.count
+			if co.expected_date < before_date
+				if pc.is_box
+					oco = oco + (pc.count*(self.per_box? ? self.per_box : 0 ))
+				else
+					oco = oco + pc.count
+				end
 			end
 		end
 		return oco
@@ -140,7 +143,7 @@ class Product < ActiveRecord::Base
 	
 	def need(leadTime)
 		currentInventory = self.get_Inventory
-		pipeLine = self.get_orders
+		pipeLine = self.get_orders(leadTime)
 		# Customer Orders
 		y=self.get_trend["y"]
 		(0..y.length-1).each do |n|

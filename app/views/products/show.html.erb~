@@ -55,10 +55,10 @@ Done on: <%= @product.inventory.last.date %> <br>
 </div>
 </div>
 <script>
-	$(function() {
-		$("#accordion").accordion({ active: false, collapsible: true });
-	});
-	</script>
+$(function() {
+	$("#accordion").accordion({ active: false, collapsible: true });
+});
+</script>
 <div id="orders_chart" style="width:560px; height:300px;"></div>
 <script type="text/javascript" charset="utf-8">
   $(function () {
