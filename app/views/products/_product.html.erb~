@@ -10,7 +10,7 @@
 		<%= product.description %>
 	</td>
 	<td>
-		<%= pluralize(product.weight,"lb") if product.weight >0 %>
+		<%= pluralize(product.weight,"lb") if product.weight && product.weight >0 %>
 	</td>
 	<td class="number">
 		<%= product.per_box %>

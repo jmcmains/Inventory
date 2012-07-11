@@ -19,7 +19,7 @@
 		<%= product.get_Inventory.round %>
 	</td>
 	<td class="number">
-		<%= product.get_orders.round %>
+		<%= product.get_orders(1000).round %>
 	</td>
 	<td class="number">
 		<%= product.need(60).round %>
