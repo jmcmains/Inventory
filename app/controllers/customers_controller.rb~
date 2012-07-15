@@ -22,7 +22,7 @@ class CustomersController < ApplicationController
   end
   
   def index
-		@offerings = Offering.search(params[:search])
+		@customers = Customer.search(params[:search]).paginate(:page => params[:page], :per_page => 10)
   	@title = "All Phone/Email Orders"
   end
   

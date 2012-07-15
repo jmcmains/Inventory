@@ -4,14 +4,19 @@
   	<%= submit_tag :submit, class: "btn" %>
    </p>
 <% end %>
-<div id="accordion">
-<% @customers.each do |customer| %>
-	<p><a href="#"><%= customer.first_name %> <%= customer.last_name %></a></p>
-	<%= render 'customer', customer: customer %>
-<% end %>
-</div>
 <script>
 	$(function() {
 		$("#accordion").accordion({ active: false, collapsible: true });
 	});
 </script>
+<div id="accordion">
+<% @customers.each do |customer| %>
+	<h3><a href="#"><%= customer.first_name %> <%= customer.last_name %></a></h3>
+	<%= render 'customer', customer: customer %>
+	
+<% end %>
+</div>
+<div class="pagination">
+	<%= will_paginate @customers, :container => false %>
+</div>
+

@@ -1,4 +1,5 @@
 class CustomersController < ApplicationController
+  require 'will_paginate/array'
   def new
   	@customer = Customer.new
   	@customer.orders.build
@@ -22,7 +23,7 @@ class CustomersController < ApplicationController
   end
   
   def index
-		@customers = Customer.search(params[:search])
+		@customers = Customer.search(params[:search]).paginate(:page => params[:page], :per_page => 10)
   	@title = "All Phone/Email Orders"
   end
   
