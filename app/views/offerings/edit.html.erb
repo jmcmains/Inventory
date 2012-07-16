@@ -13,7 +13,7 @@
 		<div style="width:300px;height:300px;float:left;margin:10px;border:1px solid #000;text-align:center;valign:middle;border-radius: 10px;">
 		<% product = @offering.offering_products.sort_by { |a| a.product_id }.first(n).last.product %>
 		<% if product.nil? %>
-			<% product = Product.first(n).last %>
+			<% product = Product.sort_by { |a| a.id }.first(n).last %>
 		<% end %>
 		<strong><%= product.name %></strong><br>
 			<% if !product.description.blank? %>
