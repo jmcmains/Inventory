@@ -12,6 +12,13 @@ class Product < ActiveRecord::Base
 		self.events.inventory
 	end
 	
+	def next
+		id < Product.last.id ? Product.find(id+1) : nil
+	end
+	
+	def previous
+		id > 1 ? Product.find(id-1) : nil
+	end
 	def product_orders
 		self.events.product_orders
 	end

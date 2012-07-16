@@ -1,3 +1,5 @@
+<%= render 'nav', product: @product %>
+<br>
 <%= image_tag @product.imloc %><br>
 <%= link_to 'Edit', edit_product_path(@product) %> | <%= link_to "Delete", @product, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{@product.name}" %><br/>
@@ -206,7 +208,7 @@ Orders current until the week of: <%= d2.last %>
 Assuming a <%= leadTime = 60 %> day lead time<br>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
 Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
-Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders %><%= pl. round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders(leadTime) %><%= pl. round %><br>
 Slope of the Demand Line: <%= m.round %><br>
 Intercept of the Demand Line: <%= b.round %><br>
 StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
@@ -227,7 +229,7 @@ Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
 Assuming a <%= leadTime = 90 %> day lead time<br>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
 Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
-Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders %><%= pl. round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders(leadTime) %><%= pl. round %><br>
 Slope of the Demand Line: <%= m.round %><br>
 Intercept of the Demand Line: <%= b.round %><br>
 StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
@@ -249,7 +251,7 @@ Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
 Assuming a <%= leadTime = 120 %> day lead time<br>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
 Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
-Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders %><%= pl. round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders(leadTime) %><%= pl. round %><br>
 Slope of the Demand Line: <%= m.round %><br>
 Intercept of the Demand Line: <%= b.round %><br>
 StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>

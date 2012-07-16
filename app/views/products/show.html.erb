@@ -1,3 +1,5 @@
+<%= render 'nav', product: @product %>
+<br>
 <%= image_tag @product.imloc %><br>
 <%= link_to 'Edit', edit_product_path(@product) %> | <%= link_to "Delete", @product, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{@product.name}" %><br/>
@@ -266,5 +268,6 @@ Predicted Demand:
 
 Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %> peices <br>
 Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
-
+<%= render 'nav', product: @product %>
+<br>
 

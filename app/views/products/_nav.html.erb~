@@ -1,0 +1,1 @@
+<%= link_to "< Previous", product_path(product.previous) if !product.previous.nil? %> <%= link_to "Next >", product_path(product.next) if !product.next.nil? %>
