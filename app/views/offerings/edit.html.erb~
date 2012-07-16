@@ -3,6 +3,10 @@
 		<%= f.label :name %>
 		<%= f.text_area :name, size: "100x5" %>
 	</div>
+	<div class="field">
+		<%= f.label :price %>
+		<%= f.text_field :price %>
+	</div>
 	<% n=1 %>
 <h2>Products</h2>
 	<%= f.fields_for :offering_products do |pc| %>  
