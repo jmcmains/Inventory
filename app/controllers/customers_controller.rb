@@ -40,6 +40,9 @@ class CustomersController < ApplicationController
 	def update
   	@customer = Customer.find(params[:id])
     @customer.update_attributes(params[:customer])
+    @customer.orders.each do |o|
+			o.update_attributes(date: convert_date(params[:date]),order_number: @customer.transaction_number, origin: "phone or email")
+		end
   	redirect_to @customer
   end
   
