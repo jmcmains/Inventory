@@ -5,15 +5,14 @@
    </p>
 <% end %>
 <script>
-	$(function() {
-		$("#accordion").accordion({ active: false, collapsible: true });
-	});
+$(function() {
+	$("#accordion").accordion({ active: false, collapsible: true, autoHeight: false });
+});
 </script>
 <div id="accordion">
 <% @customers.each do |customer| %>
 	<h3><a href="#"><%= customer.first_name %> <%= customer.last_name %></a></h3>
 	<%= render 'customer', customer: customer %>
-	
 <% end %>
 </div>
 <div class="pagination">

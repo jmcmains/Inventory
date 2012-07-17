@@ -1,5 +1,4 @@
 class CustomersController < ApplicationController
-  require 'will_paginate/array'
   def new
   	@customer = Customer.new
   	@customer.orders.build

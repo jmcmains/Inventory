@@ -1,1 +1,6 @@
-<%= link_to "< Previous", product_path(product.previous) if !product.previous.nil? %> <%= link_to "Next >", product_path(product.next) if !product.next.nil? %>
+<div style="float:left">
+<%= link_to("< Previous", product_path(product.previous), class: "btn") if !product.previous.nil? %>
+</div>
+<div style="float:right">
+<%= link_to("Next >", product_path(product.next), class: "btn") if !product.next.nil? %>
+</div>

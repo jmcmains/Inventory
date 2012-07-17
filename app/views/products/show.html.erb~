@@ -1,5 +1,8 @@
 <%= render 'nav', product: @product %>
 <br>
+<table style="vertical-align:top; width:100%;table-layout: fixed;">
+<tr valign="top">
+<td style="width">
 <%= image_tag @product.imloc %><br>
 <%= link_to 'Edit', edit_product_path(@product) %> | <%= link_to "Delete", @product, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{@product.name}" %><br/>
@@ -8,14 +11,15 @@
 
 <% y = @product.get_trend["y"] %>
 <% d2 = @product.get_trend["dates"] %>
-
-<h2>Latest Inventory:</h2>
+<% glc=@product.get_last_count("Inventory") %> 
+<div id="accordion">
+<h2><a href="#", style="color:#999">Latest Inventory<h3 class="caret"></h3></a></h2>
+<blockquote>
 Done on: <%= @product.inventory.last.date %> <br>
-<% glc=@product.get_last_count("Inventory") %>
-<%= glc.count %>
-<%= glc.is_box? ? "boxes" : "bands" %><br><br>
-<h2>Orders Currently Out:</h2>
-<div>
+<%= glc.count %> <%= glc.is_box? ? "boxes" : "bands" %>
+</blockquote>
+<h2><a href="#", style="color:#999">Orders Currently Out<b class="caret"></b></a></h2>
+<blockquote>
 <% oco = 0 %>
 <% @product.get_current_shipments.each do |co| %>
 	<% pc=co.product_counts.find_by_product_id(@product) %>
@@ -33,15 +37,15 @@ Done on: <%= @product.inventory.last.date %> <br>
 	<% end %>
 <% end %>
 <%= oco %><br>
-<div id="accordion">
-<h2><a href="#", style="color:#999">Customer Orders</a></h2>
-<div>
+</blockquote>
+<h2><a href="#", style="color:#999">Customer Orders<b class="caret"></b></a></h2>
+<blockquote>
 <% n=0 %>
 <% d2.each do |a| %>
 	<%= d2[n] %> - <%= y[n] %> <br>
 	<% n=n+1 %>
 <% end %>
-<br/>
+</blockquote>
 <% x =(1..y.length).to_a %>
 <% lineFit = LineFit.new %>
 <% lineFit.setData(x,y) %>
@@ -54,14 +58,76 @@ Done on: <%= @product.inventory.last.date %> <br>
 <% prediction_x = (y.length..(y.length+leadTimeWeeks)).to_a %>
 <% prediction_y = prediction_x.map { |x| x*m+b } %>
 <% sigma = lineFit.sigma %>
+
+<h2><a href="#", style="color:#999">Amount Needed to Order<b class="caret"></b></a></h2>
+<blockquote>
+<div id="accordion1">
+<h3><a href="#", style="color:#999">Assuming a <%= leadTime = 60 %> day lead time<b class="caret"></b></a></h3>
+<blockquote>
+<% leadTimeWeeks = (leadTime/7.0).ceil %>
+Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders(leadTime) %><%= pl. round %><br>
+Slope of the Demand Line: <%= m.round %><br>
+Intercept of the Demand Line: <%= b.round %><br>
+StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
+StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
+Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
+Predicted Demand:
+<% weeks = (0..leadTimeWeeks).map { |w| w+y.length } %>
+<% predictedDemand = weeks.map { |x1| m*x1+b } %>
+<% pd= predictedDemand.sum - predictedDemand[0] %>
+<%= pd.round %><br>
+Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %>peices <br>
+Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
+</blockquote>
+<h3><a href="#", style="color:#999">Assuming a <%= leadTime = 90 %> day lead time<b class="caret"></b></a></h3>
+<blockquote>
+<% leadTimeWeeks = (leadTime/7.0).ceil %>
+Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders(leadTime) %><%= pl. round %><br>
+Slope of the Demand Line: <%= m.round %><br>
+Intercept of the Demand Line: <%= b.round %><br>
+StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
+StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
+Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
+Predicted Demand:
+<% weeks = (0..leadTimeWeeks).map { |w| w+y.length } %>
+<% predictedDemand = weeks.map { |x1| m*x1+b } %>
+<% pd= predictedDemand.sum - predictedDemand[0] %>
+<%= pd.round %><br>
+Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %> peices <br>
+Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
+</blockquote>
+<h3><a href="#", style="color:#999">Assuming a <%= leadTime = 120 %> day lead time<b class="caret"></b></a></h3>
+<blockquote>
+<% leadTimeWeeks = (leadTime/7.0).ceil %>
+Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders(leadTime) %><%= pl. round %><br>
+Slope of the Demand Line: <%= m.round %><br>
+Intercept of the Demand Line: <%= b.round %><br>
+StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
+StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
+Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
+Predicted Demand:
+<% weeks = (0..leadTimeWeeks).map { |w| w+y.length } %>
+<% predictedDemand = weeks.map { |x1| m*x1+b } %>
+<% pd= predictedDemand.sum - predictedDemand[0] %>
+<%= pd.round %><br>
+Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %> peices <br>
+Need in boxes = <%= (need/@product.per_box).ceil %>
+</blockquote>
 </div>
-</div>
-<script>
-$(function() {
-	$("#accordion").accordion({ active: false, collapsible: true });
-});
-</script>
+</blockquote>
+</td>
+<td style="vertical-align:top">
+Orders current until the week of: <%= d2.last %>
 <div id="orders_chart" style="width:560px; height:300px;"></div>
+<div id="orders_chart1" style="width:560px; height:300px;"></div>
+</td>
+</tr>
+</table>
+<%= render 'nav', product: @product %>
+
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
@@ -149,7 +215,7 @@ $(function() {
     });
   });
 </script>
-<div id="orders_chart1" style="width:560px; height:300px;"></div>
+
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
@@ -201,72 +267,9 @@ $(function() {
     });
   });
 </script>
-
-Orders current until the week of: <%= d2.last %>
-
-<h2>Amount Needed to Order: </h2>
-Assuming a <%= leadTime = 60 %> day lead time<br>
-<% leadTimeWeeks = (leadTime/7.0).ceil %>
-Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
-Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders(leadTime) %><%= pl. round %><br>
-Slope of the Demand Line: <%= m.round %><br>
-Intercept of the Demand Line: <%= b.round %><br>
-StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
-
-StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
-
-
-Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
-Predicted Demand:
-<% weeks = (0..leadTimeWeeks).map { |w| w+y.length } %>
-<% predictedDemand = weeks.map { |x1| m*x1+b } %>
-<% pd= predictedDemand.sum - predictedDemand[0] %>
-<%= pd.round %><br>
-
-Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %>peices <br>
-Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
-
-Assuming a <%= leadTime = 90 %> day lead time<br>
-<% leadTimeWeeks = (leadTime/7.0).ceil %>
-Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
-Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders(leadTime) %><%= pl. round %><br>
-Slope of the Demand Line: <%= m.round %><br>
-Intercept of the Demand Line: <%= b.round %><br>
-StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
-
-StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
-
-
-Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
-Predicted Demand:
-<% weeks = (0..leadTimeWeeks).map { |w| w+y.length } %>
-<% predictedDemand = weeks.map { |x1| m*x1+b } %>
-<% pd= predictedDemand.sum - predictedDemand[0] %>
-<%= pd.round %><br>
-
-Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %> peices <br>
-Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
-
-
-Assuming a <%= leadTime = 120 %> day lead time<br>
-<% leadTimeWeeks = (leadTime/7.0).ceil %>
-Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
-Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders(leadTime) %><%= pl. round %><br>
-Slope of the Demand Line: <%= m.round %><br>
-Intercept of the Demand Line: <%= b.round %><br>
-StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
-
-StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
-
-
-Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
-Predicted Demand:
-<% weeks = (0..leadTimeWeeks).map { |w| w+y.length } %>
-<% predictedDemand = weeks.map { |x1| m*x1+b } %>
-<% pd= predictedDemand.sum - predictedDemand[0] %>
-<%= pd.round %><br>
-
-Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %> peices <br>
-Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
-
-
+<script>
+$(function() {
+	$("#accordion").accordion({ active: false, collapsible: true, autoHeight: false });
+	$("#accordion1").accordion({ active: false, collapsible: true, autoHeight: false });
+});
+</script>

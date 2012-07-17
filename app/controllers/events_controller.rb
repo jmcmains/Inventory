@@ -29,7 +29,7 @@ class EventsController < ApplicationController
   end
   
   def inventory
-  	@events=Event.inventory.sort_by { |i| i.date }.reverse
+  	@events=Event.inventory.sort_by { |i| i.date }.reverse.paginate(:page => params[:page], :per_page => 1)
   	@title= @events.first.event_type
   	render :index
   end
