@@ -1,0 +1,18 @@
+<h3><a href="#", style="color:#999">Assuming a <%= leadTime %> day lead time</a></h3>
+<blockquote>
+<% leadTimeWeeks = (leadTime/7.0).ceil %>
+Current Inventory: <% ci = @product.get_Inventory %><%= ci.round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @product.get_orders(leadTime) %><%= pl. round %><br>
+Slope of the Demand Line: <%= m.round %><br>
+Intercept of the Demand Line: <%= b.round %><br>
+StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
+StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
+Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
+Predicted Demand:
+<% weeks = (0..leadTimeWeeks).map { |w| w+y.length } %>
+<% predictedDemand = weeks.map { |x1| m*x1+b } %>
+<% pd= predictedDemand.sum - predictedDemand[0] %>
+<%= pd.round %><br>
+Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %>peices <br>
+Need in boxes = <%= (need/@product.per_box).ceil %><br><br>
+</blockquote>
