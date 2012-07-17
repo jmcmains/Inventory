@@ -5,13 +5,13 @@
 	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{event.event_type}" %><br/>
 		<% if event.event_type == "Product Order" %>
-			Expected Delivery (order date+90 days): <%= event.date + 90 %><br/>
+			Expected Delivery: <%= event.expected_date %><br/>
 			Invoice: <%= event.invoice %><br/>
 			Suppier: <%= event.supplier %><br/>
 		<% end %>
 	Product Counts:<br>
 	<ul>
-	<% event.product_counts.each do |pc| %>
+	<% event.product_counts.sort_by(&:product_id).each do |pc| %>
 		<% if pc.count > 0 %>
 			<li><%= link_to pc.product.name, product_path(pc.product) %>: <%= pc.count.round %> 
 			<% if pc.is_box %>
