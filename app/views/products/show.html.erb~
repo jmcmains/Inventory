@@ -62,9 +62,9 @@ Done on: <%= @product.inventory.last.date %> <br>
 <h2><a href="#", style="color:#999">Amount Needed to Order</a></h2>
 <blockquote>
 <div id="accordion1">
-<%= render "need_calc", product: @product, leadTime: 60, m: m, b: b, lineFit: lineFit, y: y %>
-<%= render "need_calc", product: @product, leadTime: 90, m: m, b: b, lineFit: lineFit, y: y %>
-<%= render "need_calc", product: @product, leadTime: 120, m: m, b: b, lineFit: lineFit, y: y %>
+	<%= render "need_calc", product: @product, leadTime: 60, m: m, b: b, lineFit: lineFit, y: y %>
+	<%= render "need_calc", product: @product, leadTime: 90, m: m, b: b, lineFit: lineFit, y: y %>
+	<%= render "need_calc", product: @product, leadTime: 120, m: m, b: b, lineFit: lineFit, y: y %>
 </div>
 </blockquote>
 </td>

@@ -10,6 +10,8 @@ Inventory::Application.routes.draw do
 	resources :customers do
 		member do
 			get :send_email
+			get :send_oe_email
+			get :send_customer_email
 		end
 	end
 	root to: 'static_pages#home'

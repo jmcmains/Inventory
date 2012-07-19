@@ -1,5 +1,9 @@
 <blockquote>
-<p><%= link_to "Send Order Confirmation E-Mail", send_email_customer_path(customer) %> | <%= link_to 'Edit', edit_customer_path(customer) %> | <%= link_to "delete", customer, :method => :delete, :confirm => "You sure?", :title => "Delete #{customer.transaction_number}" %></p>
+<p>
+<%= link_to "Send email to #{customer.first_name}", send_customer_email_customer_path(customer) %> | 
+<%= link_to "Send email to OE", send_oe_email_customer_path(customer) %> | 
+<%= link_to "Send Both E-Mails", send_email_customer_path(customer) %> | 
+<%= link_to 'Edit', edit_customer_path(customer) %> | <%= link_to "delete", customer, :method => :delete, :confirm => "You sure?", :title => "Delete #{customer.transaction_number}" %></p>
 	<strong>Date</strong><br><%= customer.orders.first.date %><br>
 	<strong>Address</strong><br><%= raw modaddy(customer.address) %><br>
 	<strong>E-mail</strong><br><%= customer.email %><br>
