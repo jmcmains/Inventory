@@ -45,7 +45,7 @@ class EventsController < ApplicationController
   end
   
   def po
-  	@events=Event.unreceived
+  	@events=Event.unreceived.sort_by { |i| i.date }.reverse.paginate(:page => params[:page], :per_page => 10)
   	@title= @events.first.event_type
   	render :index
   end

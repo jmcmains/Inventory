@@ -23,8 +23,9 @@ class Order < ActiveRecord::Base
  	def quant(pq)
  		return self.quantity * pq.find_by_offering_id(self.offering).quantity
  	end
- 	def find_by_month(month,year)
- 		Order.find(:all, :conditions => ["MONTH(order) = ? AND YEAR(order) = ?", month, year])
+ 	
+ 	def self.find_by_month(month,year)
+ 		Order.find(:all, conditions: { date: (Date.(year,month).beginning_of_month..Date.(year,month).end_of_month)})
  	end
  	
  	def week
@@ -65,6 +66,6 @@ class Order < ActiveRecord::Base
   end
   
   def offering_name=(name)
-  	self.offering_id = Offering.find__or_create_by_name(name).id if name.present?
+  	self.offering = Offering.find_or_create_by_name(name) if name.present?
   end
 end
