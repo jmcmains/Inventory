@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120710145459) do
+ActiveRecord::Schema.define(:version => 20120722190221) do
 
   create_table "customers", :force => true do |t|
     t.string   "first_name"
@@ -77,7 +77,6 @@ ActiveRecord::Schema.define(:version => 20120710145459) do
     t.datetime "updated_at", :null => false
   end
 
-  add_index "product_counts", ["event_id", "product_id"], :name => "index_product_counts_on_event_id_and_product_id", :unique => true
   add_index "product_counts", ["event_id"], :name => "index_product_counts_on_event_id"
   add_index "product_counts", ["product_id"], :name => "index_product_counts_on_product_id"
 

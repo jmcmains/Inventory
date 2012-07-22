@@ -18,7 +18,7 @@
   $(function () {
     new Highcharts.Chart({
      	chart: { renderTo: 'orders_chart' },
-		  title: { text: 'Orders by week' },
+		  title: { text: 'Total Orders by week' },
 		  xAxis: { 
 		  	type: 'datetime',
 				maxZoom: 14 * 24 * 3600000,
@@ -98,6 +98,40 @@
 				},
 				dashStyle: 'Dash'
 			}]
+    });
+  });
+</script>
+<% oc=Order.count(:all, group: "strftime('%m/%Y', date)") %>
+<div id="orders_chart1" style="width:560px; height:300px;"></div>
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    new Highcharts.Chart({
+     	chart: { renderTo: 'orders_chart1' },
+		  title: { text: 'Total Orders by month' },
+		  xAxis: { 
+		  	type: 'datetime',
+				maxZoom: 14 * 24 * 3600000,
+		  	text: "Week Number",
+		  	min: Date.UTC(<%= d2.first.year %>,<%= d2.first.month-1 %>,<%= d2.first.day %>),
+		  	max: Date.UTC(<%= (d2.last+leadTime).year %>,<%= (d2.last+leadTime).month-1 %>,<%= (d2.last+leadTime).day %>)
+		  },
+		  yAxis: {
+		  	min: 0,
+		    title: { text: 'Orders'}
+		  },
+		  series: [{
+				name: 'Weekly Sales',
+		    data: [
+					<% (d2.first.year..d2.last.year).each do |year| %>
+						<% (1..12).each do |month| %>
+							<% date = "%02d" % month + "/#{year}" %>
+							<% if oc[date] %>
+								[Date.UTC(<%= year %>, <%= month-1 %>, 1),<%= oc[date] %>]<%= "," if date != "%02d" % d2.last.month+1 + "/#{d2.last.year}" %>
+							<% end %>
+						<% end %>
+					<% end %>		
+		    ]
+		  }]
     });
   });
 </script>

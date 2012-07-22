@@ -62,6 +62,9 @@ class EventsController < ApplicationController
   
   def edit
   	@event=Event.find(params[:id])
+  	(Product.count-@event.product_counts.count).times do
+    	question = @event.product_counts.build
+  	end
   	@title = "Edit Event"
   end
   

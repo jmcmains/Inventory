@@ -12,7 +12,7 @@
 	Product Counts:<br>
 	<ul>
 	<% event.product_counts.sort_by(&:product_id).each do |pc| %>
-		<% if pc.count > 0 %>
+		<% if pc.count && pc.count > 0 %>
 			<li><%= link_to pc.product.name, product_path(pc.product) %>: <%= pc.count.round %> 
 			<% if pc.is_box %>
 				boxes

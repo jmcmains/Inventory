@@ -1,37 +1,25 @@
 <%= form_for @event do |f| %>
 	<p><%= f.hidden_field :event_type, value: @event.event_type %>
-		<strong><%= f.label :date %></strong>
-		<%= f.date_select :date, order: [:month, :day, :year] %><br/>
+		<%= f.label :date %>
+		<%= f.date_select :date, {order: [:month, :day, :year]}, {:class => "input-small"}  %>
 	<% if @event.event_type == "Product Order" %>
-		<strong><%=f.label :invoice, "Invoice # (PO#):" %></strong>
-		<%= f.text_field :invoice %><br />
-		<strong><%= f.label :supplier %></strong>
-		<%= f.text_field :supplier %><br />
-		<strong><%= f.label :received_date %></strong>
-		<%= f.date_select :received_date, order: [:month, :day, :year] %><br/>
+		<%=f.label :invoice, "Invoice # (PO#):" %>
+		<%= f.text_field :invoice %>
+		<%= f.label :supplier %>
+		<%= f.text_field :supplier %>
+		<%= f.label :expected_date %>
+		<%= f.date_select :expected_date, {order: [:month, :day, :year]}, {:class => "input-small"}  %>
+		<%= f.label :received_date %>
+		<%= f.date_select :received_date, {order: [:month, :day, :year]}, {:class => "input-small"} %><br>
 		<%= f.radio_button :received, "true" %> received
 		<%= f.radio_button :received, "false" %> not yet received
 	<% end %>
 	</p>
 	<% n=1 %>
 		<h2>Products</h2>
-	<%= f.fields_for :product_counts do |pc| %>  
-		<div style="width:300px;height:300px;float:left;margin:10px;border:1px solid #000;text-align:center;valign:middle;border-radius: 10px;">
-		<% product = @event.product_counts.first(n).last.product %>
-		<strong><%= product.name %></strong><br>
-			<% if !product.description.blank? %>
-				<%= product.description %> - 
-			<% end %>
-			<%= product.per_box %> pc/box <br>
-			Product Count:
-			<%= pc.hidden_field :product_id %>
-			<%= pc.text_field :count %><br>
-			<%= pc.radio_button :is_box, "true" %> boxes
-			<%= pc.radio_button :is_box, "false" %> pieces 
-			<% if !product.imloc.blank? %>
-				<br><%= image_tag product.imloc, style: "height:150px;max-height:100 px" %>
-			<% end %>
-		</div> 
+	<%= f.fields_for :product_counts do |builder| %>  
+		<% product = Product.all.sort_by { |a| a.id }.first(n).last %> 
+		<%= render "product_fields", f: builder, product: product %>
 		<% n = n+1 %>
 	<% end %>
 	<center><div style="width:500px"><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;text-align:center" %></div></center>

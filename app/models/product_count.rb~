@@ -1,4 +1,4 @@
 class ProductCount < ActiveRecord::Base
-  belongs_to :events, :class_name => "Event"
-	belongs_to :products, :class_name => "Product"
+  belongs_to :event, :class_name => "Event"
+	belongs_to :product, :class_name => "Product"
 end

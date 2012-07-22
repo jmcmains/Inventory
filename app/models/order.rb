@@ -28,6 +28,10 @@ class Order < ActiveRecord::Base
  		Order.find(:all, conditions: { date: (Date.new(year,month).beginning_of_month..Date.new(year,month).end_of_month)})
  	end
  	
+ 	def self.count_by_month(month,year)
+ 		Order.find(:all, conditions: { date: (Date.new(year,month).beginning_of_month..Date.new(year,month).end_of_month)}).count
+ 	end
+ 	
  	def week
  		self.date.strftime("%W").to_i
  	end
