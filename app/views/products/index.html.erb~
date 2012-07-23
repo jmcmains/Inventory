@@ -13,7 +13,8 @@
 <% prediction_x = (y.length..(y.length+leadTimeWeeks)).to_a %>
 <% prediction_y = prediction_x.map { |x| x*m+b } %>
 <% sigma = lineFit.sigma %>
-<div id="orders_chart" style="width:560px; height:300px;"></div>
+<div id="orders_chart" style="width:560px; height:300px;display:inline"></div>
+<div id="orders_chart1" style="width:560px; height:300px;display:inline"></div>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
@@ -101,8 +102,12 @@
     });
   });
 </script>
-<% oc=Order.count(:all, group: "strftime('%m/%Y', date)") %>
-<div id="orders_chart1" style="width:560px; height:300px;"></div>
+<% if Rails.env.production? %>
+	<% sql= ActiveRecord::Base.connection() %>
+	<% oc=sql.execute("SELECT COUNT(DISTINCT(orders.order_number)), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders GROUP BY year, month ORDER BY year, month ") %>
+<% else %>
+	<% oc=Order.count(:all, group: "strftime('%m/%Y', date)") %>
+<% end %>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
@@ -111,7 +116,7 @@
 		  xAxis: { 
 		  	type: 'datetime',
 				maxZoom: 14 * 24 * 3600000,
-		  	text: "Week Number",
+		  	text: "Month Number",
 		  	min: Date.UTC(<%= d2.first.year %>,<%= d2.first.month-1 %>,<%= d2.first.day %>),
 		  	max: Date.UTC(<%= (d2.last+leadTime).year %>,<%= (d2.last+leadTime).month-1 %>,<%= (d2.last+leadTime).day %>)
 		  },
@@ -120,16 +125,22 @@
 		    title: { text: 'Orders'}
 		  },
 		  series: [{
-				name: 'Weekly Sales',
+				name: 'Monthly Sales',
 		    data: [
+		    <% if Rails.env.production? %>
+		    	<% (0..(oc.count-1)).each do |val| %>
+		    	[Date.UTC(<%= oc[val]['year'] %>, <%= oc[val]['month']-1 %>, 1),<%= oc[val]['count'] %>]<%= "," if val != (oc.count-1) %>
+		    	<% end %>
+		    <% else %>
 					<% (d2.first.year..d2.last.year).each do |year| %>
 						<% (1..12).each do |month| %>
 							<% date = "%02d" % month + "/#{year}" %>
 							<% if oc[date] %>
-								[Date.UTC(<%= year %>, <%= month-1 %>, 1),<%= oc[date] %>]<%= "," if date != "%02d" % d2.last.month+1 + "/#{d2.last.year}" %>
+								[Date.UTC(<%= year %>, <%= month-1 %>, 1),<%= oc[date] %>]<%= "," if date != "%02d" % (d2.last.month+1) + "/#{d2.last.year}" %>
 							<% end %>
 						<% end %>
-					<% end %>		
+					<% end %>	
+				<% end %>	
 		    ]
 		  }]
     });
