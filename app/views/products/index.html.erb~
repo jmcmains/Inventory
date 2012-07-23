@@ -13,8 +13,8 @@
 <% prediction_x = (y.length..(y.length+leadTimeWeeks)).to_a %>
 <% prediction_y = prediction_x.map { |x| x*m+b } %>
 <% sigma = lineFit.sigma %>
-<div id="orders_chart" style="width:560px; height:300px;display:inline"></div>
-<div id="orders_chart1" style="width:560px; height:300px;display:inline"></div>
+<div id="orders_chart" style="width:560px; height:300px;display:block-inline"></div>
+<div id="orders_chart1" style="width:560px; height:300px;display:block-inline"></div>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
@@ -129,7 +129,7 @@
 		    data: [
 		    <% if Rails.env.production? %>
 		    	<% (0..(oc.count-1)).each do |val| %>
-		    	[Date.UTC(<%= oc[val]['year'] %>, <%= oc[val]['month']-1 %>, 1),<%= oc[val]['count'] %>]<%= "," if val != (oc.count-1) %>
+		    	[Date.UTC(<%= oc[val]['year'] %>, <%= oc[val]['month'].to_i-1 %>, 1),<%= oc[val]['count'] %>]<%= "," if val != (oc.count-1) %>
 		    	<% end %>
 		    <% else %>
 					<% (d2.first.year..d2.last.year).each do |year| %>
