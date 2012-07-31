@@ -21,12 +21,12 @@ class OfferingsController < ApplicationController
 	end
 	
 	def autocomplete
-		@offerings = Offering.search(params[:term])
+		@offerings = Offering.search(params[:term],true)
 		render json: @offerings.map(&:name)
 	end
 	
 	def price
-		@offerings = Offering.search(params[:term])
+		@offerings = Offering.search(params[:term],true)
 		render json: @offerings.map(&:price)
 	end
 	
@@ -37,7 +37,7 @@ class OfferingsController < ApplicationController
 	
   def index
     @title = "Current Offerings and their products"
-  	@offerings = Offering.search(params[:search])
+  	@offerings = Offering.search(params[:search],false)
   	if params[:sort_by] == "US_ASC"
   		@offerings=@offerings.sort_by {|o| o.orders.amzus.count }
   	elsif params[:sort_by] == "US_DESC"

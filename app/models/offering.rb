@@ -6,11 +6,15 @@ class Offering < ActiveRecord::Base
   accepts_nested_attributes_for :offering_products, :reject_if => :all_blank, :allow_destroy => true
   validates :name, presence: true
   
-  def self.search(search)
+  def self.search(search,price)
   	if search
 			words = search.to_s.strip.split
 		  words.inject(scoped) do |combined_scope, word|
-		    combined_scope.where('LOWER(name) LIKE ? AND price > 0',"%#{word.downcase}%")
+		  	if price
+		    	combined_scope.where('LOWER(name) LIKE ? AND price > 0',"%#{word.downcase}%")
+		    else
+		    	combined_scope.where('LOWER(name) LIKE ?',"%#{word.downcase}%")
+		    end
 		  end
   	else
   		return find(:all)

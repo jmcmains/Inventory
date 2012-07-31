@@ -36,7 +36,6 @@ Inventory::Application.routes.draw do
 	collection do
 			get :blank
 			get :autocomplete
-			get :price
 		end
 	end
 end

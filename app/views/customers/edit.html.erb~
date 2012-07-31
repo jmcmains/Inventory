@@ -32,10 +32,13 @@
 	<%= f.label :transaction_number %>
 	<%= f.text_field :transaction_number %>
 </div>
-<%= f.fields_for :orders do |builder| %>
+<div class="field">
+<%= f.label :orders, "Products" %>
+<%= f.fields_for(:orders, :html => { :class => "form-inline"}) do |builder| %>
 	<%= render "order_fields", :f => builder %>
 <% end %>
 <p><%= link_to_add_fields "Add Product", f, :orders %></p>
+</div>
 <div class="actions">
 	<%= f.submit "Save" %>
 </div>
