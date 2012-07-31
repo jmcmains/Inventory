@@ -166,7 +166,7 @@ class Product < ActiveRecord::Base
 			y[n] = 0 if !y[n]
 		end
 		x =(1..y.length).to_a
-		if y.count > 0
+		if y.count > 1
 			lineFit = LineFit.new
 			lineFit.setData(x,y)
 			b, m = lineFit.coefficients

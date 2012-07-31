@@ -166,10 +166,14 @@ class Product < ActiveRecord::Base
 			y[n] = 0 if !y[n]
 		end
 		x =(1..y.length).to_a
-		lineFit = LineFit.new
-		lineFit.setData(x,y)
-		b, m = lineFit.coefficients
-		sigma = lineFit.sigma
+		if y.count > 0
+			lineFit = LineFit.new
+			lineFit.setData(x,y)
+			b, m = lineFit.coefficients
+			sigma = lineFit.sigma
+		else
+			b=m=sigma=0
+		end
 		leadTimeWeeks = (leadTime/7.0).ceil
 		averageNetInventory = 2*sigma*Math.sqrt(leadTimeWeeks)
 		weeks = (0..leadTimeWeeks).map { |w| w+y.length }
