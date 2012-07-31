@@ -13,7 +13,7 @@ class Product < ActiveRecord::Base
 	end
 	
 	def next
-		id < Product.all.sort_by(&:id).last.id ? Product.find(id+1) : nil
+		id < Product.last.id ? Product.find(id+1) : nil
 	end
 	
 	def previous

@@ -53,9 +53,11 @@ class Product < ActiveRecord::Base
 			data["y"]=d.map { |a| a[0] }
 			data["dates"]=d.map{ |a| a[2].to_date.beginning_of_week }
 		end
-		if data["dates"].last >= Date.today.beginning_of_week-1
-			data["dates"].pop
-			data["y"].pop	
+		if data["y"].count > 0
+			if data["dates"].last >= Date.today.beginning_of_week-1
+				data["dates"].pop
+				data["y"].pop	
+			end
 		end
 		return data
 	end
