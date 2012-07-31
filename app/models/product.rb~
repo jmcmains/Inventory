@@ -29,8 +29,11 @@ class Product < ActiveRecord::Base
 	end
 	
 	def get_last_count(event_name)
-		e=get_last(event_name)
-		e.product_counts.find_by_product_id(self)
+		if e=get_last(event_name)
+			e.product_counts.find_by_product_id(self)
+		else
+			return 0
+		end
 	end
 	
 	def get_current_shipments
@@ -53,9 +56,11 @@ class Product < ActiveRecord::Base
 			data["y"]=d.map { |a| a[0] }
 			data["dates"]=d.map{ |a| a[2].to_date.beginning_of_week }
 		end
-		if data["dates"].last >= Date.today.beginning_of_week-1
-			data["dates"].pop
-			data["y"].pop	
+		if data["y"].count > 0
+			if data["dates"].last >= Date.today.beginning_of_week-1
+				data["dates"].pop
+				data["y"].pop	
+			end
 		end
 		return data
 	end
@@ -123,10 +128,14 @@ class Product < ActiveRecord::Base
 	def get_Inventory
 		# Inventory
 		last_inv=self.get_last_count("Inventory");
-		if last_inv.is_box
-			li = last_inv.count*(self.per_box? ? self.per_box : 0 )
+		if last_inv != 0
+			if last_inv.is_box
+				li = last_inv.count*(self.per_box? ? self.per_box : 0 )
+			else
+				li = last_inv.count
+			end
 		else
-			li = last_inv.count
+			li = 0
 		end
 		return li
 	end

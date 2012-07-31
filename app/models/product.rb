@@ -29,8 +29,11 @@ class Product < ActiveRecord::Base
 	end
 	
 	def get_last_count(event_name)
-		e=get_last(event_name)
-		e.product_counts.find_by_product_id(self)
+		if e=get_last(event_name)
+			e.product_counts.find_by_product_id(self)
+		else
+			return 0
+		end
 	end
 	
 	def get_current_shipments
@@ -125,10 +128,14 @@ class Product < ActiveRecord::Base
 	def get_Inventory
 		# Inventory
 		last_inv=self.get_last_count("Inventory");
-		if last_inv.is_box
-			li = last_inv.count*(self.per_box? ? self.per_box : 0 )
+		if last_inv != 0
+			if last_inv.is_box
+				li = last_inv.count*(self.per_box? ? self.per_box : 0 )
+			else
+				li = last_inv.count
+			end
 		else
-			li = last_inv.count
+			li = 0
 		end
 		return li
 	end
@@ -159,10 +166,14 @@ class Product < ActiveRecord::Base
 			y[n] = 0 if !y[n]
 		end
 		x =(1..y.length).to_a
-		lineFit = LineFit.new
-		lineFit.setData(x,y)
-		b, m = lineFit.coefficients
-		sigma = lineFit.sigma
+		if y.count > 0
+			lineFit = LineFit.new
+			lineFit.setData(x,y)
+			b, m = lineFit.coefficients
+			sigma = lineFit.sigma
+		else
+			b=m=sigma=0
+		end
 		leadTimeWeeks = (leadTime/7.0).ceil
 		averageNetInventory = 2*sigma*Math.sqrt(leadTimeWeeks)
 		weeks = (0..leadTimeWeeks).map { |w| w+y.length }
