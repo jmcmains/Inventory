@@ -15,7 +15,11 @@ Inventory::Application.routes.draw do
 		end
 	end
 	root to: 'static_pages#home'
-	resources :products
+	resources :products do
+	collection do
+			get :autocomplete
+		end
+	end
 	resources :product_counts
 	resources :events do
 		collection do

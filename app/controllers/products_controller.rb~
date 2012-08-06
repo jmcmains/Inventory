@@ -34,7 +34,7 @@ class ProductsController < ApplicationController
 	
 	def index
 		@title = "All Products"
-    @products = Product.all
+    @products = Product.all.sort_by { |a| a.id }
 	end
 	
 	def destroy

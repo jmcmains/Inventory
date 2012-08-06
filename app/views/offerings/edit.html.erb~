@@ -9,25 +9,11 @@
 	</div>
 	<% n=1 %>
 <h2>Products</h2>
-	<%= f.fields_for :offering_products do |pc| %>  
-		<div style="width:300px;height:300px;float:left;margin:10px;border:1px solid #000;text-align:center;valign:middle;border-radius: 10px;">
-		<% product = @offering.offering_products.sort_by(&:product_id).first(n).last.product %>
-		<% if product.nil? %>
-			<% product = Product.all.sort_by(&:id).first(n).last %>
-		<% end %>
-		<strong><%= product.name %></strong><br>
-			<% if !product.description.blank? %>
-				<%= product.description %> - 
-			<% end %>
-			<%= product.per_box %> pc/box <br>
-			Product Count:
-			<%= pc.hidden_field :product_id, value: product.id %>
-			<%= pc.text_field :quantity %><br>
-			<% if !product.imloc.blank? %>
-				<br><%= image_tag product.imloc, style: "height:150px;max-height:100 px" %>
-			<% end %>
-		</div> 
-		<% n = n+1 %>
-	<% end %>
-	<center><div style="width:500px"><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;text-align:center" %></div></center>
+	<%= f.fields_for(:offering_products, :html => { :class => "form-inline"}) do |builder| %>
+	<%= render "offering_product_fields", :f => builder %>
+<% end %>
+<p><%= link_to_add_fields "Add Product", f, :products %></p>
+<div class="actions">
+	<%= f.submit "Save" %>
+</div>
 	<% end %>

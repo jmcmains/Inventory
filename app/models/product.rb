@@ -28,6 +28,17 @@ class Product < ActiveRecord::Base
 		return base+im
 	end
 	
+	def self.search(search)
+  	if search
+			words = search.to_s.strip.split
+		  words.inject(scoped) do |combined_scope, word|
+		    combined_scope.where('LOWER(name) LIKE ?',"%#{word.downcase}%")
+		  end
+  	else
+  		return find(:all)
+  	end
+  end
+  
 	def get_last_count(event_name)
 		if e=get_last(event_name)
 			e.product_counts.find_by_product_id(self)
@@ -182,5 +193,12 @@ class Product < ActiveRecord::Base
 		needed = averageNetInventory+predictedDemand2 - (currentInventory + pipeLine)
 		return needed
 	end
-
+	
+	def product_name
+  	try(:name)
+  end
+  
+  def product_name=(name)
+  	Product.find_or_create_by_name(name) if name.present?
+  end
 end

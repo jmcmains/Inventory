@@ -6,16 +6,14 @@ class OfferingsController < ApplicationController
   def edit
   	@offering=Offering.find(params[:id])
   	@title = "Edit Offering"
-  	if @offering.offering_products.count == 0
-  			@offering_products = Array.new(Product.all.count) { @offering.offering_products.build }
-  	end
+  	@offering.offering_products.build
   end
   
 	def update
 		@offering = Offering.find(params[:id])
     @offering.update_attributes(params[:offering])
     respond_to do |format|
-			format.html { redirect_to offerings_path }
+			format.html { redirect_to blank_offerings_path }
 			format.js
 		end
 	end
