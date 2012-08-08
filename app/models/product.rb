@@ -106,7 +106,10 @@ class Product < ActiveRecord::Base
 		max_lead_time=130.0;
 		y=self.get_trend["y"]
 		dates=self.get_trend["dates"]
-		x =(1..y.length).to_a
+		x =Array.new
+		dates.each_with_index do |d,i|
+			x[i]=(d-dates[0]).to_i
+		end
 		lineFit = LineFit.new
 		lineFit.setData(x,y)
 		b, m = lineFit.coefficients

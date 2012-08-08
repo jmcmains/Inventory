@@ -194,5 +194,11 @@ class Product < ActiveRecord::Base
 		return needed
 	end
 	
-
+	def product_name
+  	try(:name)
+  end
+  
+  def product_name=(name)
+  	Product.find_or_create_by_name(name) if name.present?
+  end
 end
