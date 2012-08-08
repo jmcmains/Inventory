@@ -6,6 +6,7 @@
 <%= link_to 'Edit', edit_customer_path(customer) %> | <%= link_to "delete", customer, :method => :delete, :confirm => "You sure?", :title => "Delete #{customer.transaction_number}" %></p>
 	<strong>Date</strong><br><%= customer.orders.first.date %><br>
 	<strong>Address</strong><br><%= raw modaddy(customer.address) %><br>
+	<strong>Delivery Method</strong><br><%= customer.delivery_method %><br>
 	<strong>E-mail</strong><br><%= customer.email %><br>
 	<strong>Total Cost</strong><br><%= customer.total_cost %><br>
 	<strong>Payment Method</strong><br><%= customer.payment_method %><br>
