@@ -1,4 +1,4 @@
-<a href="
+
 <%= form_for(@customer) do |f| %>
 <div class="field">
 	<%= f.label :date %>

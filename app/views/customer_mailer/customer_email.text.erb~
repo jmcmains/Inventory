@@ -17,7 +17,7 @@ Quantity: <%= o.quantity %>
 
 <% end %>
 
-TOTAL: <%= @customer.total_cost %>
+TOTAL: <%= number_to_currency(@customer.total_cost) %>
 
 
 SHIPPING INFORMATION

@@ -164,7 +164,9 @@ Orders current until the week of: <%= d2.last %>
     });
   });
 </script>
-
+<% lead60=d2.last+60 %>
+<% lead90=d2.last+90 %>
+<% lead120=d2.last+120 %>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
@@ -174,6 +176,19 @@ Orders current until the week of: <%= d2.last %>
 		  	type: 'datetime',
 				maxZoom: 14 * 24 * 3600000,
 		  	text: "Week Number",
+				plotBands: [{ 
+					from: Date.UTC(<%= lead60.year %>, <%= lead60.month-1 %>, <%= lead60.day %>),
+					to: Date.UTC(<%= lead60.year %>, <%= lead60.month-1 %>, <%= lead60.day+1 %>),
+					color: 'rgba(0, 0, 0, .2)'
+				},{ 
+					from: Date.UTC(<%= lead90.year %>, <%= lead90.month-1 %>, <%= lead90.day %>),
+					to: Date.UTC(<%= lead90.year %>, <%= lead90.month-1 %>, <%= lead90.day+1 %>),
+					color: 'rgba(0, 0, 0, .2)'
+				},{ 
+					from: Date.UTC(<%= lead120.year %>, <%= lead120.month-1 %>, <%= lead120.day %>),
+					to: Date.UTC(<%= lead120.year %>, <%= lead120.month-1 %>, <%= lead120.day+1 %>),
+					color: 'rgba(0, 0, 0, .2)'
+				}]
 		  },
 		  yAxis: {
 		    title: { text: 'Inventory'}
