@@ -5,7 +5,7 @@ class Product < ActiveRecord::Base
 	has_many :offerings, through: :offering_products
 	
 	def get_last(event_name)
-		self.events.find_all_by_event_type(event_name).last
+		self.events.find_all_by_event_type(event_name).sort_by(&:date).last
 	end
 	
 	def inventory
@@ -24,7 +24,6 @@ class Product < ActiveRecord::Base
 	end
 	def image
 		base = "http://rubberbanditz.com/wp-content/themes/rubberbanditzNew/proImg/"
-
 		return base+im
 	end
 	
@@ -115,10 +114,10 @@ class Product < ActiveRecord::Base
 		b, m = lineFit.coefficients
 		levels=[inventory]
 		curdate = Date.today.beginning_of_week + 1
-		if Date.today.beginning_of_week == dates.last
+		if Date.today.beginning_of_week == inv.event.date.beginning_of_week
 			n = x.last + 1
 		else
-			n = x.last + 2
+			n = x.last + (Date.today.beginning_of_week-inv.event.date.beginning_of_week)
 		end
 		while curdate < start+max_lead_time
 			levels << levels.last
