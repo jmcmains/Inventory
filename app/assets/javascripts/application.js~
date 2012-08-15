@@ -17,7 +17,7 @@
 //= require_tree .
 
 function remove_fields(link) {
-  $(link).closest(".fields").remove();
+  $(link).closest(".fields").hide();
 }
 
 function add_fields(link, association, content) {
@@ -26,7 +26,7 @@ function add_fields(link, association, content) {
   
   $(link).parent().before(content.replace(regexp, new_id));
   $( "#customer_orders_attributes_" + new_id + "_offering_name" ).autocomplete({
-			source: ['foo','food','floor']
+			source: $( "#customer_orders_attributes_0_offering_name" ).data('autocomplete-source')
 	});
 }
 

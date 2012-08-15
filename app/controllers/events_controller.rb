@@ -22,10 +22,7 @@ class EventsController < ApplicationController
   	@event.event_type="Product Order"
   	@title="New Product Order"
   	@subtitle=""
-		Product.all.count.times do
-    	question = @event.product_counts.build
-  	end
-  	render :new
+   	question = @event.product_counts.build
   end
   
   def inventory
@@ -62,10 +59,14 @@ class EventsController < ApplicationController
   
   def edit
   	@event=Event.find(params[:id])
+  	@title = "Edit Event"
+  	if @event.event_type == "Product Order"
+  		render :edit_po
+  	else
   	(Product.count-@event.product_counts.count).times do
     	question = @event.product_counts.build
   	end
-  	@title = "Edit Event"
+  	end
   end
   
   def update

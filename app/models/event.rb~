@@ -9,12 +9,7 @@ class Event < ActiveRecord::Base
 protected
 
     def check_product_count(product_count_attr)
-      if pc = ProductCount.find_by_product_id_and_event_id(product_count_attr['product_id'],id)
-        self.product_count.id = pc.id
-        rval = true
-      else
-      	rval = false
-      end
+
       if product_count_attr['count'].blank?
       	rval ||= true
       else

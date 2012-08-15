@@ -17,7 +17,8 @@
 //= require_tree .
 
 function remove_fields(link) {
-  $(link).closest(".fields").remove();
+  $(link).closest(".fields").hide();
+  $(link).prev("input[type=hidden]").val("1");
 }
 
 function add_fields(link, association, content) {
