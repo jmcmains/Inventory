@@ -1,18 +1,27 @@
+<% if @title == "Product Order" %>
+	<%= form_tag(po_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
+		<%= select_tag :supplier, options_for_select(@suppliers.map(&:supplier)) %>
+		<%= submit_tag %>
+	<% end %>
+<% end %>
 <% @events.each do |event| %>
 	<p>
 	<h2>Date: <%= event.date %> </h2>
 
 	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",
-                                :title => "Delete #{event.event_type}" %><br/>
-		<% if event.event_type == "Product Order" %>
+                                :title => "Delete #{event.event_type}" %> 
+		<% if @title == "Product Order" %>
+			| <%= link_to 'Receive Today', receive_po_today_event_path(event) %><br>
 			Expected Delivery: <%= event.expected_date %><br/>
 			Invoice: <%= event.invoice %><br/>
 			Suppier: <%= event.supplier %><br/>
+		<% else %>
+			<br>
 		<% end %>
 	Product Counts:<br>
 	<ul>
 	<% event.product_counts.sort_by(&:product_id).each do |pc| %>
-		<% if pc.count > 0 %>
+		<% if pc.count && pc.count > 0 %>
 			<li><%= link_to pc.product.name, product_path(pc.product) %>: <%= pc.count.round %> 
 			<% if pc.is_box %>
 				boxes

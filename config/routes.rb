@@ -28,6 +28,9 @@ Inventory::Application.routes.draw do
 			get :new_inventory
 			get :new_po
 		end
+		member do
+			get :receive_po_today
+		end
 	end
 	resources :orders do
 		collection do

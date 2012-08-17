@@ -9,7 +9,10 @@
 		<%= f.text_field :supplier %>
 		<%= f.label :expected_date %>
 		<%= f.date_select :expected_date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
-		<%= f.hidden_field :received, value: false %>
+		<%= f.label :received_date %>
+		<%= f.date_select :received_date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
+		<%= f.label :received %>
+		<%= f.radio_button :received, "true" %> yes	<%= f.radio_button :received, "false" %> no
 	<% end %>
 	</p>
 	<% n=1 %>
