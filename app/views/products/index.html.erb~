@@ -154,6 +154,7 @@
 		    	<% (0..(oc['dates'].count-1)).each do |val| %>
 		    	[Date.UTC(<%= oc['dates'][val].year.to_i %>, <%= oc['dates'][val].month.to_i-1 %>, 1),<%= oc['y'][val].to_i %>]<%= "," if val != (oc['dates'].count-1) %>
 		    	<% end %>
+		    	}
 				<% end %>	
 		    ]
 		  }]
