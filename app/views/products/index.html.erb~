@@ -132,7 +132,7 @@
 		    data: [
 		    <% if Rails.env.production? %>
 		    	<% (0..(oc.count-1)).each do |val| %>
-		    	[Date.UTC(<%= oc[val]['year'].to_i %>, <%= oc[val]['month'].to_i-1 %>, 1),<%= oc[val]['count'].to_i %>]<%= "," if val != (oc.count-1) %>
+		    	[Date.UTC(<%= oc['dates'][val].year.to_i %>, <%= oc['dates'][val].month.to_i-1 %>, 1),<%= oc['y'][val].to_i %>]<%= "," if val != (oc.count-1) %>
 		    	<% end %>
 		    <% else %>
 					<% (d2.first.year..d2.last.year).each do |year| %>
