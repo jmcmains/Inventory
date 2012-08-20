@@ -104,7 +104,10 @@
 </script>
 <% if Rails.env.production? %>
 	<% sql= ActiveRecord::Base.connection() %>
-	<% oc=sql.execute("SELECT COUNT(DISTINCT(orders.order_number)), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders GROUP BY year, month ORDER BY year, month ") %>
+	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year, month ORDER BY year, month ") %>
+	<% oc = {} %>
+	<% oc["y"]=d.map { |a| a["sum"].to_i } %>
+	<% oc["dates"] = d.map { |a| Date.new(a["year"].to_i,a["month"].to_i,1) } %>
 <% else %>
 	<% oc=Order.count(:all, group: "strftime('%m/%Y', date)") %>
 <% end %>
@@ -129,7 +132,7 @@
 		    data: [
 		    <% if Rails.env.production? %>
 		    	<% (0..(oc.count-1)).each do |val| %>
-		    	[Date.UTC(<%= oc[val]['year'] %>, <%= oc[val]['month'].to_i-1 %>, 1),<%= oc[val]['count'] %>]<%= "," if val != (oc.count-1) %>
+		    	[Date.UTC(<%= oc[val]['year'].to_i %>, <%= oc[val]['month'].to_i-1 %>, 1),<%= oc[val]['count'].to_i %>]<%= "," if val != (oc.count-1) %>
 		    	<% end %>
 		    <% else %>
 					<% (d2.first.year..d2.last.year).each do |year| %>
