@@ -227,39 +227,6 @@ Orders current until the week of: <%= d2.last %>
 					enabled: false
 				},
 				dashStyle: 'Dash'
-			},{
-				type: 'line',
-				name: '60 Day Line',
-				data: [
-					[Date.UTC(<%= lead60.year %>, <%= lead60.month-1 %>, <%= lead60.day %>),0],
-					[Date.UTC(<%= lead60.year %>, <%= lead60.month-1 %>, <%= lead60.day %>),100]
-					],
-				marker: {
-					enabled: false
-				},
-				dashStyle: 'Dash'
-			},{
-				type: 'line',
-				name: '90 Day Line',
-				data: [
-					[Date.UTC(<%= lead90.year %>, <%= lead90.month-1 %>, <%= lead90.day %>),0],
-					[Date.UTC(<%= lead90.year %>, <%= lead90.month-1 %>, <%= lead90.day %>),100]
-					],
-				marker: {
-					enabled: false
-				},
-				dashStyle: 'Dash'
-			},{
-				type: 'line',
-				name: '120 Day Line',
-				data: [
-					[Date.UTC(<%= lead120.year %>, <%= lead120.month-1 %>, <%= lead120.day %>),0],
-					[Date.UTC(<%= lead120.year %>, <%= lead120.month-1 %>, <%= lead120.day %>),100]
-					],
-				marker: {
-					enabled: false
-				},
-				dashStyle: 'Dash'
 			}]
     });
   });
