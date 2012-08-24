@@ -19,9 +19,16 @@ class Product < ActiveRecord::Base
 	def previous
 		id > 1 ? Product.find(id-1) : nil
 	end
+	
 	def product_orders
 		self.events.product_orders
 	end
+	
+	def running_out?
+		limit = 14 #Days
+		return forcast_demand[0..(limit-1)].map { |d| d < 0 }.include?(true)
+	end
+	
 	def image
 		base = "http://rubberbanditz.com/wp-content/themes/rubberbanditzNew/proImg/"
 		return base+im

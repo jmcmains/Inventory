@@ -160,6 +160,24 @@
     });
   });
 </script>
+<table class="info" id='main'>
+<tr'>
+	<td id='td1'>Modify</td>
+	<td id='td2'>Name</td>
+	<td id='td3'>Description</td>
+	<td id='td4'>Weight</td>
+	<td id='td5'>Quantity per Box</td>
+	<td id='td6'>Current Inventory</td>
+	<td id='td7'>Amount in Transit</td>
+	<td id='td8'>Need (lead Time: 60 days)</td>
+	<td id='td9'>Need (lead Time: 90 days)</td>
+	<td id='td10'>Need (lead Time: 120 days)</td>
+</tr>
+	<%= render @products %>
+</table>
+</center>
+<%= link_to 'New Product', new_product_path %>
+
 <div id='floater' style="background-color:#fff;position:fixed;top:40px;">
 <table class='info' id='inflo'>
 	<tr>
@@ -181,42 +199,24 @@ $(function() {
 	var position = $('#main').offset();
 	var width = $('#main').width();
 	var height = $('#td1').height();
+	var navbar_height = $('.navbar-inner').height();
 	$('#floater').attr('left',position.left);
 	$('#inflo').attr('width',$('#main').width());
 	<% (1..10).each do |i| %>
 		$('#td<%= i %>f').attr('width',$('#td<%= i %>').width());
 	<% end %>
-	if ($(window).scrollTop() > position.top ) {
+	if ($(window).scrollTop() > position.top-navbar_height ) {
       $('#floater').show(); 
   } else {
     $('#floater').hide();
   };
+  $(window).scroll(function () { 
+		var position = $('#td1').offset();
+		if ($(window).scrollTop() > position.top-navbar_height ) {
+		  $('#floater').show(); 
+		} else {
+		  $('#floater').hide();
+		};
+	});
 });
 </script>
-<script>
-$(window).scroll(function () { 
-	var position = $('#main').offset();
-	if ($(window).scrollTop() > position.top ) {
-    $('#floater').show(); 
-  } else {
-    $('#floater').hide();
-  };
-});
-</script>
-<table class="info" id='main'>
-<tr'>
-	<td id='td1'>Modify</td>
-	<td id='td2'>Name</td>
-	<td id='td3'>Description</td>
-	<td id='td4'>Weight</td>
-	<td id='td5'>Quantity per Box</td>
-	<td id='td6'>Current Inventory</td>
-	<td id='td7'>Amount in Transit</td>
-	<td id='td8'>Need (lead Time: 60 days)</td>
-	<td id='td9'>Need (lead Time: 90 days)</td>
-	<td id='td10'>Need (lead Time: 120 days)</td>
-</tr>
-	<%= render @products %>
-</table>
-</center>
-<%= link_to 'New Product', new_product_path %>

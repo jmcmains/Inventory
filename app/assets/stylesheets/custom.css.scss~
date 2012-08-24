@@ -29,18 +29,6 @@ textarea {
 	width:100%;
 }
 /* header */
-
-.title {
-	position:absolute;
-	top:10px;
-  width:30%;
-  left: 35%;
-  right: 35%;
-  font-size:large;
-  font-weight:bold;
-  color:#fff;
-  text-transform:uppercase;
-}
 #logo {
 	float: left;
 	margin-right: 10px;

@@ -1,4 +1,9 @@
-<tr>
+<% if product.running_out? %>
+	<% c = 'alert' %>
+<% else %>
+	<% c = '' %>
+<% end %>
+<tr class= "<%= c %>">
 	<td>
 		<%= link_to 'Edit', edit_product_path(product) %> | <%= link_to "delete", product, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{product.name}" %>

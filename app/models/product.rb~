@@ -19,9 +19,17 @@ class Product < ActiveRecord::Base
 	def previous
 		id > 1 ? Product.find(id-1) : nil
 	end
+	
 	def product_orders
 		self.events.product_orders
 	end
+	
+	def running_out?
+		limit = 14 #Days
+		demand=forcast_demand;
+		return demand[0..13].map { |d| d < 0 }.include?(true)
+	end
+	
 	def image
 		base = "http://rubberbanditz.com/wp-content/themes/rubberbanditzNew/proImg/"
 		return base+im
@@ -114,10 +122,10 @@ class Product < ActiveRecord::Base
 		b, m = lineFit.coefficients
 		levels=[inventory]
 		curdate = Date.today.beginning_of_week + 1
-		if Date.today.beginning_of_week == (dates.last)
+		if Date.today.beginning_of_week == inv.event.date.beginning_of_week
 			n = x.last + 1
 		else
-			n = x.last + 8
+			n = x.last + (Date.today.beginning_of_week-inv.event.date.beginning_of_week)
 		end
 		while curdate < start+max_lead_time
 			levels << levels.last

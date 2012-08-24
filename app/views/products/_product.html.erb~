@@ -1,4 +1,9 @@
-<tr>
+<% if product.running_out? %>
+	<% class = 'alert' %>
+<% else %>
+	<% class = '' %>
+<% end %>
+<tr class= "<%= class %>">
 	<td>
 		<%= link_to 'Edit', edit_product_path(product) %> | <%= link_to "delete", product, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{product.name}" %>
@@ -19,7 +24,7 @@
 		<%= product.get_Inventory.round %>
 	</td>
 	<td class="number">
-		<%= product.get_orders.round %>
+		<%= product.get_orders(1000).round %>
 	</td>
 	<td class="number">
 		<%= product.need(60).round %>
