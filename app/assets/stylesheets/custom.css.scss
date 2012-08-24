@@ -76,6 +76,11 @@ p {
 
 table.info {
 	tr {
+		&.error {
+			background-color: #F2DEDE;
+			text-weight: bold;
+			text-color: #fff;
+		}
 		td {
 			border:1px solid #000;
 			padding:10px;
