@@ -76,6 +76,9 @@ p {
 
 table.info {
 	tr {
+		&.alert {
+			background-color: #f00;
+		}
 		td {
 			border:1px solid #000;
 			padding:10px;
