@@ -193,7 +193,20 @@ Orders current until the week of: <%= d2.last %>
 		  yAxis: {
 		    title: { text: 'Inventory'}
 		  },
-		  series: []
+		  series: [{
+				name: 'Supplier Orders',
+				type: 'column',
+				data: [
+					<% @product.product_orders.sort_by(&:date).each do |po| %>
+						<% if po.product_counts.find_by_product_id(@product).is_box %>
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if po != @product.product_orders.sort_by(&:date).last %>
+						<% else %>
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]<%= "," if po != @product.product_orders.sort_by(&:date).last %>
+						<% end %>
+						
+					<% end %>
+				]
+		  }]
     });
   });
 </script>

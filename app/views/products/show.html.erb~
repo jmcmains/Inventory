@@ -193,41 +193,7 @@ Orders current until the week of: <%= d2.last %>
 		  yAxis: {
 		    title: { text: 'Inventory'}
 		  },
-		  series: [{
-				name: 'Supplier Orders',
-				type: 'column',
-				data: [
-					<% @product.product_orders.sort_by(&:date).each do |po| %>
-						<% if po.product_counts.find_by_product_id(@product).is_box %>
-							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if po != @product.product_orders.sort_by(&:date).last %>
-						<% else %>
-							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]<%= "," if po != @product.product_orders.sort_by(&:date).last %>
-						<% end %>
-						
-					<% end %>
-				]
-		  },{
-				name: 'Inventory',
-				data: [
-					<% @product.inventory.sort_by(&:date).each do |inv| %>
-						<% if inv.product_counts.find_by_product_id(@product).is_box %>
-							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if inv != @product.inventory.last %>
-						<% else %>
-							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count %>]<%= "," if inv != @product.inventory.last %>
-						<% end %>
-					<% end %>
-				]
-		  },{
-		  	type: 'line',
-		  	name: 'Predicted Inventory Line',
-		  	pointInterval: 24 * 3600 * 1000,
-		  	pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day+1 %>),
-		  	data: <%= @product.forcast_demand.map { |a| a.round(2) } %>,
-		  	marker: {
-					enabled: false
-				},
-				dashStyle: 'Dash'
-			}]
+		  series: []
     });
   });
 </script>
