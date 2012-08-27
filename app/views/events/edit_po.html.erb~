@@ -11,13 +11,13 @@
 		<%= f.date_select :expected_date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
 		<%= f.label :received_date %>
 		<%= f.date_select :received_date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
-		<%= f.radio_button :received, "true" %> received	<%= f.radio_button :received, "false" %> not received 
+		<%= f.label :received %>
+		<%= f.radio_button :received, "true" %> yes	<%= f.radio_button :received, "false" %> no
 	<% end %>
 	</p>
-	<% n=1 %>
 	<h2>Products</h2>
 	<%= f.fields_for(:product_counts, :html => { :class => "form-inline"}) do |builder| %>
-	<%= render "product_count_fields", :f => builder, event: @event %>
+	<%= render "product_count_fields", f: builder, event: @event %>
 	<% end %>
 <p><%= link_to_add_fields "Add Product", f, :product_counts %></p>
 <div class="actions">

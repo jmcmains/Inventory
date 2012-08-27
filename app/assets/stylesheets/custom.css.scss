@@ -163,3 +163,23 @@ ul.ui-autocomplete {
       padding: 0.1em 0.25em;}}
 }
 
+div.product {
+	width: 250px;
+	height: 175px;
+	float:left;
+	margin:5px;
+	padding:5px;
+	border:1px solid #000;
+	text-align:center;
+	valign:middle;
+	border-radius: 5px;
+	overflow: hidden;
+	table tr td {
+		text-align: left;
+		vertical-align: top;
+	}
+	img {
+		max-height:100 px;
+		max-width:100px;
+	}
+}

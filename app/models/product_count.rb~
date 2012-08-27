@@ -18,5 +18,11 @@ class ProductCount < ActiveRecord::Base
   	self.product = Product.find_or_create_by_description(description) if description.present?
   end
   
+  def product_description
+  	product.try(:description)
+  end
   
+  def product_description=(description)
+  	self.product = Product.find_or_create_by_description(description) if description.present?
+  end
 end

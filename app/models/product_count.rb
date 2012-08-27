@@ -10,6 +10,13 @@ class ProductCount < ActiveRecord::Base
   	self.product = Product.find_or_create_by_name(name) if name.present?
   end
   
+  def product_image
+  	product.try(:imloc)
+  end
+  
+  def product_image=(imloc)
+  	self.product = Product.find_or_create_by_imloc(imloc) if imloc.present?
+  end
   def product_description
   	product.try(:description)
   end

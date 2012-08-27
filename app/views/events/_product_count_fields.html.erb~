@@ -1,13 +1,17 @@
 <p class="fields form-inline">
   <%= f.text_field :product_name, data: {autocomplete_source: autocomplete_products_path}, placeholder: "Product", class: "autocomplete" %>
   <%= f.text_field :count, class: "input-small", placeholder: "Quantity" %>
-  <%= f.radio_button :is_box, "true", checked: "true" %> boxes	<%= f.radio_button :is_box, "false" %> pieces 
+  <%= f.radio_button :is_box, "true", checked: true %> boxes	<%= f.radio_button :is_box, "false" %> pieces
   <%= link_to_remove_fields "-", f %>
 </p>
 <script>
+if ( $( ".autocomplete" ).val() != "" ) {
+	$( ".autocomplete" ).attr('disabled','disabled')
+	}
 $(function() {
 	 $( ".autocomplete" ).autocomplete({
 			source: $( "#event_product_counts_attributes_0_product_name" ).data('autocomplete-source')
 	});
 });
+
 </script>
