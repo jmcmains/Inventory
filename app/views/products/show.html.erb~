@@ -199,11 +199,11 @@ Orders current until the week of: <%= d2.last %>
 				data: [
 					<% @product.product_orders.sort_by(&:date).each do |po| %>
 						<% if po.product_counts.find_by_product_id(@product).is_box %>
-							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if po != @product.product_orders.sort_by(&:date).last %>
 						<% else %>
-							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]<%= "," if po != @product.product_orders.sort_by(&:date).last %>
 						<% end %>
-						<%= "," if po != @product.product_orders.sort_by(&:date).last %>
+						
 					<% end %>
 				]
 		  },{
@@ -222,7 +222,7 @@ Orders current until the week of: <%= d2.last %>
 		  	name: 'Predicted Inventory Line',
 		  	pointInterval: 24 * 3600 * 1000,
 		  	pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day+1 %>),
-		  	data: <%= @product.forcast_demand %>,
+		  	data: <%= @product.forcast_demand.round(2) %>,
 		  	marker: {
 					enabled: false
 				},
