@@ -13,7 +13,7 @@ class EventsController < ApplicationController
   	@subtitle=""
   	i=0;
   	@products=Array.new;
-		Product.all.each do |p|
+		Product.sort_by(&:id).all.each do |p|
     	@products[i] = @event.product_counts.build(attributes: { product_id: p.id })
     	i=i+1;
   	end
@@ -78,7 +78,7 @@ class EventsController < ApplicationController
   def edit
   	@event=Event.find(params[:id])
   	@title = "Edit Event"
-		render :edit_po
+			render :edit_po
   end
   
   def update
