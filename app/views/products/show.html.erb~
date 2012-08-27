@@ -222,7 +222,7 @@ Orders current until the week of: <%= d2.last %>
 		  	name: 'Predicted Inventory Line',
 		  	pointInterval: 24 * 3600 * 1000,
 		  	pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day+1 %>),
-		  	data: <%= @product.forcast_demand.round(2) %>,
+		  	data: <%= @product.forcast_demand.map { |a| a.round(2) } %>,
 		  	marker: {
 					enabled: false
 				},

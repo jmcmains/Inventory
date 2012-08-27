@@ -167,70 +167,7 @@ Orders current until the week of: <%= d2.last %>
 <% lead60=d2.last+60 %>
 <% lead90=d2.last+90 %>
 <% lead120=d2.last+120 %>
-<script type="text/javascript" charset="utf-8">
-  $(function () {
-    new Highcharts.Chart({
-     	chart: { renderTo: 'orders_chart1' },
-		  title: { text: 'Inventory and Supplier Orders' },
-		  xAxis: { 
-		  	type: 'datetime',
-				maxZoom: 14 * 24 * 3600000,
-		  	text: "Week Number",
-				plotBands: [{ 
-					from: Date.UTC(<%= lead60.year %>, <%= lead60.month-1 %>, <%= lead60.day %>),
-					to: Date.UTC(<%= lead60.year %>, <%= lead60.month-1 %>, <%= lead60.day+1 %>),
-					color: 'rgba(0, 0, 0, .2)'
-				},{ 
-					from: Date.UTC(<%= lead90.year %>, <%= lead90.month-1 %>, <%= lead90.day %>),
-					to: Date.UTC(<%= lead90.year %>, <%= lead90.month-1 %>, <%= lead90.day+1 %>),
-					color: 'rgba(0, 0, 0, .2)'
-				},{ 
-					from: Date.UTC(<%= lead120.year %>, <%= lead120.month-1 %>, <%= lead120.day %>),
-					to: Date.UTC(<%= lead120.year %>, <%= lead120.month-1 %>, <%= lead120.day+1 %>),
-					color: 'rgba(0, 0, 0, .2)'
-				}]
-		  },
-		  yAxis: {
-		    title: { text: 'Inventory'}
-		  },
-		  series: [{
-				name: 'Supplier Orders',
-				type: 'column',
-				data: [
-					<% @product.product_orders.sort_by(&:date).each do |po| %>
-						<% if po.product_counts.find_by_product_id(@product).is_box %>
-							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if po != @product.product_orders.sort_by(&:date).last %>
-						<% else %>
-							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_product_id(@product).count %>]<%= "," if po != @product.product_orders.sort_by(&:date).last %>
-						<% end %>
-						
-					<% end %>
-				]
-		  },{
-				name: 'Inventory',
-				data: [
-					<% @product.inventory.sort_by(&:date).each do |inv| %>
-						<% if inv.product_counts.find_by_product_id(@product).is_box %>
-							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if inv != @product.inventory.last %>
-						<% else %>
-							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count %>]<%= "," if inv != @product.inventory.last %>
-						<% end %>
-					<% end %>
-				]
-		  },{
-		  	type: 'line',
-		  	name: 'Predicted Inventory Line',
-		  	pointInterval: 24 * 3600 * 1000,
-		  	pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day+1 %>),
-		  	data: <%= @product.forcast_demand.map { |a| a.round(2) } %>,
-		  	marker: {
-					enabled: false
-				},
-				dashStyle: 'Dash'
-			}]
-    });
-  });
-</script>
+
 <script>
 $(function() {
 	$("#accordion").accordion({ active: false, collapsible: true, autoHeight: false, icons: { "header": "ui-icon-plus", "headerSelected": "ui-icon-minus" } });
