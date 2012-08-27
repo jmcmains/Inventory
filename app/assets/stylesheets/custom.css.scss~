@@ -176,7 +176,7 @@ div.product {
 	overflow: hidden;
 	table tr td {
 		text-align: left;
-		valign: top;
+		vertical-align: top;
 	}
 	img {
 		max-height:100 px;

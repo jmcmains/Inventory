@@ -3,11 +3,11 @@
 <table style="vertical-align:top; width:100%;table-layout: fixed;">
 <tr valign="top">
 <td style="width">
-<%= image_tag @product.imloc %><br>
+<%= image_tag @product.imloc class: "product-image" %><br>
 <%= link_to 'Edit', edit_product_path(@product) %> | <%= link_to "Delete", @product, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{@product.name}" %><br/>
 <p><%= @product.description %></p>
-<p><%= @product.per_box %> bands/box</p>
+<p><%= @product.per_box %> pieces/box</p>
 
 <% y = @product.get_trend["y"] %>
 <% d2 = @product.get_trend["dates"] %>
@@ -16,7 +16,7 @@
 <h2><a href="#", style="color:#999">Latest Inventory</a></h2>
 <blockquote>
 Done on: <%= @product.inventory.last.date %> <br>
-<%= glc.count %> <%= glc.is_box? ? "boxes" : "bands" %>
+<%= glc.count %> <%= glc.is_box? ? "boxes" : "pieces" %>
 </blockquote>
 <h2><a href="#", style="color:#999">Orders Currently Out</a></h2>
 <blockquote>
@@ -30,7 +30,7 @@ Done on: <%= @product.inventory.last.date %> <br>
 			boxes
 			<% oco = oco + (pc.count*@product.per_box) %>
 		<% else %>
-			bands
+			peices
 			<% oco = oco + pc.count %>
 		<% end %>
 	<br><br>
