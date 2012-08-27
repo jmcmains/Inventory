@@ -3,7 +3,7 @@
 <table style="vertical-align:top; width:100%;table-layout: fixed;">
 <tr valign="top">
 <td style="width">
-<%= image_tag @product.imloc class: "product-image" %><br>
+<%= image_tag @product.imloc, class: "product-image" %><br>
 <%= link_to 'Edit', edit_product_path(@product) %> | <%= link_to "Delete", @product, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{@product.name}" %><br/>
 <p><%= @product.description %></p>
