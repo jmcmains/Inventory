@@ -4,5 +4,6 @@
 	<%= f.radio_button :origin, "Amazon US", checked: true %>Amazon US - last order:<%= Order.find_all_by_origin("Amazon US").first.date %><br>
 	<%= f.radio_button :origin, "Amazon Canada" %>Amazon Canada - last order:<%= Order.find_all_by_origin("Amazon Canada").first.date %><br>
 	<%= f.radio_button :origin, "Website" %>Rubberbanditz Website - last order:<%= Order.find_all_by_origin("Website").first.date %><br>
+	<%= f.radio_button :origin, "Endicia" %>Endicia (order file will automatically download)<br>
   <%= f.submit "Load Data" %>
 <% end %>

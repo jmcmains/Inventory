@@ -26,21 +26,35 @@ require 'csv'
 			order2.each do |o|
 				o.save
 			end
+			flash[:success] = "Orders Loaded"
 			redirect_to root_path
-		else
-			@order = Order.new(params[:order])
-		  @order.save
-		  redirect_to root_path
+		elsif params[:order][:origin] == "Endicia"
+			infile = params[:order][:file].read
+			merchant_order_id=Array.new
+			tracking_number=Array.new
+			ship_date=Array.new
+			i=0
+			CSV.parse(infile) do |row|
+				merchant_order_id[i] = row[13]
+				tracking_number[i] = row[7]
+				ship_date[i] = row[2]
+				i=i+1
+			end
+			csv = CSV.generate(col_sep: "\t") do |csv|
+				csv << ["merchant order id", "tracking number", "carrier code", "other carrier name", "ship date"]
+				(2..(i-4)).to_a.each do |j|
+					if !merchant_order_id[j].blank? && merchant_order_id[j].length == 17
+						moi = merchant_order_id[j];
+						date = Date.strptime(ship_date[j], "%m/%d/%y").strftime("%Y-%m-%d")
+						tn = tracking_number[j][1..-2]
+						csv << [moi, tn, "USPS", nil, date]
+					end
+				end
+			end
+			send_data csv, type: 'text/csv', filename: "Shipping_data_#{DateTime.now.strftime("%Y%m%d%H%M%S")}.csv"
 		end
   end
-	
-	def new_phone
-		@order=Order.new
-	end
- 
- 	def create_phone
- 	
- 	end
+
 	def index
 		@orders = Order.find(:all, :order => 'date, id')
 		@order_months = @orders.group_by { |t| t.date.beginning_of_month }
