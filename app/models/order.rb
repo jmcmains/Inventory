@@ -6,6 +6,7 @@ class Order < ActiveRecord::Base
   scope :amzus, where(origin: "Amazon US")
   scope :amzca, where(origin: "Amazon Canada")
   scope :website, where(origin: "Website")
+  scope :buy, where(origin: "Buy")
   def month
   	self.date.month
  	end

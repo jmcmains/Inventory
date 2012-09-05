@@ -23,9 +23,7 @@ class Order < ActiveRecord::Base
  	def quant(pq)
  		return self.quantity * pq.find_by_offering_id(self.offering).quantity
  	end
- 	
-		
-	 	
+
  	def week
  		self.date.strftime("%W").to_i
  	end

@@ -4,6 +4,7 @@ class OrdersController < ApplicationController
   end
   
 require 'csv'
+require 'net/ftp'
   def create
   	if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Website"
 			infile = params[:order][:file].read
@@ -52,6 +53,31 @@ require 'csv'
 				end
 			end
 			send_data csv, type: 'text/csv', filename: "Shipping_data_#{DateTime.now.strftime("%Y%m%d%H%M%S")}.csv"
+		elsif params[:order][:origin] == "Buy"
+			end_date = Order.buy.count>0 ? Order.buy.sort_by(&:date).last.date : Date.new(0)
+			ftp = Net::FTP.new('trade.marketplace.buy.com')
+			ftp.login(user = "amz@rubberbanditz.com", passwd = "3ra9usW")
+			files = ftp.chdir('/Orders')
+			files = ftp.list('*.txt')
+			(0..(files.count-1)).to_a.each do |i|
+				ftp.getbinaryfile(files[i].split(' ').last, 'order.txt', 1024)
+				CSV.foreach(Rails.root.join("order.txt"), headers: true, col_sep: "\t") do |row|
+					if row[4] && Date.strptime(row[4].split(' ').first, "%m/%d/%Y") > end_date
+						Order.create! do |p|
+							p.order_number = row[1]
+							p.date = Date.strptime(row[4].split(' ').first, "%m/%d/%Y")
+							p.quantity = row[7]
+							offering_id=row[10]
+							offering=Offering.find_or_initialize_by_name(offering_id)
+							p.offering_id=offering.id
+							p.origin="Buy"
+						end
+					end
+				end
+			end
+			ftp.close
+			flash[:success] = "Orders Loaded"
+			redirect_to root_path
 		end
   end
 
