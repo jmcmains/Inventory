@@ -105,7 +105,7 @@
 <% if Rails.env.production? %>
 	<% sql= ActiveRecord::Base.connection() %>
 	<% oc=sql.execute("SELECT COUNT(DISTINCT(orders.order_number)), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders GROUP BY year, month ORDER BY year, month ") %>
-	<% oc_origin=sql.execute("SELECT COUNT(DISTINCT(orders.order_number)), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month, orders.origin AS origin FROM orders GROUP BY year, month ORDER BY year, month ") %>
+	<% oc_origin=sql.execute("SELECT COUNT(DISTINCT(orders.order_number)), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month, orders.origin AS origin FROM orders GROUP BY year, month, origin ORDER BY year, month, origin ") %>
 	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year, month ORDER BY year, month ") %>
 	<% oc2 = {} %>
 	<% oc2["y"]=d.map { |a| a["sum"].to_i } %>
