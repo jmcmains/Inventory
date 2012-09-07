@@ -203,7 +203,7 @@ $(function() {
 	$('#floater').attr('left',position.left);
 	$('#inflo').attr('width',$('#main').width());
 	<% (1..10).each do |i| %>
-		$('#td<%= i %>f').attr('width',$('#td<%= i %>').width());
+		$('#td<%= i %>f').attr('width',$('#td<%= i %>').width()+1);
 	<% end %>
 	if ($(window).scrollTop() > position.top-navbar_height ) {
       $('#floater').show(); 
