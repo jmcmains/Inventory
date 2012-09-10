@@ -4,7 +4,7 @@ class CustomerMailer < ActionMailer::Base
   
   def oe_email(customer)
   	@customer = customer
-  	mail(:to => "orders@rubberbanditz.com", :subject => "Customer Order")
+  	mail(:to => "orders@rubberbanditz.com", :subject => "Customer Order - #{@customer.first_name} #{@customer.last_name}")
   end
   
   def customer_email(customer)

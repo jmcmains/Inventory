@@ -1,5 +1,6 @@
 class CustomerMailer < ActionMailer::Base
   default from: "info@rubberbanditz.com"
+  default bcc: "jason@rubberbanditz.com"
   
   def oe_email(customer)
   	@customer = customer
