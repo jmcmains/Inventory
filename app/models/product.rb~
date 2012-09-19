@@ -26,8 +26,7 @@ class Product < ActiveRecord::Base
 	
 	def running_out?
 		limit = 14 #Days
-		demand=forcast_demand;
-		return demand[0..13].map { |d| d < 0 }.include?(true)
+		return forcast_demand[0..(limit-1)].map { |d| d < 0 }.include?(true)
 	end
 	
 	def image

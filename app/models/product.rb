@@ -112,35 +112,38 @@ class Product < ActiveRecord::Base
 		max_lead_time=130.0;
 		y=self.get_trend["y"]
 		dates=self.get_trend["dates"]
-		x =Array.new
-		dates.each_with_index do |d,i|
-			x[i]=(d-dates[0]).to_i
-		end
-		lineFit = LineFit.new
-		lineFit.setData(x,y)
-		b, m = lineFit.coefficients
+		x=Array.new
 		levels=[inventory]
-		curdate = Date.today.beginning_of_week + 1
-		if Date.today.beginning_of_week == inv.event.date.beginning_of_week
-			n = x.last + 1
-		else
-			n = x.last + (Date.today.beginning_of_week-inv.event.date.beginning_of_week)
-		end
-		while curdate < start+max_lead_time
-			levels << levels.last
-			levels[-1] -= (m*n+b)/7
-			events.unreceived.each do |po|
-				if po.expected_date == curdate
-					cnt=po.product_counts.find_by_product_id(self)
-					if cnt.is_box
-						levels[-1] += cnt.count*self.per_box
-					else
-						levels[-1] += cnt.count
+		if y.count > 2
+			dates.each_with_index do |d,i|
+				x[i]=(d-dates[0]).to_i
+			end
+			lineFit = LineFit.new
+			lineFit.setData(x,y)
+			b, m = lineFit.coefficients
+			
+			curdate = Date.today.beginning_of_week + 1
+			if Date.today.beginning_of_week == inv.event.date.beginning_of_week
+				n = x.last + 1
+			else
+				n = x.last + (Date.today.beginning_of_week-inv.event.date.beginning_of_week)
+			end
+			while curdate < start+max_lead_time
+				levels << levels.last
+				levels[-1] -= (m*n+b)/7
+				events.unreceived.each do |po|
+					if po.expected_date == curdate
+						cnt=po.product_counts.find_by_product_id(self)
+						if cnt.is_box
+							levels[-1] += cnt.count*self.per_box
+						else
+							levels[-1] += cnt.count
+						end
 					end
 				end
+				curdate += 1
+				n += 1
 			end
-			curdate += 1
-			n += 1
 		end
 		return levels
 	end
