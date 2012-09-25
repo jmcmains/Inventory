@@ -56,7 +56,7 @@ class EventsController < ApplicationController
   
   def po
   	@events=Event.unreceived.sort_by { |i| i.date }.reverse
-  	@title= @events.first.event_type
+  	@title= "Product Orders"
   	@suppliers=Event.unreceived.select("DISTINCT(supplier)")
   	if params[:supplier]
   		@title= params[:supplier]
