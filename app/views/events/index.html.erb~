@@ -1,4 +1,9 @@
-<% if @title == "Product Order" %>
+<% if @title == "Product Order" && event.received %>
+	<%= form_tag(po_received_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
+		<%= select_tag :supplier, options_for_select(@suppliers.map(&:supplier)) %>
+		<%= submit_tag "Show orders from this supplier" %>
+	<% end %>
+<% elsif @title == "Product Order" %>
 	<%= form_tag(po_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
 		<%= select_tag :supplier, options_for_select(@suppliers.map(&:supplier)) %>
 		<%= submit_tag "Show orders from this supplier" %>
@@ -14,7 +19,7 @@
 			<br>
 			Expected Delivery: <%= event.expected_date %><br/>
 			Actual Delivery: <%= event.received_date %><br/>
-			Delay: <%= event.received_date - event.date %> <br/>
+			Delay(number of days between order and delivery): <%= event.received_date - event.date %> <br/>
 			Invoice: <%= event.invoice %><br/>
 			Suppier: <%= event.supplier %><br/>
 		<% elsif @title == "Product Order" %>
