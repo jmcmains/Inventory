@@ -29,7 +29,7 @@ Inventory::Application.routes.draw do
 			get :new_po
 		end
 		member do
-			put :receive_po_today
+			get :receive_po_today
 		end
 	end
 	resources :orders do

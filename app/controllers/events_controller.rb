@@ -65,6 +65,16 @@ class EventsController < ApplicationController
   	render :index
   end
   
+  def po_received
+  	@events=Event.received.sort_by { |i| i.date }.reverse
+  	@title= @events.first.event_type
+  	@suppliers=Event.received.select("DISTINCT(supplier)")
+  	if params[:supplier]
+  		@events=Event.received.find_all_by_supplier(params[:supplier]);
+  	end
+  	@events=@events.paginate(:page => params[:page], :per_page => 10)
+  	render :index
+  end
   def create
   	@event = Event.new(params[:event])
     @event.save

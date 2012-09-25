@@ -25,6 +25,7 @@ Inventory::Application.routes.draw do
 		collection do
 			get :inventory
 			get :po
+			get :po_received
 			get :new_inventory
 			get :new_po
 		end
