@@ -1,7 +1,7 @@
 <% if @title == "Product Order" %>
 	<%= form_tag(po_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
 		<%= select_tag :supplier, options_for_select(@suppliers.map(&:supplier)) %>
-		<%= submit_tag %>
+		<%= submit_tag "Show orders from this supplier" %>
 	<% end %>
 <% end %>
 <% @events.each do |event| %>
@@ -10,7 +10,14 @@
 
 	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{event.event_type}" %> 
-		<% if @title == "Product Order" %>
+		<% if @title == "Product Order" && event.received %>
+			<br>
+			Expected Delivery: <%= event.expected_date %><br/>
+			Actual Delivery: <%= event.received_date %><br/>
+			Delay: <%= event.received_date - event.date %> <br/>
+			Invoice: <%= event.invoice %><br/>
+			Suppier: <%= event.supplier %><br/>
+		<% elsif @title == "Product Order" %>
 			| <%= link_to 'Receive Today', receive_po_today_event_path(event) %><br>
 			Expected Delivery: <%= event.expected_date %><br/>
 			Invoice: <%= event.invoice %><br/>
