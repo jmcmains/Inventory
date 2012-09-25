@@ -1,9 +1,9 @@
-<% if @title == "Product Order" && event.received %>
+<% if @title == "Received Product Orders" %>
 	<%= form_tag(po_received_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
 		<%= select_tag :supplier, options_for_select(@suppliers.map(&:supplier)) %>
 		<%= submit_tag "Show orders from this supplier" %>
 	<% end %>
-<% elsif @title == "Product Order" %>
+<% elsif @title == "Product Orders" %>
 	<%= form_tag(po_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
 		<%= select_tag :supplier, options_for_select(@suppliers.map(&:supplier)) %>
 		<%= submit_tag "Show orders from this supplier" %>

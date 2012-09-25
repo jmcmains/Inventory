@@ -59,6 +59,7 @@ class EventsController < ApplicationController
   	@title= @events.first.event_type
   	@suppliers=Event.unreceived.select("DISTINCT(supplier)")
   	if params[:supplier]
+  		@title= params[:supplier]
   		@events=Event.unreceived.find_all_by_supplier(params[:supplier]);
   	end
   	@events=@events.paginate(:page => params[:page], :per_page => 10)
@@ -67,14 +68,16 @@ class EventsController < ApplicationController
   
   def po_received
   	@events=Event.received.sort_by { |i| i.date }.reverse
-  	@title= @events.first.event_type
+  	@title= "Received Product Orders"
   	@suppliers=Event.received.select("DISTINCT(supplier)")
   	if params[:supplier]
+  		@title= params[:supplier]
   		@events=Event.received.find_all_by_supplier(params[:supplier]);
   	end
   	@events=@events.paginate(:page => params[:page], :per_page => 10)
   	render :index
   end
+  
   def create
   	@event = Event.new(params[:event])
     @event.save

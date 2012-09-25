@@ -19,7 +19,7 @@
 			<br>
 			Expected Delivery: <%= event.expected_date %><br/>
 			Actual Delivery: <%= event.received_date %><br/>
-			Delay(number of days between order and delivery): <%= event.received_date - event.date %> <br/>
+			Delay(number of days between order and delivery): <%= (event.received_date - event.date).to_i %> <br/>
 			Invoice: <%= event.invoice %><br/>
 			Suppier: <%= event.supplier %><br/>
 		<% elsif @title == "Product Order" %>
