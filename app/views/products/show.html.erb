@@ -25,7 +25,7 @@ Done on: <%= @product.inventory.last.date %> <br>
 	<% pc=co.product_counts.find_by_product_id(@product) %>
 	<% if pc.count > 0 %>
 		<% if co.expected_date < Date.today && !co.received && co.event_type == "Product Order" %>
-			<p class="error">
+			<p style="color:red">
 		<% else %> 
 			<p>
 		<% end %>
