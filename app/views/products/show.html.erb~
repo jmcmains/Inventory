@@ -213,7 +213,7 @@ Orders current until the week of: <%= d2.last %>
 						<% if inv.product_counts.find_by_product_id(@product).is_box %>
 							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count*@product.per_box %>]<%= "," if inv != @product.inventory.sort_by(&:date).last %>
 						<% else %>
-							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count %>]<%= "," if inv != @product.inventory.sort_by(&:date) %>
+							[Date.UTC(<%= inv.date.year %>, <%= inv.date.month-1 %>, <%= inv.date.day %>),<%= inv.product_counts.find_by_product_id(@product).count %>]<%= "," if inv != @product.inventory.sort_by(&:date).last %>
 						<% end %>
 					<% end %>
 				]

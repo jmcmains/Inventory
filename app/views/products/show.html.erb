@@ -25,14 +25,16 @@ Done on: <%= @product.inventory.last.date %> <br>
 	<% pc=co.product_counts.find_by_product_id(@product) %>
 	<% if pc.count > 0 %>
 		Order Made on: <%= co.date %> <br>
+		Order Expected on: <%= co.expected_date %> <br>
 		Quantity ordered: <%= pc.count %>
 		<% if pc.is_box %>
-			boxes
+			boxes<br>
 			<% oco = oco + (pc.count*@product.per_box) %>
 		<% else %>
-			peices
+			peices<br>
 			<% oco = oco + pc.count %>
 		<% end %>
+		<%= link_to "edit", edit_event_path(co) %>
 	<br><br>
 	<% end %>
 <% end %>
