@@ -24,6 +24,11 @@ Done on: <%= @product.inventory.last.date %> <br>
 <% @product.get_current_shipments.each do |co| %>
 	<% pc=co.product_counts.find_by_product_id(@product) %>
 	<% if pc.count > 0 %>
+		<% if event.expected_date < Date.today && !event.received && event.type == "Product Order" %>
+			<p class="error">
+		<% else %> 
+			<p>
+		<% end %>
 		Order Made on: <%= co.date %> <br>
 		Order Expected on: <%= co.expected_date %> <br>
 		Quantity ordered: <%= pc.count %>
@@ -35,7 +40,7 @@ Done on: <%= @product.inventory.last.date %> <br>
 			<% oco = oco + pc.count %>
 		<% end %>
 		<%= link_to "edit", edit_event_path(co) %>
-	<br><br>
+		</p>
 	<% end %>
 <% end %>
 <%= oco %><br>

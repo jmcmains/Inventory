@@ -10,7 +10,11 @@
 	<% end %>
 <% end %>
 <% @events.each do |event| %>
-	<p>
+	<% if event.expected_date < Date.today && !event.received && event.type == "Product Order" %>
+		<p class="error">
+	<% else %> 
+		<p>
+	<% end %>
 	<h2>Date: <%= event.date %> </h2>
 
 	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",

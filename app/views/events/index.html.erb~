@@ -15,14 +15,14 @@
 
 	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{event.event_type}" %> 
-		<% if @title == "Product Order" && event.received %>
+		<% if @title == "Received Product Orders" %>
 			<br>
 			Expected Delivery: <%= event.expected_date %><br/>
 			Actual Delivery: <%= event.received_date %><br/>
 			Delay(number of days between order and delivery): <%= (event.received_date - event.date).to_i %> <br/>
 			Invoice: <%= event.invoice %><br/>
 			Suppier: <%= event.supplier %><br/>
-		<% elsif @title == "Product Order" %>
+		<% elsif @title == "Product Orders" %>
 			| <%= link_to 'Receive Today', receive_po_today_event_path(event) %><br>
 			Expected Delivery: <%= event.expected_date %><br/>
 			Invoice: <%= event.invoice %><br/>
