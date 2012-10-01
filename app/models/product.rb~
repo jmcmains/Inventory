@@ -61,6 +61,26 @@ class Product < ActiveRecord::Base
 		return Order.joins(:offering => {:offering_products => :product}).where(["products.id = ? AND offering_products.quantity > 0",self])
 	end
 	
+	require 'csv'
+	def self.get_combos
+		sql = ActiveRecord::Base.connection()
+		d=sql.execute("SELECT products.id AS product_id, orders.order_number AS order_number FROM products INNER JOIN offering_products ON offering_products.product_id = products.id INNER JOIN offerings ON offerings.id = offering_products.offering_id INNER JOIN orders ON orders.offering_id = offerings.id WHERE offering_products.quantity > 0 ORDER BY product_id")
+		order_numbers=Order.uniq { |v| v.order_number }.map { |v| v.order_number}
+		data=d.map { |a| [a["order_number"], a["product_id"]] }
+		combos=[]
+		order_numbers.each do |on|
+			combos << data.find_all { |v| v[0] == on }.map { |v| v[1] }.join(",")
+		end
+		final_data=combos.uniq.map { |a| [a,combos.count { |b| b == a }] }
+		csv=CSV.generate(col_sep: "\t") do |csv1|
+			csv1 << ["combo", "times purchased"]
+			final_data.each do |fd|
+				csv1 << [fd[0],fd[1]]
+			end
+		end
+		send_data csv, type: 'text/csv', filename: "Shipping_data_#{DateTime.now.strftime("%Y%m%d%H%M%S")}.csv"
+	end
+	
 	def get_trend
 		sql = connection()
 		data= {}
@@ -112,35 +132,38 @@ class Product < ActiveRecord::Base
 		max_lead_time=130.0;
 		y=self.get_trend["y"]
 		dates=self.get_trend["dates"]
-		x =Array.new
-		dates.each_with_index do |d,i|
-			x[i]=(d-dates[0]).to_i
-		end
-		lineFit = LineFit.new
-		lineFit.setData(x,y)
-		b, m = lineFit.coefficients
+		x=Array.new
 		levels=[inventory]
-		curdate = Date.today.beginning_of_week + 1
-		if Date.today.beginning_of_week == inv.event.date.beginning_of_week
-			n = x.last + 1
-		else
-			n = x.last + (Date.today.beginning_of_week-inv.event.date.beginning_of_week)
-		end
-		while curdate < start+max_lead_time
-			levels << levels.last
-			levels[-1] -= (m*n+b)/7
-			events.unreceived.each do |po|
-				if po.expected_date == curdate
-					cnt=po.product_counts.find_by_product_id(self)
-					if cnt.is_box
-						levels[-1] += cnt.count*self.per_box
-					else
-						levels[-1] += cnt.count
+		if y.count > 2
+			dates.each_with_index do |d,i|
+				x[i]=(d-dates[0]).to_i
+			end
+			lineFit = LineFit.new
+			lineFit.setData(x,y)
+			b, m = lineFit.coefficients
+			
+			curdate = Date.today.beginning_of_week + 1
+			if Date.today.beginning_of_week == inv.event.date.beginning_of_week
+				n = x.last + 1
+			else
+				n = x.last + (Date.today.beginning_of_week-inv.event.date.beginning_of_week)
+			end
+			while curdate < start+max_lead_time
+				levels << levels.last
+				levels[-1] -= (m*n+b)/7
+				events.unreceived.each do |po|
+					if po.expected_date == curdate
+						cnt=po.product_counts.find_by_product_id(self)
+						if cnt.is_box
+							levels[-1] += cnt.count*self.per_box
+						else
+							levels[-1] += cnt.count
+						end
 					end
 				end
+				curdate += 1
+				n += 1
 			end
-			curdate += 1
-			n += 1
 		end
 		return levels
 	end

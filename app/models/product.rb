@@ -61,6 +61,26 @@ class Product < ActiveRecord::Base
 		return Order.joins(:offering => {:offering_products => :product}).where(["products.id = ? AND offering_products.quantity > 0",self])
 	end
 	
+	require 'csv'
+	def self.get_combos
+		sql = ActiveRecord::Base.connection()
+		d=sql.execute("SELECT products.id AS product_id, orders.order_number AS order_number FROM products INNER JOIN offering_products ON offering_products.product_id = products.id INNER JOIN offerings ON offerings.id = offering_products.offering_id INNER JOIN orders ON orders.offering_id = offerings.id WHERE offering_products.quantity > 0 ORDER BY product_id")
+		order_numbers=Order.uniq { |v| v.order_number }.map { |v| v.order_number}
+		data=d.map { |a| [a["order_number"], a["product_id"]] }
+		combos=[]
+		order_numbers.each do |on|
+			combos << data.find_all { |v| v[0] == on }.map { |v| v[1] }.join(",")
+		end
+		final_data=combos.uniq.map { |a| [a,combos.count { |b| b == a }] }
+		csv1 = CSV.generate(col_sep: "\t") do |csv|
+			csv << ["combo", "times purchased"]
+			final_data.each do |fd|
+				csv << [fd[0],fd[1]]
+			end
+		end
+		send_data csv1, type: 'text/csv', filename: "Shipping_data_#{DateTime.now.strftime("%Y%m%d%H%M%S")}.csv"
+	end
+	
 	def get_trend
 		sql = connection()
 		data= {}

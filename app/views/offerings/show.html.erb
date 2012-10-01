@@ -1,0 +1,6 @@
+<h1><%= @offering.name %></h1>
+
+Suggested Purchases:<br>
+<% @d.each do |r| %>
+	<%= link_to Offering.find(r["offering_id"]).name, offering_path(r["offering_id"]) %> - <%= r["how_many_other_times"] %><br>
+<% end %>

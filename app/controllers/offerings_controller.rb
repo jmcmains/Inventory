@@ -33,6 +33,12 @@ class OfferingsController < ApplicationController
 		render :index
 	end
 	
+	def show
+		sql = ActiveRecord::Base.connection()
+		@d=sql.execute("SELECT theother.offering_id, offerings.name, count(*) AS how_many_other_times FROM orders as this INNER JOIN orders AS that ON that.offering_id = this.offering_id AND that.order_number <> this.order_number INNER JOIN orders AS theother ON that.order_number = theother.order_number AND that.offering_id <> theother.offering_id INNER JOIN offerings ON offerings.id = theother.offering_id WHERE this.offering_id = #{params[:id]} GROUP BY theother.offering_id, offerings.name ORDER BY how_many_other_times DESC")
+		@offering = Offering.find(params[:id])
+	end
+	
   def index
     @title = "Current Offerings and their products"
   	@offerings = Offering.search(params[:search],false)

@@ -37,8 +37,8 @@ Inventory::Application.routes.draw do
 		collection do
 			get :new_phone
 			get :create_phone
+			get :combo
 		end
-
 	end
 	resources :offerings do
 	collection do

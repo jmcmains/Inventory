@@ -80,7 +80,7 @@ require 'net/ftp'
 			redirect_to root_path
 		end
   end
-
+  
 	def index
 		@orders = Order.find(:all, :order => 'date, id')
 		@order_months = @orders.group_by { |t| t.date.beginning_of_month }

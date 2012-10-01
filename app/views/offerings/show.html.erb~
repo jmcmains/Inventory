@@ -1,0 +1,6 @@
+<h1><%= @offering.name %></h1>
+
+Suggested Purchases:
+<% @d.each do |r| %>
+	<%= Offering.find(r["offering_id"]).name %> - <%= r["how_many_other_times"] %>
+<% end %>

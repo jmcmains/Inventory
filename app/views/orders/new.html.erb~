@@ -9,6 +9,6 @@
 <% end %>
 
 <%= form_for :order,:url=>{:controller=>"orders", :action=>"create"}, do |f| %>
-	<%= hidden_field_tag :origin, "Buy" %>
+	<%= f.hidden_field :origin, value: "Buy" %>
   <%= f.submit "Load Buy Orders" %>
 <% end %>
