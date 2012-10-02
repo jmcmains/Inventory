@@ -10,7 +10,7 @@
 	<% end %>
 <% end %>
 <% @events.each do |event| %>
-	<% if event.expected_date < Date.today && !event.received && event.event_type == "Product Order" %>
+	<% if event.event_type == "Product Order" && event.expected_date < Date.today && !event.received %>
 		<p style="color:red">
 	<% else %> 
 		<p>
