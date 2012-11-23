@@ -15,6 +15,7 @@ Inventory::Application.routes.draw do
 		end
 	end
 	root to: 'static_pages#home'
+	match '/paypal', to: 'static_pages#paypal'
 	resources :products do
 	collection do
 			get :autocomplete

@@ -18,6 +18,21 @@ class CustomersController < ApplicationController
   	@customer = Customer.find(params[:id])
   	CustomerMailer.oe_email(@customer).deliver
   	CustomerMailer.customer_email(@customer).deliver
+  	flash[:success] = "Email sent!"
+  	redirect_to @customer
+  end
+  
+  def send_oe_email
+  	@customer = Customer.find(params[:id])
+  	CustomerMailer.oe_email(@customer).deliver
+  	flash[:success] = "OE Email sent!"
+  	redirect_to @customer
+  end
+  
+  def send_customer_email
+  	@customer = Customer.find(params[:id])
+  	CustomerMailer.customer_email(@customer).deliver
+  	flash[:success] = "Customer Email sent!"
   	redirect_to @customer
   end
   

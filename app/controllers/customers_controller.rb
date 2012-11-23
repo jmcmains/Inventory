@@ -5,6 +5,13 @@ class CustomersController < ApplicationController
   	@title = "New Phone/Email Order"
   end
   
+  def new_order
+  	old = Customer.find(params[:id])
+  	@customer = Customer.new(first_name: old.first_name, last_name: old.last_name, address: old.address, email: old.email)
+  	@customer.orders.build
+  	@title = "New Phone/Email Order"
+  	render :new
+  end
 	def create
 		@customer = Customer.new(params[:customer])
 		@customer.save
