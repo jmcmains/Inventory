@@ -10,5 +10,10 @@ to:
 <%= @customer.address %>
 <%= @customer.email %>
 
+<% if !@customer.note.blank? %>
+note:
+<%= @customer.note %>
+
+<% end %>
 Thanks,
 Jason

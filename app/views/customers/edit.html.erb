@@ -32,13 +32,12 @@
 	<%= f.text_field :total_cost %>
 </div>
 <div class="field">
-	<%= f.label :payment_method %>
-	<%= f.radio_button :payment_method, "Invoice", checked: true %> Invoice
-	<%= f.radio_button :payment_method, "Terminal" %> Terminal 
-</div>
-<div class="field">
 	<%= f.label :transaction_number %>
 	<%= f.text_field :transaction_number %>
+</div>
+<div class="field">
+	<%= f.label :note %>
+	<%= f.text_area :note, size: "50x2" %>
 </div>
 <div class="field">
 <%= f.label :orders, "Products" %>

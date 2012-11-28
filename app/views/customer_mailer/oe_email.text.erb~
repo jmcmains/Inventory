@@ -10,5 +10,8 @@ to:
 <%= @customer.address %>
 <%= @customer.email %>
 
+note: 
+<%= @customer.note %>
+
 Thanks,
 Jason
