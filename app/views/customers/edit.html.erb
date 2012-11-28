@@ -7,6 +7,9 @@
 		<%= select_date Date.today, {:order => [:month, :day, :year]}, {:class => "input-small"} %>
 	<% end %>
 </div>
+<table style="width:100%">
+<tr style="vertical-align:top">
+<td>
 <div class="field">
 	<%= f.label :first_name %>
 	<%= f.text_field :first_name %>
@@ -28,10 +31,6 @@
 	<%= f.text_field :email %>
 </div>
 <div class="field">
-	<%= f.label :total_cost %>
-	<%= f.text_field :total_cost %>
-</div>
-<div class="field">
 	<%= f.label :transaction_number %>
 	<%= f.text_field :transaction_number %>
 </div>
@@ -40,12 +39,20 @@
 	<%= f.text_area :note, size: "50x2" %>
 </div>
 <div class="field">
+	<%= f.label :total_cost %>
+	<%= f.text_field :total_cost %>
+</div>
+</td><td>
+<div class="field">
 <%= f.label :orders, "Products" %>
 <%= f.fields_for(:orders, :html => { :class => "form-inline"}) do |builder| %>
 	<%= render "order_fields", :f => builder %>
 <% end %>
 <p><%= link_to_add_fields "Add Product", f, :orders %></p>
 </div>
+</td>
+</tr>
+</table>
 <div class="actions">
 	<%= f.submit "Save" %>
 </div>
