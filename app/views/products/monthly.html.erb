@@ -1,0 +1,42 @@
+<% sql = ActiveRecord::Base.connection() %>
+<% data= {} %>
+<% if Rails.env.production? %>
+	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{1}) GROUP BY year, month ORDER BY year, month ") %>
+	<% data["y"]=d.map { |a| a["sum"].to_i } %>
+	<% data["dates"] = d.map { |a| Date.new(a["year"].to_i,a["month"].to_i,1) if !a['year'].nil? && !a['month'].nil? } %>
+<% else %>
+	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y', orders.date) AS year, strftime('%m', orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{1}) GROUP BY year, month") %>
+	<% data["y"]=d.map { |a| a[0] } %>
+	<% data["dates"]= d.map { |a| Date.new(a["year"].to_i,a["month"].to_i,1) if !a['year'].nil? && !a['month'].nil? } %>
+<% end %>
+
+<table class="table">
+<tr>
+<td></td>
+<% data["dates"].each do |d| %>
+<td>
+<%= d.strftime('%B') %> <%= d.strftime('%Y') %>
+</td>
+<% end %>
+<td>Total</td>
+</tr>
+<% Product.all.each do |product| %>
+	<% if Rails.env.production? %>
+		<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{product.id}) GROUP BY year, month ORDER BY year, month ") %>
+		<% data["y"]=d.map { |a| a["sum"].to_i } %>
+	<% else %>
+		<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y', orders.date) AS year, strftime('%m', orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{product.id}) GROUP BY year, month") %>
+		<% data["y"]=d.map { |a| a[0] } %>
+	<% end %>
+	<tr>
+	<td> <%= product.name %> </td>
+	<% total=0 %>
+	<% data["y"].each do |y| %>
+		<td> <%= y %> </td>
+		<% !y.blank? ? total = total + y : 0 %>
+	<% end %>
+	<td><%= total %></td>
+	</tr>
+<% end %>
+</table>
+

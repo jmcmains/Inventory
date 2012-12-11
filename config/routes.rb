@@ -20,6 +20,7 @@ Inventory::Application.routes.draw do
 	resources :products do
 	collection do
 			get :autocomplete
+			get :monthly
 		end
 	end
 	resources :product_counts
