@@ -17,7 +17,7 @@
 <% end %>
 <td>Total</td>
 </tr>
-<% Product.all.each do |product| %>
+<% Product.all.sort_by(&:id).each do |product| %>
 	<% if Rails.env.production? %>
 		<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{product.id}) GROUP BY year, month ORDER BY year, month ") %>
 		<% orders=d.map { |a| a["sum"].to_i } %>
