@@ -43,6 +43,11 @@ class Order < ActiveRecord::Base
     	date = row[2]
 			offering_id=row[8]
 			quantity = row[9]
+		elsif type == "Buy"
+			order_number = row[3]
+    	date = Date.strptime(row[1], '%m/%d/%Y')
+			offering_id=row[7]
+			quantity = row[9]
     elsif type == "Website"
     	order_number = row[1]
     	if row[2].blank?
