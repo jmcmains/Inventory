@@ -105,12 +105,12 @@
 <% if Rails.env.production? %>
 	<% sql= ActiveRecord::Base.connection() %>
 	<% oc=sql.execute("SELECT COUNT(DISTINCT(orders.order_number)), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders GROUP BY year, month ORDER BY year, month ") %>
-	<% oc_origin=sql.execute("SELECT COUNT(DISTINCT(orders.order_number)), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month, orders.origin AS origin FROM orders GROUP BY year, month, origin ORDER BY year, month, origin	 ") %>
+	<% oc_origin=sql.execute("SELECT COUNT(DISTINCT(orders.order_number)), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month, orders.origin AS origin FROM orders GROUP BY year, month, origin ORDER BY year, month, origin") %>
 	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year, month ORDER BY year, month ") %>
 	<% oc2 = {} %>
 	<% oc2["y"]=d.map { |a| a["sum"].to_i } %>
 	<% oc2["dates"] = d.map { |a| Date.new(a["year"].to_i,a["month"].to_i,1) } %>
-	<% amzca = amzus = phone = web = [] %>
+	<% amzca = [] %><% amzus = [] %><% phone = [] %><% web = [] %><% buy = [] %>
 	<% oc_origin.each do |oco| %>
 		<% if oco["origin"] == "Amazon Canada" %>
 			<% amzca << oco %>
@@ -120,6 +120,8 @@
 			<% phone << oco %>
 		<% elsif oco["origin"] == "Website" %>
 			<% web << oco %>
+		<% elsif oco["origin"] == "Buy" %>
+			<% buy << oco %>
 		<% end %>
 	<% end %>
 <% else %>
@@ -177,22 +179,22 @@
 		    },{
 				name: 'Amazon CA Orders',
 		    data: [
-		    	<% amzca.each_with_index do |a,i| %>
-		    		[Date.UTC(<%= a['year'].to_i %>, <%= a['month'].to_i-1 %>, 1),<%= a['count'].to_i %>]<%= "," if i != (amzca.count-1) %>
+		    	<% amzca.each_with_index do |b,i| %>
+		    		[Date.UTC(<%= b['year'].to_i %>, <%= b['month'].to_i-1 %>, 1),<%= b['count'].to_i %>]<%= "," if i != (amzca.count-1) %>
 		    	<% end %>
 		    	]
 		    },{
 				name: 'Phone/Email Orders',
 		    data: [
-		    	<% phone.each_with_index do |a,i| %>
-		    		[Date.UTC(<%= a['year'].to_i %>, <%= a['month'].to_i-1 %>, 1),<%= a['count'].to_i %>]<%= "," if i != (phone.count-1) %>
+		    	<% phone.each_with_index do |c,i| %>
+		    		[Date.UTC(<%= c['year'].to_i %>, <%= c['month'].to_i-1 %>, 1),<%= c['count'].to_i %>]<%= "," if i != (phone.count-1) %>
 		    	<% end %>
 		    	]
 		    },{
 				name: 'Website Orders',
 		    data: [
-		    	<% web.each_with_index do |a,i| %>
-		    		[Date.UTC(<%= a['year'].to_i %>, <%= a['month'].to_i-1 %>, 1),<%= a['count'].to_i %>]<%= "," if i != (web.count-1) %>
+		    	<% web.each_with_index do |d,i| %>
+		    		[Date.UTC(<%= d['year'].to_i %>, <%= d['month'].to_i-1 %>, 1),<%= d['count'].to_i %>]<%= "," if i != (web.count-1) %>
 		    	<% end %>
 		    	]
 		    }

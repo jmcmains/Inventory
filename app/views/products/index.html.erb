@@ -110,7 +110,7 @@
 	<% oc2 = {} %>
 	<% oc2["y"]=d.map { |a| a["sum"].to_i } %>
 	<% oc2["dates"] = d.map { |a| Date.new(a["year"].to_i,a["month"].to_i,1) } %>
-	<% amzca = [] %><% amzus = [] %><% phone = [] %><% web = [] %>
+	<% amzca = [] %><% amzus = [] %><% phone = [] %><% web = [] %><% buy = [] %>
 	<% oc_origin.each do |oco| %>
 		<% if oco["origin"] == "Amazon Canada" %>
 			<% amzca << oco %>
@@ -120,6 +120,8 @@
 			<% phone << oco %>
 		<% elsif oco["origin"] == "Website" %>
 			<% web << oco %>
+		<% elsif oco["origin"] == "Buy" %>
+			<% buy << oco %>
 		<% end %>
 	<% end %>
 <% else %>
@@ -193,6 +195,13 @@
 		    data: [
 		    	<% web.each_with_index do |d,i| %>
 		    		[Date.UTC(<%= d['year'].to_i %>, <%= d['month'].to_i-1 %>, 1),<%= d['count'].to_i %>]<%= "," if i != (web.count-1) %>
+		    	<% end %>
+		    	]
+		    },{
+				name: 'Buy.com Orders',
+		    data: [
+		    	<% buy.each_with_index do |e,i| %>
+		    		[Date.UTC(<%= e['year'].to_i %>, <%= e['month'].to_i-1 %>, 1),<%= e['count'].to_i %>]<%= "," if i != (buy.count-1) %>
 		    	<% end %>
 		    	]
 		    }
