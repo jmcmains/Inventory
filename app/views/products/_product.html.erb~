@@ -1,5 +1,5 @@
 <% if product.running_out? %>
-	<% c = 'alert' %>
+	<% c = 'error' %>
 <% else %>
 	<% c = '' %>
 <% end %>
@@ -27,6 +27,11 @@
 		<%= product.get_orders(1000).round %>
 	</td>
 	<td class="number">
+		<% if product.need(60).round < 0 %>
+			<span style="color:red">
+		<% else %>
+			<span>
+		<% end %>
 		<%= product.need(60).round %>
 	</td>
 	<td class="number">

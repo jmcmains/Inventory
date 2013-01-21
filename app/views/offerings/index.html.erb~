@@ -73,6 +73,7 @@
 	<td><%= offer.orders.amzca.count %></td>
 	<td><%= offer.orders.website.count %></td>
 	<td><%= offer.orders.buy.count %></td>
+	<td><%= offer.orders.phone.count %></td>
 	<td><%= offer.orders.count %></td>
 	</tr>
 <% end %>
