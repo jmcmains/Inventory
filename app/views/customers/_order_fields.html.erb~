@@ -1,5 +1,5 @@
 <p class="fields form-inline">
-  <%= f.text_field :offering_name, data: {autocomplete_source: autocomplete_offerings_path}, placeholder: "Product", class="autocomplete" %>
+  <%= f.text_field :offering_name, data: {autocomplete_source: autocomplete_offerings_path}, placeholder: "Product", class: "autocomplete" %>
   <%= f.text_field :quantity, class: "input-small", placeholder: "Quantity" %>
   <%= link_to_remove_fields "-", f %>
 </p>

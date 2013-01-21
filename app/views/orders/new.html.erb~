@@ -4,8 +4,24 @@
 	<%= f.radio_button :origin, "Amazon US", checked: true %>Amazon US - last order:<%= Order.find_all_by_origin("Amazon US").first.date %><br>
 	<%= f.radio_button :origin, "Amazon Canada" %>Amazon Canada - last order:<%= Order.find_all_by_origin("Amazon Canada").first.date %><br>
 	<%= f.radio_button :origin, "Website" %>Rubberbanditz Website - last order:<%= Order.find_all_by_origin("Website").first.date %><br>
-	<%= f.radio_button :origin, "Buy" %>Buy.com - last order:<%= Order.find_all_by_origin("Buy").first.date %><br>
+	<%= f.radio_button :origin, "Buy" %>Buy.com - last order:<%= Order.find_all_by_origin("Buy").first.date if Order.find_all_by_origin("Buy").count>0 %><br>
 	<%= f.radio_button :origin, "Endicia" %>Endicia (order file will automatically download)<br>
   <%= f.submit "Load Data" %>
 <% end %>
 
+<%= form_for :order,:url=>{:controller=>"orders", :action=>"create_single"}, do |f| %>
+	<%= f.text_field :order_number, placeholder: "order number" %>
+	<%= f.date_select :date, {}, {class: "input-mini"} %>
+	<%= f.text_field :offering_name, placeholder: "offering", data: {autocomplete_source: autocomplete_no_price_offerings_path}, class: "autocomplete" %>
+	<%= f.text_field :quantity, placeholder: "quantity" %>
+	<%= f.text_field :origin, default_value: "FFO" %>
+	<%= f.submit "Load Data" %>
+<% end %>
+
+<script>
+$(function() {
+	 $( ".autocomplete" ).autocomplete({
+			source: $( "#order_offering_name" ).data('autocomplete-source')
+	});
+});
+</script>

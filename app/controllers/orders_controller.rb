@@ -3,6 +3,13 @@ class OrdersController < ApplicationController
 		@title ="Upload Order Files"
   end
   
+  def create_single
+  	@order = Order.new(params[:order])
+		@order.save
+		flash[:success] = "Single Order Loaded"
+    redirect_to root_path
+  end
+  
 require 'csv'
 require 'net/ftp'
 def create

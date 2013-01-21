@@ -40,6 +40,7 @@ Inventory::Application.routes.draw do
 		collection do
 			get :new_phone
 			get :create_phone
+			post :create_single
 			get :combo
 		end
 	end
@@ -47,6 +48,7 @@ Inventory::Application.routes.draw do
 	collection do
 			get :blank
 			get :autocomplete
+			get :autocomplete_no_price
 		end
 	end
 end

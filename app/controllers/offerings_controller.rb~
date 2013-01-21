@@ -54,6 +54,18 @@ class OfferingsController < ApplicationController
   		@offerings=@offerings.sort_by {|o| o.orders.website.count }
   	elsif params[:sort_by] == "WS_DESC"
   		@offerings=@offerings.sort_by {|o| o.orders.website.count }.reverse
+  	elsif params[:sort_by] == "BC_ASC"
+  		@offerings=@offerings.sort_by {|o| o.orders.buy.count }
+  	elsif params[:sort_by] == "BC_DESC"
+  		@offerings=@offerings.sort_by {|o| o.orders.buy.count }.reverse
+  	elsif params[:sort_by] == "PE_ASC"
+  		@offerings=@offerings.sort_by {|o| o.orders.phone.count }
+  	elsif params[:sort_by] == "PE_DESC"
+  		@offerings=@offerings.sort_by {|o| o.orders.phone.count }.reverse
+  	elsif params[:sort_by] == "ALL_ASC"
+  		@offerings=@offerings.sort_by {|o| o.orders.count }
+  	elsif params[:sort_by] == "ALL_DESC"
+  		@offerings=@offerings.sort_by {|o| o.orders.count }.reverse
   	end
   	@offerings=@offerings.paginate(:page => params[:page], :per_page => 10)
   	

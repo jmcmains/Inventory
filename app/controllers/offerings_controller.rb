@@ -23,6 +23,11 @@ class OfferingsController < ApplicationController
 		render json: @offerings.map(&:name)
 	end
 	
+	def autocomplete_no_price
+		@offerings = Offering.search(params[:term],false)
+		render json: @offerings.map(&:name)
+	end
+	
 	def price
 		@offerings = Offering.search(params[:term],true)
 		render json: @offerings.map(&:price)
