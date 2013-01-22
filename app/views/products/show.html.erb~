@@ -9,8 +9,8 @@
 <p><%= @product.description %></p>
 <p><%= @product.per_box %> pieces/box</p>
 
-<% y = @product.get_trend["y"].blank? ? [0 1] : @product.get_trend["y"] %>
-<% d2 = @product.get_trend["dates"].blank? ? [Date.yesterday Date.today] : @product.get_trend["dates"] %>
+<% y = @product.get_trend["y"] %>
+<% d2 = @product.get_trend["dates"] %>
 <% glc=@product.get_last_count("Inventory") %> 
 <div id="accordion">
 <h2><a href="#", style="color:#999">Latest Inventory</a></h2>

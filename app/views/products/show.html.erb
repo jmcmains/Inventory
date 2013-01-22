@@ -56,7 +56,12 @@ Done on: <%= @product.inventory.last.date %> <br>
 <% x =(1..y.length).to_a %>
 <% lineFit = LineFit.new %>
 <% lineFit.setData(x,y) %>
+<% if x.length > 1 %>
 <% b, m = lineFit.coefficients %>
+<% else %>
+	<% b = 0 %>
+	<% m = 0 %>
+<% end %>
 <% startY = m+b %>
 <% leadTime = 120 %>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
