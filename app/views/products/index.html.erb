@@ -210,6 +210,9 @@
     });
   });
 </script>
+<div class="pagination">
+     <%= will_paginate @offerings, :container => false %>
+</div>
 <table class="info" id='main'>
 <tr'>
 	<td id='td1'>Modify</td>
@@ -243,6 +246,9 @@
 		<td id='td10f'>Need (lead Time: 120 days)</td>
 	</tr>
 </table>
+</div>
+<div class="pagination">
+     <%= will_paginate @offerings, :container => false %>
 </div>
 <script>
 $(function() {

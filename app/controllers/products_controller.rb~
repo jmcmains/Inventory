@@ -20,6 +20,11 @@ class ProductsController < ApplicationController
 		@title = "Edit Product"
 		@product = Product.find(params[:id])
 	end
+
+	def autocomplete
+		@products = Product.search(params[:term])
+		render json: @products.map(&:name)
+	end
 	
 	def update
 		@product = Product.find(params[:id])

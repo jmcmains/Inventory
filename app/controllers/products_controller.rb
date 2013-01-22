@@ -39,7 +39,7 @@ class ProductsController < ApplicationController
 	
 	def index
 		@title = "All Products"
-    @products = Product.all.sort_by { |a| a.id }
+    @products = Product.all.sort_by { |a| a.id }.paginate(:page => params[:page], :per_page => 10)
 	end
 	
 	def destroy

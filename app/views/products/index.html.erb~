@@ -197,6 +197,13 @@
 		    		[Date.UTC(<%= d['year'].to_i %>, <%= d['month'].to_i-1 %>, 1),<%= d['count'].to_i %>]<%= "," if i != (web.count-1) %>
 		    	<% end %>
 		    	]
+		    },{
+				name: 'Buy.com Orders',
+		    data: [
+		    	<% buy.each_with_index do |e,i| %>
+		    		[Date.UTC(<%= e['year'].to_i %>, <%= e['month'].to_i-1 %>, 1),<%= e['count'].to_i %>]<%= "," if i != (buy.count-1) %>
+		    	<% end %>
+		    	]
 		    }
 				<% end %>
 				]
@@ -219,6 +226,9 @@
 	<%= render @products %>
 </table>
 </center>
+<div class="pagination">
+     <%= will_paginate @offerings, :container => false %>
+</div>
 <%= link_to 'New Product', new_product_path %>
 
 <div id='floater' style="background-color:#fff;position:fixed;top:40px;">
@@ -236,6 +246,9 @@
 		<td id='td10f'>Need (lead Time: 120 days)</td>
 	</tr>
 </table>
+</div>
+<div class="pagination">
+     <%= will_paginate @offerings, :container => false %>
 </div>
 <script>
 $(function() {
