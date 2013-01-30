@@ -210,6 +210,9 @@
     });
   });
 </script>
+<div class="pagination">
+     <%= will_paginate @offerings, :container => false %>
+</div>
 <table class="info" id='main'>
 <tr'>
 	<td id='td1'>Modify</td>
@@ -226,9 +229,6 @@
 	<%= render @products %>
 </table>
 </center>
-<div class="pagination">
-     <%= will_paginate @offerings, :container => false %>
-</div>
 <%= link_to 'New Product', new_product_path %>
 
 <div id='floater' style="background-color:#fff;position:fixed;top:40px;">

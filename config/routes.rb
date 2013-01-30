@@ -21,6 +21,7 @@ Inventory::Application.routes.draw do
 	collection do
 			get :autocomplete
 			get :monthly
+			get :create_csv
 		end
 	end
 	resources :product_counts

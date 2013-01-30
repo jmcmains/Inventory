@@ -213,6 +213,7 @@
 <div class="pagination">
      <%= will_paginate @offerings, :container => false %>
 </div>
+<%= link_to "Download to CSV", create_csv_products_path %>
 <table class="info" id='main'>
 <tr'>
 	<td id='td1'>Modify</td>

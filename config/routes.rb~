@@ -40,7 +40,7 @@ Inventory::Application.routes.draw do
 		collection do
 			get :new_phone
 			get :create_phone
-			get :create_single
+			post :create_single
 			get :combo
 		end
 	end

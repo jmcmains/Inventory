@@ -16,6 +16,18 @@ class ProductsController < ApplicationController
     redirect_to products_path
 	end
 	
+	def create_csv
+		csv = CSV.generate(col_sep: "\t") do |csv|
+			csv << ["name", "quantity per box", "60 day need", "90 day need", "120 day need"]
+			Product.all.sort_by(&:id).each do |product|
+				csv << [product.name, product.per_box, product.need(60).round, product.need(90).round, product.need(120).round]
+			end
+		end
+		file ="inventory.csv"
+		File.open(file, "w"){ |f| f << csv }
+		send_file( file, type: 'text/csv')
+	end
+	
 	def edit
 		@title = "Edit Product"
 		@product = Product.find(params[:id])
