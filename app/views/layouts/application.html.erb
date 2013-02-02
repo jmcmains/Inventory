@@ -46,7 +46,7 @@
 	<li><%= link_to "All Product Offerings", offerings_path %></li>
 </ul>
 Open Paypal Receipt:
-<%= form_tag paypal_path, railstarget: "_blank" do %>
+<%= form_tag paypal_path, target: "_blank" do %>
 		<%= text_field_tag :Order_ID, nil,placeholder: "Order ID", class: "input-medium" %>
 <% end %>
 </div>
