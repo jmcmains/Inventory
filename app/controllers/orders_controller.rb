@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
 require 'csv'
 require 'net/ftp'
 def create
-	if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Website" || params[:order][:origin] == "Buy"
+	if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Website" || params[:order][:origin] == "Buy" || params[:order][:origin] == "EBay"
 		infile = params[:order][:file].read
 		order2=[]
 		if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Buy"
@@ -23,7 +23,14 @@ def create
 					order2 = order2 << order
 				end
 			end
-		else
+		elsif params[:order][:origin] == "EBay"
+			CSV.parse(infile, headers: true, col_sep: ",", quote_char: '"') do |row|
+				order = Order.build_from_csv(row,params[:order][:origin])
+				if order.valid?
+					order2 = order2 << order
+				end
+			end
+		elsif params[:order][:origin] == "Website"
 			CSV.parse(infile, headers: true, quote_char: '"') do |row|
 				order = Order.build_from_csv(row,params[:order][:origin])
 				if order.valid?

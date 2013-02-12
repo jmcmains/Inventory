@@ -59,6 +59,11 @@ class Order < ActiveRecord::Base
     	end
 			offering_id=row[31]
 			quantity = row[32]
+		elsif type == "EBay"
+			order_number = row[13]
+			date = Date.strptime(row[25],"%b-%d-%Y")+2000.years
+			offering_id = row[14]
+			quantity = row[15]
     end
     offering=Offering.find_or_initialize_by_name(offering_id)
     offering.save

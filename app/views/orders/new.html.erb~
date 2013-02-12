@@ -14,7 +14,7 @@
 	<%= f.date_select :date, {}, {class: "input-mini"} %>
 	<%= f.text_field :offering_name, placeholder: "offering", data: {autocomplete_source: autocomplete_no_price_offerings_path}, class: "autocomplete" %>
 	<%= f.text_field :quantity, placeholder: "quantity" %>
-	<%= f.text_field :origin, default_value: "FFO" %>
+	<%= f.text_field :origin, value: "FFO" %>
 	<%= f.submit "Load Data" %>
 <% end %>
 

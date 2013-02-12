@@ -7,7 +7,7 @@ class OrdersController < ApplicationController
   	@order = Order.new(params[:order])
 		@order.save
 		flash[:success] = "Single Order Loaded"
-    redirect_to root_path
+    redirect_to new_order_path
   end
   
 require 'csv'
@@ -35,7 +35,7 @@ def create
 			o.save
 		end
 		flash[:success] = "Orders Loaded"
-		redirect_to root_path
+		redirect_to new_order_path
 	elsif params[:order][:origin] == "Endicia"
 		infile = params[:order][:file].read
 		merchant_order_id=Array.new
