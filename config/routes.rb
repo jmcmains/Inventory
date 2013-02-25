@@ -46,6 +46,9 @@ Inventory::Application.routes.draw do
 		end
 	end
 	resources :offerings do
+	member do
+		put :replace
+	end
 	collection do
 			get :blank
 			get :autocomplete

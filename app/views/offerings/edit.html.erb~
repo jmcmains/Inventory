@@ -1,3 +1,19 @@
+<%= form_for @offering, :url=>{:controller=>"offerings", :action=>"replace"}, class: "form-inline" do |f| %>
+		Replace with: 
+		<% n = @offering.name %>
+		<% @offering.name = "" %>
+		<%= f.text_field :name, data: {autocomplete_source: autocomplete_no_price_offerings_path}, placeholder: "Replace with", class: "autocomplete", id:"name" %>
+		<%= f.submit "Save", class: "btn btn-success" %>
+<% end %>
+	<% @offering.name = n %>
+<script>
+$(function() {
+	 $( ".autocomplete" ).autocomplete({
+			source: $( "#name" ).data('autocomplete-source')
+	});
+});
+</script>
+
 <%= form_for @offering do |f| %>
 	<div class="field">
 		<%= f.label :name %>
@@ -8,12 +24,12 @@
 		<%= f.text_field :price %>
 	</div>
 	<% n=1 %>
-<h2>Categories</h2>
+<h2>Products</h2>
 	<%= f.fields_for(:offering_products, :html => { :class => "form-inline"}) do |builder| %>
 	<%= render "offering_product_fields", :f => builder %>
 <% end %>
 <p><%= link_to_add_fields "Add Product", f, :offering_products %></p>
 <div class="actions">
-	<%= f.submit "Save" %>
+	<%= f.submit "Save", class: "btn btn-success" %>
 </div>
 	<% end %>

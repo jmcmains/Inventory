@@ -6,6 +6,9 @@ class Offering < ActiveRecord::Base
   accepts_nested_attributes_for :offering_products, :reject_if => :all_blank, :allow_destroy => true
   validates :name, presence: true
   
+  def replace
+  
+  end
   def self.search(search,price)
   	if search
 			words = search.to_s.strip.split
@@ -30,5 +33,4 @@ class Offering < ActiveRecord::Base
 			return d[0][0]
 		end
 	end
-
 end

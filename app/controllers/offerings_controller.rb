@@ -11,11 +11,19 @@ class OfferingsController < ApplicationController
   
 	def update
 		@offering = Offering.find(params[:id])
-    @offering.update_attributes(params[:offering])
-    respond_to do |format|
+	  @offering.update_attributes(params[:offering])
+	  respond_to do |format|
 			format.html { redirect_to blank_offerings_path }
 			format.js
 		end
+	end
+	
+	def replace
+		@offering = Offering.find(params[:id])
+		replace=Offering.find_or_create_by_name(params[:offering][:name])
+		Order.where(offering_id: @offering.id).update_all({:offering_id => replace.id})
+		@offering.destroy
+	  redirect_to offerings_path
 	end
 	
 	def autocomplete
