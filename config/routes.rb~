@@ -47,7 +47,7 @@ Inventory::Application.routes.draw do
 	end
 	resources :offerings do
 	member do
-		get :replace
+		put :replace
 	end
 	collection do
 			get :blank
