@@ -22,6 +22,7 @@ class OfferingsController < ApplicationController
 		@offering = Offering.find(params[:id])
 		replace=Offering.find_or_create_by_name(params[:offering][:name])
 		Order.where(offering_id: @offering.id).update_all({:offering_id => replace.id})
+		@offering.destroy
 	  redirect_to offerings_path
 	end
 	
