@@ -15,9 +15,9 @@
 	<td colspan="7" style="margin:0;padding:0;text-align:center">Sales</td>
 	</tr>
 	<tr>
-		<td style="margin:0;padding:0;text-align:center">Modify</span></td>
+		<td style="margin:0;padding:0;text-align:center;width:91px">Modify</span></td>
 		<td style="margin:0;padding:0;text-align:center;width:250px">Offering Name</td>
-		<td style="margin:0;padding:0;text-align:center">Price</td>
+		<td style="margin:0;padding:0;text-align:center;width:90px">Price</td>
 		<td style="margin:0;padding:0;text-align:center">Weight (Lbs)</td>
 		<td  style="margin:0;padding:0;text-align:center;width:150px">Included</td>
 		<td style="margin:0;padding:0;text-align:center">AMZ US<br>
