@@ -24,10 +24,26 @@ def create
 				end
 			end
 		elsif params[:order][:origin] == "EBay"
-			CSV.parse(infile, headers: true, col_sep: ",", quote_char: '"') do |row|
-				order = Order.build_from_csv(row,params[:order][:origin])
-				if order.valid?
-					order2 = order2 << order
+			csv = CSV.parse(infile, headers: false, col_sep: ",", quote_char: '"')
+			len=csv.length
+			csv.each_with_index do |row,i|
+				if i>2 && i<(len-3)
+					if row[33].blank?
+						order = Order.build_from_csv(row,params[:order][:origin])
+						order2 = order2 << order
+					else
+						if !row[12].blank?
+							order_number = row[33]
+							date = Date.strptime(row[22],"%b-%d-%Y")+2000.years
+							offering_id = row[12]
+							quantity = row[14]
+							offering=Offering.find_or_initialize_by_name(offering_id)
+    					offering.save
+    					order= Order.create(order_number: order_number, date: date,offering_id: offering.id,quantity: quantity, origin: params[:order][:origin])
+    					order2 = order2 << order
+						end
+					end
+						
 				end
 			end
 		elsif params[:order][:origin] == "Website"

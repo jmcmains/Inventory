@@ -10,6 +10,8 @@ class Order < ActiveRecord::Base
   scope :website, where(origin: "Website")
   scope :buy, where(origin: "Buy")
   scope :phone, where(origin: "phone or email")
+  scope :ebay, where(origin: "EBay")
+    
   def month
   	self.date.month
  	end
@@ -60,10 +62,10 @@ class Order < ActiveRecord::Base
 			offering_id=row[31]
 			quantity = row[32]
 		elsif type == "EBay"
-			order_number = row[13]
+			order_number = row[29]
 			date = Date.strptime(row[25],"%b-%d-%Y")+2000.years
-			offering_id = row[14]
-			quantity = row[15]
+			offering_id = row[12]
+			quantity = row[14]
     end
     offering=Offering.find_or_initialize_by_name(offering_id)
     offering.save
