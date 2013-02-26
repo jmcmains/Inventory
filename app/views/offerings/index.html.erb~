@@ -11,32 +11,40 @@
 <%= @offerings.total_entries %>
 <table class="info">
 	<tr>
-		<td>Modify</td>
-		<td style="width:300px">Offering Name</td>
-		<td>Price</td>
-		<td>Total Weight (Lbs)</td>
-		<td style="width:150px">Products Included</td>
-		<td>Sales - Amazon US<br>
+	<td colspan="5"></td>
+	<td colspan="7" style="margin:0;padding:0;text-align:center">Sales</td>
+	</tr>
+	<tr>
+		<td style="margin:0;padding:0;text-align:center">Modify</span></td>
+		<td style="margin:0;padding:0;text-align:center;width:250px">Offering Name</td>
+		<td style="margin:0;padding:0;text-align:center">Price</td>
+		<td style="margin:0;padding:0;text-align:center">Weight (Lbs)</td>
+		<td  style="margin:0;padding:0;text-align:center;width:150px">Included</td>
+		<td style="margin:0;padding:0;text-align:center">AMZ US<br>
 			<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "US_ASC"  %><%= submit_tag "^" %><% end %>
 			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "US_DESC"  %>	<%= submit_tag "v" %><% end %>
 		</td>
-		<td>Sales - Amazon Canada<br>
+		<td style="margin:0;padding:0;text-align:center">AMZ CAD<br>
 		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "CA_ASC"  %><%= submit_tag "^" %><% end %>
 			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "CA_DESC"  %>	<%= submit_tag "v" %><% end %>
 		</td>
-		<td>Sales - Website<br>
+		<td style="margin:0;padding:0;text-align:center">RBZ.COM<br>
 		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "WS_ASC"  %><%= submit_tag "^" %><% end %>
 			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "WS_DESC"  %>	<%= submit_tag "v" %><% end %>
 		</td>
-		<td>Sales - Buy.com<br>
+		<td style="margin:0;padding:0;text-align:center">Buy<br>
 		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "BC_ASC"  %><%= submit_tag "^" %><% end %>
 			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "BC_DESC"  %>	<%= submit_tag "v" %><% end %>
 		</td>
-		<td>Sales - Phone/Email<br>
+		<td style="margin:0;padding:0;text-align:center">Ebay<br>
+		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "EB_ASC"  %><%= submit_tag "^" %><% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "EB_DESC"  %>	<%= submit_tag "v" %><% end %>
+		</td>
+		<td style="margin:0;padding:0;text-align:center">Phone<br>
 		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "PE_ASC"  %><%= submit_tag "^" %><% end %>
 			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "PE_DESC"  %>	<%= submit_tag "v" %><% end %>
 		</td>
-		<td>Sales - All<br>
+		<td style="margin:0;padding:0;text-align:center">All<br>
 		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "ALL_ASC"  %><%= submit_tag "^" %><% end %>
 			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "ALL_DESC"  %>	<%= submit_tag "v" %><% end %>
 		</td>
@@ -50,7 +58,7 @@
   <div id="price_<%= offer.id %>">
 		<% if offer.price.blank? %>
 			<%= form_for offer, remote: true do |f| %>
-					<%= f.text_field :price, placeholder: "enter price", :class => "input-small", style: "display:inline" %>
+					<%= f.text_field :price, placeholder: "enter price", :class => "input-mini", style: "display:inline" %>
 			<% end %>
 		<% else %>
 		  <%= offer.price %>
@@ -73,6 +81,7 @@
 	<td><%= offer.orders.amzca.count %></td>
 	<td><%= offer.orders.website.count %></td>
 	<td><%= offer.orders.buy.count %></td>
+	<td><%= offer.orders.ebay.count %></td>
 	<td><%= offer.orders.phone.count %></td>
 	<td><%= offer.orders.count %></td>
 	</tr>

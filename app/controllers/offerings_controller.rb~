@@ -80,7 +80,7 @@ class OfferingsController < ApplicationController
   	elsif params[:sort_by] == "ALL_DESC"
   		@offerings=@offerings.sort_by {|o| o.orders.count }.reverse
   	end
-  	#@offerings=@offerings.paginate(:page => params[:page], :per_page => 10)
+  	@offerings=@offerings.paginate(:page => params[:page], :per_page => 10)
   	
   end
 end
