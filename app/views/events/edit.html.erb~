@@ -13,12 +13,14 @@
 		<%= f.date_select :received_date, {order: [:month, :day, :year]}, {:class => "input-small"} %><br>
 		<%= f.radio_button :received, "true" %> received
 		<%= f.radio_button :received, "false" %> not yet received
+		<%= f.label :additional_cost %>
+		<%= f.text_field :additional_cost %>
 	<% end %>
 	</p>
 	<% n=0 %>
 		<h2>Products</h2>
 	<%= f.fields_for :product_counts do |builder| %>  
-		<%= render "product_fields", f: builder, event: @event %>
+		<%= render "product_fields", f: builder, product: @products[n].product, event: @event %>
 		<% n = n+1 %>
 	<% end %>
 	<center><div style="width:500px"><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;text-align:center" %></div></center>

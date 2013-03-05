@@ -1,0 +1,12 @@
+<h1>COGS</h1>
+Time Span:
+<%= form_tag(cogs_products_path, method: :get) do %>
+	Start:<br> <%= select_date @start_date, {:prefix => 'start_date'}, {:class => "input-small"} %><br>
+	Finish:<br> <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "input-small"} %><br>
+<%= submit_tag %>
+<% end %>
+
+<% @product.each_with_index |p,i| %>
+	<%= p.name %>: <%= @value[i] %> <br>
+<% end %>
+

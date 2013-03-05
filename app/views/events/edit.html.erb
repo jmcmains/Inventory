@@ -13,6 +13,8 @@
 		<%= f.date_select :received_date, {order: [:month, :day, :year]}, {:class => "input-small"} %><br>
 		<%= f.radio_button :received, "true" %> received
 		<%= f.radio_button :received, "false" %> not yet received
+		<%= f.label :additional_cost %>
+		<%= f.text_field :additional_cost %>
 	<% end %>
 	</p>
 	<% n=0 %>

@@ -7,6 +7,18 @@ class Event < ActiveRecord::Base
   scope :received, where(event_type: "Product Order", received: true)
   scope :product_orders, where(event_type: "Product Order")
 
+def per_unit_cost
+	count = 0
+	product_counts.each do |pc|
+	if pc.is_box
+		count = count + pc.count * Product.find(pc.product_id).per_box
+	else
+		count = count +pc.count
+	end
+	return additional_cost/count
+end
+
+
 protected
 
     def check_product_count(product_count_attr)

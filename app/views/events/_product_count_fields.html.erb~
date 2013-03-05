@@ -5,9 +5,6 @@
   <%= link_to_remove_fields "-", f %>
 </p>
 <script>
-if ( $( ".autocomplete" ).val() != "" ) {
-	$( ".autocomplete" ).attr('disabled','disabled')
-	}
 $(function() {
 	 $( ".autocomplete" ).autocomplete({
 			source: $( "#event_product_counts_attributes_0_product_name" ).data('autocomplete-source')

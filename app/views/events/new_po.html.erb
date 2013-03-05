@@ -10,6 +10,8 @@
 		<%= f.label :expected_date %>
 		<%= f.date_select :expected_date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
 		<%= f.hidden_field :received, value: false %>
+				<%= f.label :additional_cost %>
+		<%= f.text_field :additional_cost %>
 	<% end %>
 	</p>
 	<% n=1 %>
