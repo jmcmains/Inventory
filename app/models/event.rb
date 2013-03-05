@@ -19,6 +19,7 @@ def per_unit_cost
 end
 
 
+
 protected
 
     def check_product_count(product_count_attr)
@@ -31,4 +32,6 @@ protected
       
       return rval
     end
+end
+
 end
