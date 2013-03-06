@@ -8,7 +8,10 @@ class OfferingsController < ApplicationController
   	@title = "Edit Offering"
   	@offering.offering_products.build
   end
-  
+  def destroy
+		Offering.find(params[:id]).destroy
+	  redirect_to offerings_path
+  end
 	def update
 		@offering = Offering.find(params[:id])
 	  @offering.update_attributes(params[:offering])

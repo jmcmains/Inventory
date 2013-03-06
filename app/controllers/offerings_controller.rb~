@@ -75,6 +75,10 @@ class OfferingsController < ApplicationController
   		@offerings=@offerings.sort_by {|o| o.orders.phone.count }
   	elsif params[:sort_by] == "PE_DESC"
   		@offerings=@offerings.sort_by {|o| o.orders.phone.count }.reverse
+  	elsif params[:sort_by] == "EB_ASC"
+  		@offerings=@offerings.sort_by {|o| o.orders.ebay.count }
+  	elsif params[:sort_by] == "EB_DESC"
+  		@offerings=@offerings.sort_by {|o| o.orders.ebay.count }.reverse
   	elsif params[:sort_by] == "ALL_ASC"
   		@offerings=@offerings.sort_by {|o| o.orders.count }
   	elsif params[:sort_by] == "ALL_DESC"
