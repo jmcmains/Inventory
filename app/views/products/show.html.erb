@@ -18,6 +18,17 @@
 Done on: <%= @product.inventory.last.date %> <br>
 <%= glc.count %> <%= glc.is_box? ? "boxes" : "pieces" %>
 </blockquote>
+<h2><a href="#", style="color:#999">Cost of Goods Sold</a></h2>
+<blockquote>
+Time Span:
+<%= form_tag(product_path, method: :get) do %>
+	Start: <%= select_date @start_date, {:prefix => 'start_date'}, {:class => "input-small"} %><br>
+	Finish: <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "input-small"} %><br>
+<%= submit_tag %>
+<% end %>
+	<%= @product.name %>: <%= @value %>
+<% end %>
+</blockquote>
 <h2><a href="#", style="color:#999">Orders Currently Out</a></h2>
 <blockquote>
 <% oco = 0 %>

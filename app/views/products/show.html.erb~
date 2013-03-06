@@ -18,6 +18,17 @@
 Done on: <%= @product.inventory.last.date %> <br>
 <%= glc.count %> <%= glc.is_box? ? "boxes" : "pieces" %>
 </blockquote>
+<h2><a href="#", style="color:#999">Cost of Goods Sold</a></h2>
+<blockquote>
+Time Span:
+<%= form_tag(product_path, method: :get) do %>
+	Start:<br> <%= select_date @start_date, {:prefix => 'start_date'}, {:class => "input-small"} %><br>
+	Finish:<br> <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "input-small"} %><br>
+<%= submit_tag %>
+<% end %>
+	<%= @product.name %>: <%= @value %>
+<% end %>
+</blockquote>
 <h2><a href="#", style="color:#999">Orders Currently Out</a></h2>
 <blockquote>
 <% oco = 0 %>
@@ -56,7 +67,12 @@ Done on: <%= @product.inventory.last.date %> <br>
 <% x =(1..y.length).to_a %>
 <% lineFit = LineFit.new %>
 <% lineFit.setData(x,y) %>
+<% if x.length > 1 %>
 <% b, m = lineFit.coefficients %>
+<% else %>
+	<% b = 0 %>
+	<% m = 0 %>
+<% end %>
 <% startY = m+b %>
 <% leadTime = 120 %>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
