@@ -22,8 +22,8 @@ Done on: <%= @product.inventory.last.date %> <br>
 <blockquote>
 Time Span:
 <%= form_tag(product_path, method: :get) do %>
-	Start:<br> <%= select_date @start_date, {:prefix => 'start_date'}, {:class => "input-small"} %><br>
-	Finish:<br> <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "input-small"} %><br>
+	Start: <%= select_date @start_date, {:prefix => 'start_date'}, {:class => "input-small"} %><br>
+	Finish: <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "input-small"} %><br>
 <%= submit_tag %>
 <% end %>
 	<%= @product.name %>: <%= @value %>

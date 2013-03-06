@@ -24,10 +24,9 @@ Time Span:
 <%= form_tag(product_path, method: :get) do %>
 	Start: <%= select_date @start_date, {:prefix => 'start_date'}, {:class => "input-small"} %><br>
 	Finish: <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "input-small"} %><br>
-<%= submit_tag %>
+	<%= submit_tag %>
 <% end %>
-	<%= @product.name %>: <%= @value %>
-<% end %>
+<%= @product.name %>: <%= @value %>
 </blockquote>
 <h2><a href="#", style="color:#999">Orders Currently Out</a></h2>
 <blockquote>
