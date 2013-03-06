@@ -21,32 +21,62 @@
 		<td style="margin:0;padding:0;text-align:center;width:75px">Weight (Lbs)</td>
 		<td  style="margin:0;padding:0;text-align:center;width:150px">Included</td>
 		<td style="margin:0;padding:0;text-align:center">AMZ US<br>
-			<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "US_ASC"  %><%= submit_tag "^" %><% end %>
-			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "US_DESC"  %>	<%= submit_tag "v" %><% end %>
+			<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "US_ASC"  %>
+			<button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-up"></i>
+			</button>
+			<% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "US_DESC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-down"></i>
+			</button><% end %>
 		</td>
 		<td style="margin:0;padding:0;text-align:center">AMZ CAD<br>
-		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "CA_ASC"  %><%= submit_tag "^" %><% end %>
-			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "CA_DESC"  %>	<%= submit_tag "v" %><% end %>
+		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "CA_ASC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-up"></i>
+			</button><% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "CA_DESC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-down"></i>
+			</button><% end %>
 		</td>
 		<td style="margin:0;padding:0;text-align:center">RBZ.COM<br>
-		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "WS_ASC"  %><%= submit_tag "^" %><% end %>
-			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "WS_DESC"  %>	<%= submit_tag "v" %><% end %>
+		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "WS_ASC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-up"></i>
+			</button><% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "WS_DESC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-down"></i>
+			</button><% end %>
 		</td>
 		<td style="margin:0;padding:0;text-align:center">Buy<br>
-		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "BC_ASC"  %><%= submit_tag "^" %><% end %>
-			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "BC_DESC"  %>	<%= submit_tag "v" %><% end %>
+		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "BC_ASC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-up"></i>
+			</button><% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "BC_DESC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-down"></i>
+			</button><% end %>
 		</td>
 		<td style="margin:0;padding:0;text-align:center">Ebay<br>
-		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "EB_ASC"  %><%= submit_tag "^" %><% end %>
-			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "EB_DESC"  %>	<%= submit_tag "v" %><% end %>
+		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "EB_ASC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-up"></i>
+			</button><% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "EB_DESC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-down"></i>
+			</button><% end %>
 		</td>
 		<td style="margin:0;padding:0;text-align:center">Phone<br>
-		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "PE_ASC"  %><%= submit_tag "^" %><% end %>
-			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "PE_DESC"  %>	<%= submit_tag "v" %><% end %>
+		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "PE_ASC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-up"></i>
+			</button><% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "PE_DESC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-down"></i>
+			</button><% end %>
 		</td>
 		<td style="margin:0;padding:0;text-align:center">All<br>
-		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "ALL_ASC"  %><%= submit_tag "^" %><% end %>
-			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "ALL_DESC"  %>	<%= submit_tag "v" %><% end %>
+		<%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "ALL_ASC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-up"></i>
+			</button><% end %>
+			<%= form_tag(offerings_path, :class => "form-inline", :style => "display:inline", method: :get) do %><%= hidden_field_tag :sort_by, "ALL_DESC"  %><button class="btn btn-mini" name="commit" type="submit">
+					<i class="icon-chevron-down"></i>
+			</button><% end %>
 		</td>
 	</tr>
 <% @offerings.each do |offer| %>

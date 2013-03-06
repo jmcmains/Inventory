@@ -40,7 +40,6 @@ textarea {
 	font-weight: bold;
 	line-height: 1;
 	&:hover {
-		color: #fff;
 		text-decoration:none;
 	}
 }
@@ -123,8 +122,6 @@ ul.ui-autocomplete {
 	}
 }
 .pagination {
-  background: white;
-  cursor: default;
   a, span, em {
     padding: 5px;
     padding-top:-2px;
@@ -162,6 +159,9 @@ ul.ui-autocomplete {
       padding: 0.1em 0.25em;}}
 }
 
+.ui-helper-hidden-accessible {
+	display:none;
+}
 .product-image {
 	max-height:200px;
 	max-width:200px;

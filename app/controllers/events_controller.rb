@@ -21,7 +21,7 @@ class EventsController < ApplicationController
   end
   
   def new_po
-  	@event=Event.new(expected_date: Date.today+120)
+  	@event=Event.new(expected_date: Date.today+120,received_date: Date.today+120)
   	@event.event_type="Product Order"
   	@title="New Product Order"
   	@subtitle=""
