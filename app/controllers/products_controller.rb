@@ -39,13 +39,15 @@ class ProductsController < ApplicationController
 			i=0
 			total = purchases
 			value = 0;
-			while total > 0
-				if total >= inv[i]
-					total = total-inv[i]
-					value = value + inv[i]*price[i]
-				elsif total < inv[i]
-					value = value + total*price[i]
-					total = 0
+			if inv.sum > total
+				while total > 0
+					if total >= inv[i]
+						total = total-inv[i]
+						value = value + inv[i]*price[i]
+					elsif total < inv[i]
+						value = value + total*price[i]
+						total = 0
+					end
 				end
 			end
 			@value=value
@@ -140,8 +142,6 @@ class ProductsController < ApplicationController
 							total = 0
 						end
 					end
-				else
-					value = 0
 				end
 				@product[i]=product
 				@value[i]=value
@@ -184,13 +184,15 @@ class ProductsController < ApplicationController
 			i=0
 			total = purchases
 			value = 0;
-			while total > 0
-				if total >= inv[i]
-					total = total-inv[i]
-					value = value + inv[i]*price[i]
-				elsif total < inv[i]
-					value = value + total*price[i]
-					total = 0
+			if inv.sum > total
+				while total > 0
+					if total >= inv[i]
+						total = total-inv[i]
+						value = value + inv[i]*price[i]
+					elsif total < inv[i]
+						value = value + total*price[i]
+						total = 0
+					end
 				end
 			end
 			@value=value
