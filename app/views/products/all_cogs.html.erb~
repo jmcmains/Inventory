@@ -1,4 +1,4 @@
-<div style="margin-left:auto;margin-right:auto;width:auto">
+<div style="text-align:center;margin-left:auto;margin-right:auto;width:auto">
 Time Span:
 <%= form_tag(all_cogs_products_path, method: :get) do %>
 <%= select_date @start_date, {:prefix => 'start_date'}, {:class => "btn-mini input-mini"} %> to <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "btn-mini input-mini"} %><%= submit_tag "submit", :class => "btn btn-success" %>
