@@ -60,7 +60,7 @@ class ProductsController < ApplicationController
 		inv=d.map { |a| a["count"].to_i }.reverse
 		box=d.map { |a| a["box"]=="t" }.reverse
 		price = d.map { |a| a["price"].to_f }.reverse
-		event_id = d.map { |a| a["id"] }.reverse
+		event_id = d.map { |a| a["id"].to_i }.reverse
 		inv.each_with_index do |c,i| 
 			if box[i]
 				inv[i] = Product.find(1).per_box * c
