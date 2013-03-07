@@ -1,0 +1,37 @@
+<div style="margin-left:auto;margin-right:auto;width:auto">
+Time Span:
+<%= form_tag(all_cogs_products_path, method: :get) do %>
+<%= select_date @start_date, {:prefix => 'start_date'}, {:class => "btn-mini input-mini"} %> to <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "btn-mini input-mini"} %><%= submit_tag "submit", :class => "btn btn-success" %>
+<% end %>
+</div>
+<style>
+table.table { width:auto;margin-left:auto;margin-right:auto }
+td.num { text-align: center }
+th.num { text-align: center }
+</style>
+<table class="table table-condensed table-bordered table-striped">
+<thead>
+<tr>
+	<th>Product Name</th>
+	<th class="num">Total Orders</th>
+	<th class="num">Total COGS</th>
+	<th class="num">Average COGS</th>
+</tr>
+</thead>
+<tbody>
+<% @product.each_with_index do |product,i| %>
+<tr>
+<td><%= @product[i].name %></td>
+<td class="num"><%= number_with_precision(@orders[i], :precision => 0, :delimiter => ',') %></td>
+<td class="num">$<%= number_with_precision(@value[i], :precision => 2, :delimiter => ',') %></td>
+<td class="num">$<%= number_with_precision(@value[i]/@orders[i], :precision => 2, :delimiter => ',') %></td>
+</tr>
+<% end %>
+<tr>
+<td>Total</td>
+<td class="num"><%= number_with_precision(@orders_total, :precision => 0, :delimiter => ',') %></td>
+<td class="num">$<%= number_with_precision(@value_total, :precision => 2, :delimiter => ',') %></td>
+<td class="num">$<%= number_with_precision(@value_total/@orders_total, :precision => 2, :delimiter => ',') %></td>
+</tr>
+</tbody>
+</table>

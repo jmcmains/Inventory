@@ -18,7 +18,7 @@ Inventory::Application.routes.draw do
 	root to: 'static_pages#home'
 	match '/paypal', to: 'static_pages#paypal'
 	resources :products do
-	members do
+	member do
 			get :cogs
 		end
 	collection do
