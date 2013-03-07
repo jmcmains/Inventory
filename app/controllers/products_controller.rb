@@ -110,10 +110,17 @@ class ProductsController < ApplicationController
 				d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity) as purchases FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{product.id}) AND orders.date <= '#{@end_date}'::date AND orders.date >= '#{@start_date}'::date")
 				purchases=d[0]["purchases"].to_i
 				d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{product.id}) AND events.received AND events.received_date <= '#{@end_date}'::date ORDER BY events.received_date")
+				if d.count >0
 				inv=d.map { |a| a["count"].to_i }.reverse
 				box=d.map { |a| a["box"]=="t" }.reverse
 				price = d.map { |a| a["price"].to_f }.reverse
 				event_id = d.map { |a| a["id"].to_i }.reverse
+				else
+					inv=0
+					box=0
+					price = 0
+					event_id = 0
+				end
 				inv.each_with_index do |c,i| 
 					if box[i]
 						inv[i] = Product.find(1).per_box * c
