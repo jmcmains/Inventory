@@ -8,6 +8,46 @@ class Product < ActiveRecord::Base
 		self.events.find_all_by_event_type(event_name).sort_by(&:date).last
 	end
 	
+	def cogs(start_date,end_date)
+	 	output={}
+	 	sql = connection()
+	 	if Rails.env.production?
+			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity) as purchases FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{id}) AND orders.date <= '#{end_date}'::date AND orders.date >= '#{start_date}'::date")
+			purchases=d[0]["purchases"].to_i
+			d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{id}) AND events.received AND events.received_date <= '#{end_date}'::date ORDER BY events.received_date")
+			inv=d.map { |a| a["count"].to_i }.reverse
+			box=d.map { |a| a["box"]=="t" }.reverse
+			price = d.map { |a| a["price"].to_f }.reverse
+			event_id = d.map { |a| a["id"].to_i }.reverse
+			inv.each_with_index do |c,i| 
+				if box[i]
+					inv[i] = per_box * c
+				end
+				price[i] = price[i]/inv[i] + Event.find(event_id[i]).per_unit_cost
+			end
+			i=0
+			total = purchases
+			value = 0;
+			if inv.sum > total
+				while total > 0
+					if total >= inv[i]
+						total = total-inv[i]
+						value = value + inv[i]*price[i]
+					elsif total < inv[i]
+						value = value + total*price[i]
+						total = 0
+					end
+				end
+			end
+			output["value"]=value
+			output["purchases"]=purchases
+		else
+			output["value"]=rand*100
+			output["purchases"]=rand*1000
+		end
+		return output
+	end
+	
 	def inventory
 		self.events.inventory
 	end

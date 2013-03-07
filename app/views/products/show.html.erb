@@ -26,7 +26,7 @@ Time Span:
 <% end %>
 Total Orders During Period: <span id="orders"><%= number_with_precision(@orders, :precision => 0, :delimiter => ',') %></span><br>
 Total Cost of Goods Sold During Period: <span id="cogs">$<%= number_with_precision(@value, :precision => 2, :delimiter => ',') %></span><br>
-Average Cost of Goods Sold During Period: <span id="averagecogs">$<%= number_with_precision(@avg, :precision => 2, :delimiter => ',') %></span>
+Average Cost of Goods Sold During Period: <span id="averagecogs">$<%= number_with_precision((@orders > 0 ? @value/@orders : 0), :precision => 2, :delimiter => ',') %></span>
 </blockquote>
 <h2><a href="#", style="color:#999">Orders Currently Out</a></h2>
 <blockquote>
