@@ -1,1 +1,4 @@
 $('#cogs').html("$<%= number_with_precision(@value, :precision => 2, :delimiter => ',') %>")
+$('#orders').html("<%= number_with_precision(@orders, :precision => 0, :delimiter => ',') %>")
+$('#averagecogs').html("$<%= number_with_precision(@avg, :precision => 2, :delimiter => ',') %>")
+

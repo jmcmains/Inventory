@@ -49,8 +49,12 @@ class ProductsController < ApplicationController
 				end
 			end
 			@value=value
+			@orders=purchases
+			@avg = @value/@orders
 		else
-			@value = rand*1000;
+			@value = rand*1000
+			@orders = rand*1000
+			@avg = @value/@orders
 		end
 		respond_to do |format|
       format.js
@@ -123,8 +127,12 @@ class ProductsController < ApplicationController
 				end
 			end
 			@value=value
+			@orders=purchases
+			@avg = @value/@orders
 		else
-			@value = rand*1000;
+			@value = rand*1000
+			@orders = rand*1000
+			@avg = @value/@orders
 		end
   end
 	
