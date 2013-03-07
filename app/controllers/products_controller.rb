@@ -8,7 +8,6 @@ class ProductsController < ApplicationController
 	def show
 		@product = Product.find(params[:id])
 		@title = @product.name
-		sql = ActiveRecord::Base.connection()
 		if params[:start_date]
   		@start_date = Date.new(params[:start_date][:year].to_i,params[:start_date][:month].to_i,params[:start_date][:day].to_i)
   		@end_date = Date.new(params[:end_date][:year].to_i,params[:end_date][:month].to_i,params[:end_date][:day].to_i)
@@ -16,7 +15,8 @@ class ProductsController < ApplicationController
   		@start_date = Date.today.beginning_of_year
   		@end_date = Date.today.end_of_year
   	end
-  	d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity) as purchases FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) AND orders.date <= '#{@end_date}'::date AND orders.date >= '#{@start_date}'::date")
+  	sql = ActiveRecord::Base.connection()
+		d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity) as purchases FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) AND orders.date <= '#{@end_date}'::date AND orders.date >= '#{@start_date}'::date")
 		purchases=d[0]["purchases"].to_i
 		d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{@product.id}) AND events.received AND events.received_date <= '#{@end_date}'::date ORDER BY events.received_date")
 		inv=d.map { |a| a["count"].to_i }.reverse
