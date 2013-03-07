@@ -22,9 +22,8 @@ Done on: <%= @product.inventory.last.date %> <br>
 <blockquote>
 Time Span:
 <%= form_tag(product_path(@product), method: :get) do %>
-<%= select_date @start_date, {:prefix => 'start_date'}, {:class => "input-mini"} %> to <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "input-mini"} %><%= submit_tag, class: "btn btn-success" %>
+<%= select_date @start_date, {:prefix => 'start_date'}, {:class => "input-mini"} %> to <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "input-mini"} %><%= submit_tag "submit", :class => "btn btn-success" %>
 <% end %>
-<%= @product.name %>: <%= @value %>
 </blockquote>
 <h2><a href="#", style="color:#999">Orders Currently Out</a></h2>
 <blockquote>
