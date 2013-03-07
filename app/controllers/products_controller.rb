@@ -12,7 +12,49 @@ class ProductsController < ApplicationController
 	end
 	
 	def cogs
-
+		@product = Product.find(params[:id])
+    @title = @product.name
+    if params[:start_date]
+  		@start_date = Date.new(params[:start_date][:year].to_i,params[:start_date][:month].to_i,params[:start_date][:day].to_i)
+  		@end_date = Date.new(params[:end_date][:year].to_i,params[:end_date][:month].to_i,params[:end_date][:day].to_i)
+  	else
+  		@start_date = Date.today.beginning_of_year
+  		@end_date = Date.today.end_of_year
+  	end
+  	if Rails.env.production?
+			sql = ActiveRecord::Base.connection()
+			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity) as purchases FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) AND orders.date <= '#{@end_date}'::date AND orders.date >= '#{@start_date}'::date")
+			purchases=d[0]["purchases"].to_i
+			d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{@product.id}) AND events.received AND events.received_date <= '#{@end_date}'::date ORDER BY events.received_date")
+			inv=d.map { |a| a["count"].to_i }.reverse
+			box=d.map { |a| a["box"]=="t" }.reverse
+			price = d.map { |a| a["price"].to_f }.reverse
+			event_id = d.map { |a| a["id"].to_i }.reverse
+			inv.each_with_index do |c,i| 
+				if box[i]
+					inv[i] = Product.find(1).per_box * c
+				end
+				price[i] = price[i]/inv[i] + Event.find(event_id[i]).per_unit_cost
+			end
+			i=0
+			total = purchases
+			value = 0;
+			while total > 0
+				if total >= inv[i]
+					total = total-inv[i]
+					value = value + inv[i]*price[i]
+				elsif total < inv[i]
+					value = value + total*price[i]
+					total = 0
+				end
+			end
+			@value=value
+		else
+			@value = rand*1000;
+		end
+		respond_to do |format|
+      format.js
+    end
 	end
 	
 	def create_csv
@@ -53,33 +95,37 @@ class ProductsController < ApplicationController
   		@start_date = Date.today.beginning_of_year
   		@end_date = Date.today.end_of_year
   	end
-  	sql = ActiveRecord::Base.connection()
-		d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity) as purchases FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) AND orders.date <= '#{@end_date}'::date AND orders.date >= '#{@start_date}'::date")
-		purchases=d[0]["purchases"].to_i
-		d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{@product.id}) AND events.received AND events.received_date <= '#{@end_date}'::date ORDER BY events.received_date")
-		inv=d.map { |a| a["count"].to_i }.reverse
-		box=d.map { |a| a["box"]=="t" }.reverse
-		price = d.map { |a| a["price"].to_f }.reverse
-		event_id = d.map { |a| a["id"].to_i }.reverse
-		inv.each_with_index do |c,i| 
-			if box[i]
-				inv[i] = Product.find(1).per_box * c
+  	if Rails.env.production?
+			sql = ActiveRecord::Base.connection()
+			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity) as purchases FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{@product.id}) AND orders.date <= '#{@end_date}'::date AND orders.date >= '#{@start_date}'::date")
+			purchases=d[0]["purchases"].to_i
+			d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{@product.id}) AND events.received AND events.received_date <= '#{@end_date}'::date ORDER BY events.received_date")
+			inv=d.map { |a| a["count"].to_i }.reverse
+			box=d.map { |a| a["box"]=="t" }.reverse
+			price = d.map { |a| a["price"].to_f }.reverse
+			event_id = d.map { |a| a["id"].to_i }.reverse
+			inv.each_with_index do |c,i| 
+				if box[i]
+					inv[i] = Product.find(1).per_box * c
+				end
+				price[i] = price[i]/inv[i] + Event.find(event_id[i]).per_unit_cost
 			end
-			price[i] = price[i]/inv[i] + Event.find(event_id[i]).per_unit_cost
-		end
-		i=0
-		total = purchases
-		value = 0;
-		while total > 0
-			if total >= inv[i]
-				total = total-inv[i]
-				value = value + inv[i]*price[i]
-			elsif total < inv[i]
-				value = value + total*price[i]
-				total = 0
+			i=0
+			total = purchases
+			value = 0;
+			while total > 0
+				if total >= inv[i]
+					total = total-inv[i]
+					value = value + inv[i]*price[i]
+				elsif total < inv[i]
+					value = value + total*price[i]
+					total = 0
+				end
 			end
+			@value=value
+		else
+			@value = rand*1000;
 		end
-		@value=value
   end
 	
 	def index

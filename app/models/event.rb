@@ -15,7 +15,7 @@ def per_unit_cost
 	else
 		count = count +pc.count
 	end
-	return additional_cost/count
+	return (additional_cost ? additional_cost: 0) /count
 end
 
 

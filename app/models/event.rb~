@@ -18,7 +18,6 @@ def per_unit_cost
 	return additional_cost/count
 end
 
-end
 
 
 protected
@@ -33,4 +32,6 @@ protected
       
       return rval
     end
+end
+
 end

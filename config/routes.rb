@@ -18,11 +18,13 @@ Inventory::Application.routes.draw do
 	root to: 'static_pages#home'
 	match '/paypal', to: 'static_pages#paypal'
 	resources :products do
+	member do
+			get :cogs
+		end
 	collection do
 			get :autocomplete
 			get :monthly
 			get :create_csv
-			get :cogs
 		end
 	end
 	resources :product_counts

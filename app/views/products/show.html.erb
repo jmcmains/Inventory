@@ -21,9 +21,10 @@ Done on: <%= @product.inventory.last.date %> <br>
 <h2><a href="#", style="color:#999">Cost of Goods Sold</a></h2>
 <blockquote>
 Time Span:
-<%= form_tag(product_path(@product), method: :get) do %>
+<%= form_tag(cogs_product_path(@product), method: :get, remote: true) do %>
 <%= select_date @start_date, {:prefix => 'start_date'}, {:class => "input-mini"} %> to <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "input-mini"} %><%= submit_tag "submit", :class => "btn btn-success" %>
 <% end %>
+Total Cost of Goods Sold During Period: <span id="cogs">$<%= number_with_precision(@value, :precision => 2, :delimiter => ',') %></span>
 </blockquote>
 <h2><a href="#", style="color:#999">Orders Currently Out</a></h2>
 <blockquote>
