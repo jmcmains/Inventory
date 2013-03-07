@@ -117,9 +117,9 @@ class ProductsController < ApplicationController
 				event_id = d.map { |a| a["id"].to_i }.reverse
 				else
 					inv=0
-				box=0
-				price = 0
-				event_id = 0
+					box=0
+					price = 0
+					event_id = 0
 				end
 				inv.each_with_index do |c,i| 
 					if box[i]
