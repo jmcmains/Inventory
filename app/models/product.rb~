@@ -45,6 +45,7 @@ class Product < ActiveRecord::Base
 			output["value"]=rand*100
 			output["purchases"]=rand*1000
 		end
+		return output
 	end
 	
 	def inventory
