@@ -42,7 +42,7 @@ class Product < ActiveRecord::Base
 				if inv.sum > 0
 					val = 0
 					inv.each_with_index do |c,i|
-						val = inv[i]*price + val
+						val = inv[i]*price[i] + val
 					end
 					value = (val/inv.sum) * purchases
 				end
