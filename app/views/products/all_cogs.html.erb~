@@ -24,7 +24,7 @@ th.num { text-align: center }
 <td><%= @product[i].name %></td>
 <td class="num"><%= number_with_precision(@orders[i], :precision => 0, :delimiter => ',') %></td>
 <td class="num">$<%= number_with_precision(@value[i], :precision => 2, :delimiter => ',') %></td>
-<td class="num">$<%= number_with_precision(@value[i]/@orders[i], :precision => 2, :delimiter => ',') %></td>
+<td class="num">$<%= number_with_precision((@orders[i] > 0 ? @value[i]/@orders[i] : 0), :precision => 2, :delimiter => ',') %></td>
 </tr>
 <% end %>
 <tr>

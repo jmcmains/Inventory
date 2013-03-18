@@ -31,7 +31,7 @@ th.num { text-align: center }
 <td>Total</td>
 <td class="num"><%= number_with_precision(@orders_total, :precision => 0, :delimiter => ',') %></td>
 <td class="num">$<%= number_with_precision(@value_total, :precision => 2, :delimiter => ',') %></td>
-<td class="num">$<%= number_with_precision(@value_total/@orders_total, :precision => 2, :delimiter => ',') %></td>
+<td class="num">$<%= number_with_precision((@orders_total > 0 ? @value_total/@orders_total : 0), :precision => 2, :delimiter => ',') %></td>
 </tr>
 </tbody>
 </table>
