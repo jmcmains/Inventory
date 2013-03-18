@@ -37,6 +37,7 @@ class Product < ActiveRecord::Base
 						value = value + total*price[i]
 						total = 0
 					end
+					i=i+1
 				end
 			else
 				if inv.sum > 0
