@@ -10,12 +10,13 @@ class Event < ActiveRecord::Base
 def per_unit_cost
 	count = 0
 	product_counts.each do |pc|
-	if pc.is_box
-		count = count + pc.count * Product.find(pc.product_id).per_box
-	else
-		count = count +pc.count
+		if pc.is_box
+			count = count + pc.count * Product.find(pc.product_id).per_box
+		else
+			count = count +pc.count
+		end
 	end
-	return (additional_cost ? additional_cost: 0) /count
+	return (additional_cost ? additional_cost : 0) /count
 end
 
 
@@ -34,4 +35,3 @@ protected
     end
 end
 
-end
