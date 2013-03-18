@@ -71,7 +71,7 @@ class ProductsController < ApplicationController
 		@avg={}
 		@value_total=0
 		@orders_total=0
-  	Product.all.each_with_index do |product,i|
+  	Product.all.sort_by(&:id).each_with_index do |product,i|
   		output=product.cogs(@start_date,@end_date)
   		@product[i]=product
 			@value[i]=output["value"]

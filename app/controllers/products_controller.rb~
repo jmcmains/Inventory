@@ -22,7 +22,7 @@ class ProductsController < ApplicationController
   	end
   	output = @product.cogs(@start_date,@end_date)
   	@value=output["value"]
-		@purchases=output["purchases"]
+		@orders=output["purchases"]
 		respond_to do |format|
       format.js
     end
