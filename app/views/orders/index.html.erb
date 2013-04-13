@@ -1,8 +1,22 @@
-<% @order_months.sort.each do |month, orders| %>
-  <h2><%= month.strftime('%B, %Y') %>, <%= orders.count %></h2>
-  <% for order in orders %>
-    <div class="order">
-      <%= order.order_number %>, <%= order.date %>, <%= order.offering.name %>, <%= order.quantity %>
-    </div>
-  <% end %>
+<table class="table">
+	<tr>
+		<td>Order Number</td>
+		<td>Offering</td>
+		<td>Quantity</td>
+		<td>Origin</td>
+	</tr>
+<% Order.all.each do |o| %>
+	<% if Order.find_all_by_offering_id_and_order_number(o.offering_id,o.order_number).count > 2 %>
+		<tr>
+			<td><%= o.order_number %></td>
+			<td><%= o.offering.name %></td>
+			<td><%= o.quantity %></td>
+			<td><%= o.origin %></td>
+		</tr>
+	<% end %>
 <% end %>
+</table>
+
+
+<% sql = ActiveRecord::Base.connection() %>
+<% d=sql.execute("SELECT COUNT(CONCAT(offering_id,order_number)) AS NumOccurrences FROM orders HAVING ( NumOccurrences > 1 )") %>

@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
 require 'csv'
 require 'net/ftp'
 def create
-	if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Website" || params[:order][:origin] == "Buy" || params[:order][:origin] == "EBay"
+	if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Website" || params[:order][:origin] == "Buy" || params[:order][:origin] == "EBay" || params[:order][:origin] == "Shipworks"
 		infile = params[:order][:file].read
 		order2=[]
 		if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Buy"
@@ -53,6 +53,13 @@ def create
 					order2 = order2 << order
 				end
 			end
+		elsif params[:order][:origin] == "Shipworks"
+			CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
+				order = Order.shipworks_csv(row)
+				if order.valid?
+					order2 = order2 << order
+				end
+			end
 		end
 		order2.each do |o|
 			o.save
@@ -87,8 +94,7 @@ def create
 end
   
 	def index
-		@orders = Order.find(:all, :order => 'date, id')
-		@order_months = @orders.group_by { |t| t.date.beginning_of_month }
+
 	end
 
   def destroy

@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
 require 'csv'
 require 'net/ftp'
 def create
-	if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Website" || params[:order][:origin] == "Buy" || params[:order][:origin] == "EBay"
+	if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Website" || params[:order][:origin] == "Buy" || params[:order][:origin] == "EBay" || params[:order][:origin] == "Shipworks"
 		infile = params[:order][:file].read
 		order2=[]
 		if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Buy"
@@ -29,8 +29,8 @@ def create
 			csv.each_with_index do |row,i|
 				if i>2 && i<(len-3)
 					if row[33].blank?
-						#order = Order.build_from_csv(row,params[:order][:origin])
-						#order2 = order2 << order
+						order = Order.build_from_csv(row,params[:order][:origin])
+						order2 = order2 << order
 					else
 						if !row[12].blank?
 							order_number = row[33]
@@ -49,6 +49,13 @@ def create
 		elsif params[:order][:origin] == "Website"
 			CSV.parse(infile, headers: true, quote_char: '"') do |row|
 				order = Order.build_from_csv(row,params[:order][:origin])
+				if order.valid?
+					order2 = order2 << order
+				end
+			end
+		elsif params[:order][:origin] == "Shipworks"
+			CSV.parse(infile, headers: true, quote_char: '"') do |row|
+				order = Order.shipworks_csv(row)
 				if order.valid?
 					order2 = order2 << order
 				end
@@ -87,8 +94,7 @@ def create
 end
   
 	def index
-		@orders = Order.find(:all, :order => 'date, id')
-		@order_months = @orders.group_by { |t| t.date.beginning_of_month }
+
 	end
 
   def destroy

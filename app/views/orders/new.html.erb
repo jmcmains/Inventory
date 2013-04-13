@@ -1,7 +1,8 @@
 <%= form_for :order,:url=>{:controller=>"orders", :action=>"create"}, do |f| %>
   <%= f.file_field :file %><br />
 	<%= f.label :origin %>
-	<%= f.radio_button :origin, "Amazon US", checked: true %>Amazon US - last order:<%= Order.find_all_by_origin("Amazon US").first.date %><br>
+	<%= f.radio_button :origin, "Shipworks", checked: true  %>Shipworks<br>
+	<%= f.radio_button :origin, "Amazon US"%>Amazon US - last order:<%= Order.find_all_by_origin("Amazon US").first.date %><br>
 	<%= f.radio_button :origin, "Amazon Canada" %>Amazon Canada - last order:<%= Order.find_all_by_origin("Amazon Canada").first.date %><br>
 	<%= f.radio_button :origin, "Website" %>Rubberbanditz Website - last order:<%= Order.find_all_by_origin("Website").first.date %><br>
 	<%= f.radio_button :origin, "Buy" %>Buy.com - last order:<%= Order.find_all_by_origin("Buy").first.date %><br>

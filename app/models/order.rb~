@@ -34,6 +34,25 @@ class Order < ActiveRecord::Base
  		self.date.strftime("%W").to_i
  	end
  	
+ 	def self.shipworks_csv(row)
+ 		order_number = row[0]
+ 		type = row[1]
+		date = row[2]
+		quantity = row[3]
+		offering_id=row[4]
+		offering=Offering.find_or_initialize_by_name(offering_id)
+    offering.save
+    order = Order.find_by_order_number_and_offering_id(order_number,offering.id)
+    if order
+    	if type == "EBay"
+    		order.update_attributes(origin: type)
+    	end
+    else
+    	order= Order.create(order_number: order_number, date: date,offering_id: offering.id,quantity: quantity, origin: type)
+    end
+    return order
+ 	end
+ 	
   def self.build_from_csv(row,type)
     # find existing customer from email or create new
     if type == "Amazon US"
@@ -67,7 +86,7 @@ class Order < ActiveRecord::Base
 			offering_id = row[12]
 			quantity = row[14]
     end
-    offering=Offering.find_or_create_by_name(offering_id)
+    offering=Offering.find_or_initialize_by_name(offering_id)
     offering.save
     order= Order.create(order_number: order_number, date: date,offering_id: offering.id,quantity: quantity, origin: type)
     return order

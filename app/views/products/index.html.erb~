@@ -111,6 +111,7 @@
 	<% oc2["y"]=d.map { |a| a["sum"].to_i } %>
 	<% oc2["dates"] = d.map { |a| Date.new(a["year"].to_i,a["month"].to_i,1) } %>
 	<% amzca = [] %><% amzus = [] %><% phone = [] %><% web = [] %><% buy = [] %>
+
 	<% oc_origin.each do |oco| %>
 		<% if oco["origin"] == "Amazon Canada" %>
 			<% amzca << oco %>
@@ -213,6 +214,7 @@
 <div class="pagination">
      <%= will_paginate @offerings, :container => false %>
 </div>
+<%= link_to "Download to CSV", create_csv_products_path %>
 <table class="info" id='main'>
 <tr'>
 	<td id='td1'>Modify</td>
