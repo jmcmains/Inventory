@@ -16,11 +16,14 @@
 	</p>
 	<% n=0 %>
 	<h2>Products</h2>
+	<div style="background-color:#aaa;width:100%">
 	<%= f.fields_for :product_counts do |builder| %> 
 		<%= render "product_fields", f: builder, product: @products[n].product, event: @event %>
 		<% n = n+1 %>
 	<% end %> 
-	<center><div style="width:500px"><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;text-align:center" %></div></center>
+	</div>
+
+	<div style="width:100%;text-align:center;display:block;margin-left:auto;margin-right:auto;float:left"><%= f.submit "Submit", class: "btn-primary btn-large" %></div>
 <% end %>
 
 

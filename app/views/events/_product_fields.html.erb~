@@ -11,7 +11,7 @@
 		<%= f.radio_button :is_box, "false", checked: true %> pieces 
 	<% end %>
 <% else %>
-	<%= f.text_field :count, value: nil, class: "input-small", placeholder: "Quantity"  %>
+	<%= f.text_field :count, value: nil, 	class: "input-small", placeholder: "Quantity"  %>
 	<%= f.radio_button :is_box, "true", checked: true %> boxes
 	<%= f.radio_button :is_box, "false" %> pieces 
 <% end %>

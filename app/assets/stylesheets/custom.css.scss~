@@ -122,6 +122,8 @@ ul.ui-autocomplete {
 	}
 }
 .pagination {
+	float:left;
+	width:100%;
   a, span, em {
     padding: 5px;
     padding-top:-2px;

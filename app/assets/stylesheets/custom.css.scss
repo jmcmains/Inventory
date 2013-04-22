@@ -170,7 +170,7 @@ ul.ui-autocomplete {
 }
 div.product {
 	width: 250px;
-	height: 175px;
+	height: 200px;
 	float:left;
 	margin:5px;
 	padding:5px;
@@ -186,5 +186,8 @@ div.product {
 	img {
 		max-height:100 px;
 		max-width:100px;
+	}
+	h3 {
+		font-size:20px
 	}
 }
