@@ -13,7 +13,7 @@ class EventsController < ApplicationController
   	@subtitle=""
   	i=0;
   	@products=Array.new;
-		Product.all.sort_by(&:id).each do |p|
+		Product.all.sort_by(&:name).each do |p|
     	@products[i] = @event.product_counts.build(attributes: { product_id: p.id })
     	i=i+1;
   	end
