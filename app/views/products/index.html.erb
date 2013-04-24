@@ -237,7 +237,7 @@
 	<td id='td9'>Need (lead Time: 90 days)</td>
 	<td id='td10'>Need (lead Time: 120 days)</td>
 </tr>
-	<%= render @products %>
+	<%= render @products.sort_by(&:name) %>
 </table>
 </center>
 <%= link_to 'New Product', new_product_path %>

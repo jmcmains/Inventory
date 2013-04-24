@@ -10,7 +10,7 @@
 	<% end %>
 <% end %>
 <% @events.each do |event| %>
-	<% if event.expected_date < Date.today && !event.received && event.event_type == "Product Order" %>
+	<% if event.event_type == "Product Order" && event.expected_date < Date.today && !event.received %>
 		<p style="color:red">
 	<% else %> 
 		<p>
@@ -36,7 +36,7 @@
 		<% end %>
 	Product Counts:<br>
 	<ul>
-	<% event.product_counts.sort_by(&:product_id).each do |pc| %>
+	<% event.product_counts.sort_by(&:name).each do |pc| %>
 		<% if pc.count && pc.count > 0 %>
 			<li><%= link_to pc.product.name, product_path(pc.product) %>: <%= pc.count.round %> 
 			<% if pc.is_box %>
