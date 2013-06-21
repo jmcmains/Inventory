@@ -1,6 +1,7 @@
 <center>
 <% y = Product.get_trend["y"] %>
 <% d2 = Product.get_trend["dates"] %>
+<% x = [] %>
 <% d2.each_with_index do |d,i| %>
 	<% x[i]=(d-d2[0]).to_i %>
 <% end %>
