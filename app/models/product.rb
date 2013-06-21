@@ -62,12 +62,12 @@ class Product < ActiveRecord::Base
 	end
 	
 	def next
-		id < Product.last.id ? Product.find(id+1) : nil
-	end
-	
-	def previous
-		id > 1 ? Product.find(id-1) : nil
-	end
+    Product.where("id > ?", id).order("id ASC").first
+  end
+
+  def previous
+    Product.where("id < ?", id).order("id DESC").first
+  end
 	
 	def product_orders
 		self.events.product_orders
@@ -133,14 +133,22 @@ class Product < ActiveRecord::Base
 	def get_trend
 		sql = connection()
 		data= {}
+		data['y'] = []
+		data['dates'] = []
 		if Rails.env.production?
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year, week ORDER BY year, week ")
 			data["y"]=d.map { |a| a["sum"].to_i }
 			data["dates"] = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) if !a['year'].nil? && !a['week'].nil? }
 		else
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year") 
-			data["y"]=d.map { |a| a[0] }
-			data["dates"]=d.map{ |a| a[2].to_date.beginning_of_week }
+			i=0
+			d.each do |a|
+				if a[2]
+					data["y"][i] = a[0]
+					data["dates"][i] = a[2].to_date.beginning_of_week
+					i=i+1
+				end
+			end
 		end
 		if data["y"].count > 0
 			if data["dates"].last >= Date.today.beginning_of_week-1
@@ -154,14 +162,22 @@ class Product < ActiveRecord::Base
 	def self.get_trend
 		sql = connection()
 		data= {}
+		data['y']=[]
+		data['dates']=[]
 		if Rails.env.production?
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year, week ORDER BY year, week ")
 			data["y"]=d.map { |a| a["sum"].to_i }
 			data["dates"] = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) }
 		else
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year") 
-			data["y"]=d.map { |a| a[0] }
-			data["dates"]=d.map{ |a| a[2].to_date.beginning_of_week }
+			i=0
+			d.each do |a|
+				if a[2]
+					data["y"][i] = a[0]
+					data["dates"][i] = a[2].to_date.beginning_of_week
+					i=i+1
+				end
+			end
 		end
 		if data["dates"].last >= Date.today.beginning_of_week-1
 			data["dates"].pop
@@ -173,10 +189,14 @@ class Product < ActiveRecord::Base
 	def forcast_demand
 		start=Date.today.beginning_of_week
 		inv=get_last_count("Inventory")
-		if inv.is_box
-			inventory = inv.count*self.per_box
+		if inv.instance_of?(ProductCount) && inv.count
+			if inv.is_box
+				inventory = inv.count*self.per_box
+			else
+				inventory = inv.count
+			end
 		else
-			inventory = inv.count
+			inventory=0
 		end
 		max_lead_time=130.0;
 		y=self.get_trend["y"]
@@ -214,7 +234,11 @@ class Product < ActiveRecord::Base
 				n += 1
 			end
 		end
-		return levels
+		if levels
+			return levels
+		else
+			return Array.new(2){0}
+		end
 	end
 	
 	def get_Inventory

@@ -98,7 +98,7 @@ class ProductsController < ApplicationController
 	
 	def index
 		@title = "All Products"
-    @products = Product.all.sort_by { |a| a.id }.paginate(:page => params[:page], :per_page => 10)
+    @products = Product.all.sort_by { |a| a.name }.paginate(:page => params[:page], :per_page => 10)
 	end
 	
 	def destroy
