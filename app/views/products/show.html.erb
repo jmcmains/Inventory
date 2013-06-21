@@ -69,6 +69,10 @@ Average Cost of Goods Sold During Period: <span id="averagecogs">$<%= number_wit
 <% end %>
 </blockquote>
 <% if @product.inventory.count>0 && y.count>1 %>
+<% x = [] %>
+<% d2.each_with_index do |d,i| %>
+	<% x[i]=(d-d2[0]).to_i %>
+<% end %>
 <% x =(1..y.length).to_a %>
 <% lineFit = LineFit.new %>
 <% lineFit.setData(x,y) %>

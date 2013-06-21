@@ -1,7 +1,9 @@
 <center>
 <% y = Product.get_trend["y"] %>
 <% d2 = Product.get_trend["dates"] %>
-<% x =(1..y.length).to_a %>
+<% d2.each_with_index do |d,i| %>
+	<% x[i]=(d-d2[0]).to_i %>
+<% end %>
 <% lineFit = LineFit.new %>
 <% lineFit.setData(x,y) %>
 <% b, m = lineFit.coefficients %>
@@ -237,7 +239,7 @@
 	<td id='td9'>Need (lead Time: 90 days)</td>
 	<td id='td10'>Need (lead Time: 120 days)</td>
 </tr>
-	<%= render @products %>
+	<%= render @products.sort_by(&:name) %>
 </table>
 </center>
 <%= link_to 'New Product', new_product_path %>

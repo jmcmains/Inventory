@@ -1,7 +1,10 @@
 <center>
 <% y = Product.get_trend["y"] %>
 <% d2 = Product.get_trend["dates"] %>
-<% x =(1..y.length).to_a %>
+<% x = [] %>
+<% d2.each_with_index do |d,i| %>
+	<% x[i]=(d-d2[0]).to_i %>
+<% end %>
 <% lineFit = LineFit.new %>
 <% lineFit.setData(x,y) %>
 <% b, m = lineFit.coefficients %>
