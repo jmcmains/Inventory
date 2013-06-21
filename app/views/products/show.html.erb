@@ -13,11 +13,13 @@
 <% d2 = @product.get_trend["dates"] %>
 <% glc=@product.get_last_count("Inventory") %> 
 <div id="accordion">
+<% if @product.inventory %>
 <h2><a href="#", style="color:#999">Latest Inventory</a></h2>
 <blockquote>
 Done on: <%= @product.inventory.last.date %> <br>
 <%= glc.count %> <%= glc.is_box? ? "boxes" : "pieces" %>
 </blockquote>
+<% end %>
 <h2><a href="#", style="color:#999">Cost of Goods Sold</a></h2>
 <blockquote>
 Time Span:
