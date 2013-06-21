@@ -15,8 +15,13 @@
 <div id="accordion">
 <h2><a href="#", style="color:#999">Latest Inventory</a></h2>
 <blockquote>
+<% if @product.inventory.count>0 %>
 Done on: <%= @product.inventory.last.date %> <br>
 <%= glc.count %> <%= glc.is_box? ? "boxes" : "pieces" %>
+<% else %>
+Done on: <b>never</b><br>
+0 boxes
+<% end %>
 </blockquote>
 <h2><a href="#", style="color:#999">Cost of Goods Sold</a></h2>
 <blockquote>

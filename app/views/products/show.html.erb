@@ -13,13 +13,16 @@
 <% d2 = @product.get_trend["dates"] %>
 <% glc=@product.get_last_count("Inventory") %> 
 <div id="accordion">
-<% if @product.inventory %>
 <h2><a href="#", style="color:#999">Latest Inventory</a></h2>
 <blockquote>
+<% if @product.inventory.count>0 %>
 Done on: <%= @product.inventory.last.date %> <br>
 <%= glc.count %> <%= glc.is_box? ? "boxes" : "pieces" %>
-</blockquote>
+<% else %>
+Done on: <b>never</b><br>
+0 boxes
 <% end %>
+</blockquote>
 <h2><a href="#", style="color:#999">Cost of Goods Sold</a></h2>
 <blockquote>
 Time Span:
@@ -65,6 +68,7 @@ Average Cost of Goods Sold During Period: <span id="averagecogs">$<%= number_wit
 	<% n=n+1 %>
 <% end %>
 </blockquote>
+<% if @product.inventory.count>0 %>
 <% x =(1..y.length).to_a %>
 <% lineFit = LineFit.new %>
 <% lineFit.setData(x,y) %>
@@ -255,6 +259,7 @@ Orders current until the week of: <%= d2.last %>
     });
   });
 </script>
+<% end %>
 <script>
 $(function() {
 	$("#accordion").accordion({ active: false, collapsible: true, autoHeight: false, icons: { "header": "ui-icon-plus", "headerSelected": "ui-icon-minus" } });
