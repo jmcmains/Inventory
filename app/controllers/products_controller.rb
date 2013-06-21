@@ -35,7 +35,7 @@ class ProductsController < ApplicationController
 				csv << [product.name, product.per_box, product.need(60).round, product.need(90).round, product.need(120).round]
 			end
 		end
-		file ="inventory.csv"
+		file ="inventory.txt"
 		File.open(file, "w"){ |f| f << csv }
 		send_file( file, type: 'text/csv')
 	end
