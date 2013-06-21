@@ -68,7 +68,7 @@ Average Cost of Goods Sold During Period: <span id="averagecogs">$<%= number_wit
 	<% n=n+1 %>
 <% end %>
 </blockquote>
-<% if @product.inventory.count>0 %>
+<% if @product.inventory.count>0 && y.count>0 %>
 <% x =(1..y.length).to_a %>
 <% lineFit = LineFit.new %>
 <% lineFit.setData(x,y) %>
