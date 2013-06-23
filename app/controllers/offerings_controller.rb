@@ -57,7 +57,8 @@ class OfferingsController < ApplicationController
 	
   def index
     @title = "Current Offerings and their products"
-  	@offerings = Offering.search(params[:search],false)
+    @search=params[:search]
+  	@offerings = Offering.search(@search,false)
   	if params[:sort_by] == "US_ASC"
   		@offerings=@offerings.sort_by {|o| o.orders.amzus.count }
   	elsif params[:sort_by] == "US_DESC"

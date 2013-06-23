@@ -1,0 +1,55 @@
+<% if @title == "Received Product Orders" %>
+	<%= form_tag(po_received_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
+		<%= select_tag :supplier, options_for_select(@suppliers.map(&:supplier)) %>
+		<%= submit_tag "Show orders from this supplier" %>
+	<% end %>
+<% elsif @title == "Product Orders" %>
+	<%= form_tag(po_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
+		<%= select_tag :supplier, options_for_select(@suppliers.map(&:supplier)) %>
+		<%= submit_tag "Show orders from this supplier" %>
+	<% end %>
+<% end %>
+<% @events.each do |event| %>
+	<% if event.event_type == "Product Order" && event.expected_date < Date.today && !event.received %>
+		<p style="color:red">
+	<% else %> 
+		<p>
+	<% end %>
+	<h2>Date: <%= event.date %> </h2>
+
+	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",
+                                :title => "Delete #{event.event_type}" %> 
+		<% if @title == "Received Product Orders" %>
+			<br>
+			Expected Delivery: <%= event.expected_date %><br/>
+			Actual Delivery: <%= event.received_date %><br/>
+			Delay(number of days between order and delivery): <%= (event.received_date - event.date).to_i %> <br/>
+			Invoice: <%= event.invoice %><br/>
+			Suppier: <%= event.supplier %><br/>
+		<% elsif @title == "Product Orders" %>
+			| <%= link_to 'Receive Today', receive_po_today_event_path(event) %><br>
+			Expected Delivery: <%= event.expected_date %><br/>
+			Invoice: <%= event.invoice %><br/>
+			Suppier: <%= event.supplier %><br/>
+		<% else %>
+			<br>
+		<% end %>
+	Product Counts:<br>
+	<ul>
+	<% event.product_counts.sort_by(&:product_name).each do |pc| %>
+		<% if pc.count && pc.count > 0 %>
+			<li><%= link_to pc.product.name, product_path(pc.product) %>: <%= pc.count.round %> 
+			<% if pc.is_box %>
+				boxes
+			<% else %>
+				pieces
+			<% end %>
+			</li>
+		<% end %>
+	<% end %>
+	</ul>
+	</p>
+<% end %>
+<div class="pagination">
+	<%= will_paginate @events, :container => false %>
+</div>

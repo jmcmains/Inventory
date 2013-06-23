@@ -55,23 +55,47 @@ class EventsController < ApplicationController
   end
   
   def po
-  	@events=Event.unreceived.sort_by { |i| i.date }.reverse
-  	@title= "Product Orders"
-  	@suppliers=Event.unreceived.select("DISTINCT(supplier)")
-  	if params[:supplier]
-  		@events=Event.unreceived.find_all_by_supplier(params[:supplier]);
+  	@event_type=params[:event_type]
+  	if @event_type == "All Shipments"
+  		received="%"
+  	elsif @event_type == "Received"
+			received="t"
+  	elsif @event_type == "In Transit"
+  		received="f"
+  	else
+  		received="%"
   	end
-  	@events=@events.paginate(:page => params[:page], :per_page => 10)
-  	render :index
-  end
-  
-  def po_received
-  	@events=Event.received.sort_by { |i| i.date }.reverse
-  	@title= "Received Product Orders"
-  	@suppliers=Event.received.select("DISTINCT(supplier)")
-  	if params[:supplier]
-  		@events=Event.received.find_all_by_supplier(params[:supplier]);
+  	@inv_num= params[:Invoice]? params[:Invoice] : "%"
+  	@sup_name= params[:Supplier]? params[:Supplier] : "%"
+		@events=Event.where('received LIKE ? AND LOWER(invoice) LIKE ? AND LOWER(supplier) LIKE ?',"#{received}","%#{@inv_num.downcase}%","%#{@sup_name.downcase}%")
+		if @inv_num == "%"
+		@inv_num=[]
+		end
+		if @sup_name == "%"
+		@sup_name=[]
+		end
+  	if params[:sort_by] == "INV_ASC"
+  		@events=@events.sort_by {|a| a.invoice }
+  	elsif params[:sort_by] == "INV_DESC"
+  		@events=@events.sort_by {|a| a.invoice }.reverse
+  	elsif params[:sort_by] == "SUP_ASC"
+  		@events=@events.sort_by {|a| a.supplier }
+  	elsif params[:sort_by] == "SUP_DESC"
+  		@events=@events.sort_by {|a| a.supplier }.reverse
+  	elsif params[:sort_by] == "DC_ASC"
+  		@events=@events.sort_by {|a| a.date }
+  	elsif params[:sort_by] == "DC_DESC"
+  		@events=@events.sort_by {|a| a.date }.reverse
+  	elsif params[:sort_by] == "DE_ASC"
+  		@events=@events.sort_by {|a| a.expected_date }
+  	elsif params[:sort_by] == "DE_DESC"
+  		@events=@events.sort_by {|a| a.expected_date }.reverse
+  	elsif params[:sort_by] == "DA_ASC"
+  		@events=@events.sort_by {|a| a.received_date }
+  	elsif params[:sort_by] == "DA_DESC"
+  		@events=@events.sort_by {|a| a.received_date }.reverse
   	end
+  	@title= "Product Order"
   	@events=@events.paginate(:page => params[:page], :per_page => 10)
   	render :index
   end

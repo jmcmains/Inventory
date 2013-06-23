@@ -1,57 +1,55 @@
-<% if @title == "Received Product Orders" %>
-	<%= form_tag(po_received_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
-		<%= select_tag :supplier, options_for_select(@suppliers.map(&:supplier)) %>
-		<%= submit_tag "Show orders from this supplier" %>
+<% if @title == "Product Order" %>
+	<%= form_tag(po_events_path, class: "form", method: :get) do %>
+		<%= text_field_tag :Invoice, @inv_num, placeholder: "Invoice #"  %>
+		<%= text_field_tag :Supplier, @sup_name, placeholder: "Supplier Name"  %>
+		<%= select_tag :event_type, options_for_select(["All Shipments", "Received", "In Transit"], @event_type) %>
+		<%= submit_tag "Submit", class: "btn btn-primary" %>
 	<% end %>
-<% elsif @title == "Product Orders" %>
-	<%= form_tag(po_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
-		<%= select_tag :supplier, options_for_select(@suppliers.map(&:supplier)) %>
-		<%= submit_tag "Show orders from this supplier" %>
-	<% end %>
+	<%= link_to "New Product Order", new_po_events_path %>
+<% elsif @title == "Inventory" %>
+	<%= link_to "New Inventory Count", new_inventory_events_path %>
 <% end %>
+<table class="table">
+<tr>
+	<td>Modify Record</td>
+	<td>Date Created <%= render "sort_buttons", name: "DC", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type %></td>
+<% if @title == "Product Order" %>
+	<td>Invoice # <%= render "sort_buttons", name: "INV", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
+	<td>Supplier <%= render "sort_buttons", name: "SUP", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
+	<td>Expected Delivery<%= render "sort_buttons", name: "DE", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
+	<td>Actual Delivery<%= render "sort_buttons", name: "DA", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
+<% end %>
+	<td>Products</td>
+</tr>
 <% @events.each do |event| %>
-	<% if event.event_type == "Product Order" && event.expected_date < Date.today && !event.received %>
-		<p style="color:red">
-	<% else %> 
-		<p>
-	<% end %>
-	<h2>Date: <%= event.date %> </h2>
-
-	<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?",
-                                :title => "Delete #{event.event_type}" %> 
-		<% if @title == "Received Product Orders" %>
-			<br>
-			Expected Delivery: <%= event.expected_date %><br/>
-			Actual Delivery: <%= event.received_date %><br/>
-			Delay(number of days between order and delivery): <%= (event.received_date - event.date).to_i %> <br/>
-			Invoice: <%= event.invoice %><br/>
-			Suppier: <%= event.supplier %><br/>
-		<% elsif @title == "Product Orders" %>
-			| <%= link_to 'Receive Today', receive_po_today_event_path(event) %><br>
-			Expected Delivery: <%= event.expected_date %><br/>
-			Invoice: <%= event.invoice %><br/>
-			Suppier: <%= event.supplier %><br/>
-		<% else %>
-			<br>
-		<% end %>
-	Product Counts:<br>
-	<ul>
-	<% event.product_counts.sort_by(&:name).each do |pc| %>
-		<% if pc.count && pc.count > 0 %>
-			<li><%= link_to pc.product.name, product_path(pc.product) %>: <%= pc.count.round %> 
-			<% if pc.is_box %>
-				boxes
-			<% else %>
-				pieces
-			<% end %>
-			</li>
-		<% end %>
-	<% end %>
-	</ul>
-	</p>
+<tr>
+	<td><%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?", :title => "Delete #{event.event_type}" %> 
+	<% if !event.received && @title != "Inventory" %>
+ 		| <%= link_to 'Receive Today', receive_po_today_event_path(event) %> 
+ 	<% end %>        
+  </td>
+  <td><%= event.date %></td>
+<% if @title == "Product Order" %>
+	<td><%= event.invoice %></td>
+	<td><%= event.supplier %></td>
+	<td><%= event.expected_date %></td>
+	<td><%= event.received_date if event.received %></td>
 <% end %>
-<div class="pagination">
-	<%= will_paginate @events, :container => false %>
-</div>
-
-
+	<td>
+		<ul>
+		<% event.product_counts.sort_by(&:product_name).each do |pc| %>
+			<% if pc.count && pc.count > 0 %>
+				<li><%= link_to pc.product.name, product_path(pc.product) %>: <%= pc.count.round %> 
+				<% if pc.is_box %>
+					boxes
+				<% else %>
+					pieces
+				<% end %>
+				</li>
+			<% end %>
+		<% end %>
+		</ul>
+	</td>
+</tr>
+<% end %>
+</table>
