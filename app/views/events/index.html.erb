@@ -12,18 +12,21 @@
 <div class="pagination">
      <%= will_paginate @events, :container => false %>
 </div>
-<table class="table">
+<table class="table table-bordered table-striped table-condensed">
+<thead>
 <tr>
-	<td style="text-align:center">Modify Record</td>
-	<td style="text-align:center">Date Created<br><%= render "sort_buttons", name: "DC", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type %></td>
+	<th style="vertical-align:top;text-align:center">Modify Record</th>
+	<th style="vertical-align:top;text-align:center">Date Created<br><%= render "sort_buttons", name: "DC", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type %></th>
 <% if @title == "Product Order" %>
-	<td style="text-align:center">Invoice #<br><%= render "sort_buttons", name: "INV", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
-	<td style="text-align:center">Supplier<br><%= render "sort_buttons", name: "SUP", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
-	<td style="text-align:center">Expected Delivery<br><%= render "sort_buttons", name: "DE", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
-	<td style="text-align:center">Actual Delivery<br><%= render "sort_buttons", name: "DA", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
+	<th style="vertical-align:top;text-align:center">Invoice #<br><%= render "sort_buttons", name: "INV", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></th>
+	<th style="vertical-align:top;text-align:center">Supplier<br><%= render "sort_buttons", name: "SUP", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></th>
+	<th style="vertical-align:top;text-align:center">Expected Delivery<br><%= render "sort_buttons", name: "DE", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></th>
+	<th style="vertical-align:top;text-align:center">Actual Delivery<br><%= render "sort_buttons", name: "DA", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></th>
 <% end %>
-	<td style="text-align:center">Products</td>
+	<th style="vertical-align:top;text-align:center">Products</th>
 </tr>
+</thead>
+<tbody>
 <% @events.each do |event| %>
 <tr>
 	<td><%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?", :title => "Delete #{event.event_type}" %> 
@@ -55,6 +58,7 @@
 	</td>
 </tr>
 <% end %>
+</tbody>
 </table>
 <div class="pagination">
      <%= will_paginate @events, :container => false %>
