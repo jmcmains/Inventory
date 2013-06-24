@@ -1,5 +1,5 @@
 <% if @title == "Product Order" %>
-	<%= form_tag(po_events_path, method: :get) do %>
+	Search: <%= form_tag(po_events_path, method: :get) do %>
 		<%= text_field_tag :Invoice, @inv_num, placeholder: "Invoice #"  %>
 		<%= text_field_tag :Supplier, @sup_name, placeholder: "Supplier Name"  %>
 		<%= select_tag :event_type, options_for_select(["All Shipments", "Received", "In Transit"], @event_type) %>

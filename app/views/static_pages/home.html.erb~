@@ -1,17 +1,9 @@
 <ul class="home">
 <li class="top">
 <%= link_to "Count Inventory", new_inventory_events_path, class: "btn btn-large btn-primary" %></li>
-<li id="fat-menu" class="dropdown top"><a href="#" class="dropdown-toggle btn btn-large btn-primary" data-toggle="dropdown">Receive Shipment <b class="caret"></b></a>
-		<ul class="dropdown-menu">
-		<% Event.unreceived.each do |po| %>
-			<li><%= link_to po.invoice, edit_event_path(po) %></li>
-		<% end %>
-		</ul>
-	</li>
+<li class="top"><%= link_to "Place an order from suppliers", new_po_events_path, class: "btn btn-large btn-primary"  %></li>
+<li class="top"><%= link_to "See shipments", po_events_path, class: "btn btn-large btn-primary"  %></li>
+<li class="top"><%= link_to "Upload Shipworks CSV", new_order_path, class: "btn btn-large btn-primary"  %></li>
 </ul>
 
-<form id="cartButtonForm_33" class="Cart66CartButton" method="post" action="http://rubberbanditz.com/idevaffiliate/idevaffiliate.php?id=100&url=1">
-	<input type="hidden" name="task" id="task_33" value="addToCart">
-	<input type="hidden" name="cart66ItemId" value="2">
-	<input type="hidden" name="product_url" value="http://rubberbanditz.com/exercise-bands/heavy-pullup-bands-pair/"> 
-	<span class="Cart66Price"> <span class="Cart66PriceLabel">Price: </span> <span class="Cart66CurrencySymbol Cart66CurrencySymbolbefore">$</span><span class="Cart66PreDecimal">34</span><span class="Cart66DecimalSep">.</span><span class="Cart66PostDecimal">99</span><span class="Cart66CurrencySymbol Cart66CurrencySymbolAfter"></span> </span> <input type="hidden" name="item_quantity" class="Cart66ItemQuantityInput" value="1"> <input type="submit" value="Add to Cart" class="Cart66ButtonPrimary purAddToCart ajax-button" name="addToCart_33" id="addToCart_33"></form>
+
