@@ -1,7 +1,7 @@
 <%= form_tag(po_events_path, class: "form-inline", :style => "display:inline", method: :get) do %>
 <%= hidden_field_tag :sort_by, input_name  %>
-<%= hidden_field_tag :inv_num, inv_num  %>
-<%= hidden_field_tag :sup_name, sup_name  %>
+<%= hidden_field_tag :Invoice inv_num  %>
+<%= hidden_field_tag :Supplier, sup_name  %>
 <%= hidden_field_tag :event_type, event_type  %>
 <button class="btn btn-mini" name="commit" type="submit">
 		<i class="icon-chevron-<%= direction %>"></i>
