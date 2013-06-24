@@ -14,15 +14,15 @@
 </div>
 <table class="table">
 <tr>
-	<td>Modify Record</td>
-	<td>Date Created <%= render "sort_buttons", name: "DC", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type %></td>
+	<td style="text-align:center">Modify Record</td>
+	<td style="text-align:center">Date Created<br><%= render "sort_buttons", name: "DC", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type %></td>
 <% if @title == "Product Order" %>
-	<td>Invoice #<br><%= render "sort_buttons", name: "INV", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
-	<td>Supplier<br><%= render "sort_buttons", name: "SUP", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
-	<td>Expected Delivery<br><%= render "sort_buttons", name: "DE", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
-	<td>Actual Delivery<br><%= render "sort_buttons", name: "DA", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
+	<td style="text-align:center">Invoice #<br><%= render "sort_buttons", name: "INV", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
+	<td style="text-align:center">Supplier<br><%= render "sort_buttons", name: "SUP", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
+	<td style="text-align:center">Expected Delivery<br><%= render "sort_buttons", name: "DE", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
+	<td style="text-align:center">Actual Delivery<br><%= render "sort_buttons", name: "DA", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></td>
 <% end %>
-	<td>Products</td>
+	<td style="text-align:center">Products</td>
 </tr>
 <% @events.each do |event| %>
 <tr>
