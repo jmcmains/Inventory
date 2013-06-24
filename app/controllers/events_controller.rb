@@ -57,22 +57,22 @@ class EventsController < ApplicationController
   def po
   	@event_type=params[:event_type]
   	if @event_type == "All Shipments"
-  		received="%"
+  		received=""
   	elsif @event_type == "Received"
-			received="t"
+			received="received = true AND "
   	elsif @event_type == "In Transit"
-  		received="f"
+  		received="received = false AND"
   	else
-  		received="%"
+  		received=""
   	end
-  	@inv_num= params[:Invoice]? params[:Invoice] : "%"
-  	@sup_name= params[:Supplier]? params[:Supplier] : "%"
-		@events=Event.where('received LIKE ? AND LOWER(invoice) LIKE ? AND LOWER(supplier) LIKE ?',"#{received}","%#{@inv_num.downcase}%","%#{@sup_name.downcase}%")
-		if @inv_num == "%"
-		@inv_num=[]
+  	@inv_num= params[:Invoice]? params[:Invoice] : ""
+  	@sup_name= params[:Supplier]? params[:Supplier] : ""
+		@events=Event.where("#{received} LOWER(invoice) LIKE ? AND LOWER(supplier) LIKE ?","%#{@inv_num.downcase}%","%#{@sup_name.downcase}%")
+		if @inv_num == ""
+			@inv_num=[]
 		end
-		if @sup_name == "%"
-		@sup_name=[]
+		if @sup_name == ""
+			@sup_name=[]
 		end
   	if params[:sort_by] == "INV_ASC"
   		@events=@events.sort_by {|a| a.invoice }
