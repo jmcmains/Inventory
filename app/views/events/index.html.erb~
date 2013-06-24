@@ -9,6 +9,9 @@
 <% elsif @title == "Inventory" %>
 	<%= link_to "New Inventory Count", new_inventory_events_path %>
 <% end %>
+<div class="pagination">
+     <%= will_paginate @events, :container => false %>
+</div>
 <table class="table">
 <tr>
 	<td>Modify Record</td>
@@ -53,3 +56,6 @@
 </tr>
 <% end %>
 </table>
+<div class="pagination">
+     <%= will_paginate @events, :container => false %>
+</div>
