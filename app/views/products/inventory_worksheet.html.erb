@@ -36,8 +36,8 @@ $('#data-popup').onclick('click', function(e) {
 	<td>
 	<% received=0 %>
 	<% product.events.where("received = ? AND received_date >= ?",'t',updated).each do |e| %>
-		c=e.product_counts.find_by_product_id(product)
-		received = received + c.count * (c.is_box ? product.per_box : 1)
+		<% c=e.product_counts.find_by_product_id(product) %>
+		<% received = received + c.count * (c.is_box ? product.per_box : 1) %>
 	<% end %>
 	<%= received %>
 	</td>

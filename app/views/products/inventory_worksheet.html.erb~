@@ -18,7 +18,7 @@ $('#data-popup').onclick('click', function(e) {
 	<td>Last Inventory Date</td>
 	<td>Last Inventory Amount (peices)</td>
 	<td>Estimated Sales Since Inventory (peices)</td>
-	<td>Amount Recieved Since Inventory	(peices)</td>
+	<td>Amount Received Since Inventory	(peices)</td>
 	<td>New Estimated Inventory (peices)</td>
 </tr>
 <% @products.each do |product| %>
