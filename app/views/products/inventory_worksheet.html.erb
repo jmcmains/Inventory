@@ -1,5 +1,5 @@
 <% if @title == "Inventory Worksheet" %>
-<%= (link_to "Print", inventory_worksheet_print_products_path, target: "_blank", onclick: "return !window.open(this.href, 'Print', 'width=500,height=500')") %>
+	<%= link_to "Print Worksheet", inventory_worksheet_print_products_path, target: "_blank", onclick: "return !window.open(this.href, 'Print', 'width=500,height=500')", class: "btn btn-primary btn-large"  %>
 <script>
 $('#data-popup').onclick('click', function(e) { 
 	window.open(this.href,'create_company', 'height=600, width=600');
@@ -7,20 +7,28 @@ $('#data-popup').onclick('click', function(e) {
 });
 </script>
 <% else %>
+<style>
+thead {
+	display: table-header-group;
+	}
+</style>
 <link href="/assets/custom.css?body=1" media="all" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
  window.onload = function() { window.print(); }
 </script>
 <% end %>
-<table class="table">
+<table class="table" style="padding-top:0;margin-top:0">
+<thead>
 <tr>
-	<td>Product</td>
-	<td>Last Inventory Date</td>
-	<td>Last Inventory Amount (peices)</td>
-	<td>Estimated Sales Since Inventory (peices)</td>
-	<td>Amount Received Since Inventory	(peices)</td>
-	<td>New Estimated Inventory (peices)</td>
+	<th>Product</th>
+	<th>Last Inventory Date</th>
+	<th>Last Inventory Amount (peices)</th>
+	<th>Estimated Sales Since Inventory (peices)</th>
+	<th>Amount Received Since Inventory	(peices)</th>
+	<th>New Estimated Inventory (peices)</th>
 </tr>
+</thead>
+<tbody>
 <% @products.each do |product| %>
 <tr>
 	<td><%= product.name %></td>
@@ -44,4 +52,5 @@ $('#data-popup').onclick('click', function(e) {
 	<td><%= count + received - sales %></td>
 </tr>
 <% end %>
+</tbody>
 </table>
