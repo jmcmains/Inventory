@@ -5,6 +5,17 @@ class ProductsController < ApplicationController
 		@title = "New Product"
 	end
 
+	def inventory_worksheet
+		@products = Product.all.sort_by { |a| a.name }
+		@title = "Inventory Worksheet"
+	end
+	
+	def inventory_worksheet_print
+		@products = Product.all.sort_by { |a| a.name }
+		@title = "Print Inventory Worksheet"
+		render "products/inventory_worksheet", layout: false
+	end
+	
 	def create
 		@product = Product.new(params[:product])
     @product.save

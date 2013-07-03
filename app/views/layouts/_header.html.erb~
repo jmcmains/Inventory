@@ -1,10 +1,10 @@
 <header class="navbar navbar-fixed-top">
   <div class="navbar-inner">
-      <%= link_to @title, root_path, id: "logo" %>
+      <%= link_to "Inventory", root_path, id: "logo" %><b class="icon-chevron-right"></b><%= link_to @title, root_path, id: "logo" %>
       <nav>
         <ul class="nav pull-right">
-          <li><%= link_to "Home", root_path %></li>
           <% if signed_in? %>
+          	<li><%= link_to "Home", root_path %></li>
             <li id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 Account <b class="caret"></b>
@@ -18,8 +18,6 @@
                 </li>
               </ul>
             </li>
-          <% else %>
-            <li><%= link_to "Sign in", signin_path %></li>
           <% end %>
         </ul>
       </nav>

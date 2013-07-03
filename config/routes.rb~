@@ -22,9 +22,11 @@ Inventory::Application.routes.draw do
 			get :cogs
 		end
 	collection do
+			get :inventory_worksheet
 			get :autocomplete
 			get :monthly
 			get :create_csv
+			get :all_cogs
 		end
 	end
 	resources :product_counts

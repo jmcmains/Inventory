@@ -22,6 +22,8 @@ Inventory::Application.routes.draw do
 			get :cogs
 		end
 	collection do
+			get :inventory_worksheet
+			get :inventory_worksheet_print
 			get :autocomplete
 			get :monthly
 			get :create_csv

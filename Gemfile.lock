@@ -127,6 +127,7 @@ DEPENDENCIES
   linefit
   pg
   rails
+  rake (= 10.0.4)
   sass-rails
   sqlite3
   uglifier

@@ -13,6 +13,18 @@ class OrdersController < ApplicationController
 require 'csv'
 require 'net/ftp'
 def create
+	infile = params[:order][:file].read
+	CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
+		order = Order.shipworks_csv(row)
+		if order.valid?
+			order.save
+		end
+	end
+	flash[:success] = "Orders Loaded"
+	redirect_to new_order_path
+end
+
+def create1
 	if params[:order][:origin] == "Amazon US" || params[:order][:origin] == "Amazon Canada" || params[:order][:origin] == "Website" || params[:order][:origin] == "Buy" || params[:order][:origin] == "EBay" || params[:order][:origin] == "Shipworks"
 		infile = params[:order][:file].read
 		order2=[]
