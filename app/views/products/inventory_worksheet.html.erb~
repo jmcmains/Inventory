@@ -24,7 +24,7 @@ $('#data-popup').onclick('click', function(e) {
 <% @products.each do |product| %>
 <tr>
 	<td><%= product.name %></td>
-	<td><%= updated = product.get_last_count("Inventory").class != Fixnum ? product.get_last_count("Inventory").updated_at : DateTime.new(2009) %></td>
+	<td><%= updated = (product.get_last_count("Inventory").class != Fixnum ? product.get_last_count("Inventory").updated_at : DateTime.new(2009)).to_date %></td>
 	<td><%= count = ((product.get_last_count("Inventory").class != Fixnum ? product.get_last_count("Inventory").count : 0 ) * (product.get_last_count("Inventory").class != Fixnum ? (product.get_last_count("Inventory").is_box ? product.per_box : 1) : 0 )).round(0) %></td>
 	<% sql = ActiveRecord::Base.connection() %>
 	<% if Rails.env.production? %>
