@@ -67,7 +67,12 @@ class EventsController < ApplicationController
   	end
   	@inv_num= params[:Invoice]? params[:Invoice] : ""
   	@sup_name= params[:Supplier]? params[:Supplier] : ""
-		@events=Event.where("#{received} LOWER(invoice) LIKE ? AND LOWER(supplier) LIKE ?","%#{@inv_num.downcase}%","%#{@sup_name.downcase}%")
+  	if @sup_name.length > 0
+  		@supplier = Supplier.where("LOWER(name) LIKE ?","%#{@sup_name.downcase}%").first
+			@events=Event.where("#{received} LOWER(invoice) LIKE ? AND supplier_id = ?","%#{@inv_num.downcase}%","#{@supplier.id}")
+		else
+			@events=Event.where("#{received} LOWER(invoice) LIKE ?","%#{@inv_num.downcase}%")
+		end
 		if @inv_num == ""
 			@inv_num=[]
 		end
@@ -79,9 +84,9 @@ class EventsController < ApplicationController
   	elsif params[:sort_by] == "INV_DESC"
   		@events=@events.sort_by {|a| a.invoice }.reverse
   	elsif params[:sort_by] == "SUP_ASC"
-  		@events=@events.sort_by {|a| a.supplier }
+  		@events=@events.sort_by {|a| a.supplier.blank? ? "" : a.supplier.name }
   	elsif params[:sort_by] == "SUP_DESC"
-  		@events=@events.sort_by {|a| a.supplier }.reverse
+  		@events=@events.sort_by {|a| a.supplier.blank? ? "" : a.supplier.name }.reverse
   	elsif params[:sort_by] == "DC_ASC"
   		@events=@events.sort_by {|a| a.date }
   	elsif params[:sort_by] == "DC_DESC"

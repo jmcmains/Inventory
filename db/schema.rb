@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130305140136) do
+ActiveRecord::Schema.define(:version => 20130711211242) do
 
   create_table "customers", :force => true do |t|
     t.string   "first_name"
@@ -36,9 +36,10 @@ ActiveRecord::Schema.define(:version => 20130305140136) do
     t.boolean  "received"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
-    t.string   "supplier"
+    t.string   "oldsup"
     t.date     "expected_date"
     t.float    "additional_cost"
+    t.integer  "supplier_id"
   end
 
   create_table "offering_products", :force => true do |t|
@@ -92,6 +93,15 @@ ActiveRecord::Schema.define(:version => 20130305140136) do
     t.datetime "updated_at",  :null => false
     t.string   "imloc"
     t.float    "weight"
+  end
+
+  create_table "suppliers", :force => true do |t|
+    t.string   "name"
+    t.string   "contact_name"
+    t.string   "email"
+    t.string   "payment_terms"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "users", :force => true do |t|

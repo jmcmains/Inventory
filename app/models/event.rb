@@ -2,6 +2,8 @@ class Event < ActiveRecord::Base
   has_many :product_counts, :foreign_key => "event_id", :dependent => :destroy
   has_many :products, through: :product_counts
   accepts_nested_attributes_for :product_counts, :reject_if => proc { |attributes| attributes['count'].blank?}, :allow_destroy => true
+  belongs_to :supplier, :class_name => "Supplier"
+  accepts_nested_attributes_for :supplier, :reject_if => proc { |attributes| attributes['name'].blank?}, :allow_destroy => true
   scope :inventory, where(event_type: "Inventory")
   scope :unreceived, where(event_type: "Product Order", received: false)
   scope :received, where(event_type: "Product Order", received: true)
@@ -19,7 +21,13 @@ def per_unit_cost
 	return (additional_cost ? additional_cost : 0) /count
 end
 
+def supplier_name
+	supplier.try(:name)
+end
 
+def supplier_name=(name)
+	self.supplier = Supplier.find_or_create_by_name(name) if name.present?
+end
 
 protected
 

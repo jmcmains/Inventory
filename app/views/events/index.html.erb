@@ -9,12 +9,20 @@
 	</tr>
 	<tr style="vertical-align:middle;">
 		<td style="vertical-align:top;"><%= text_field_tag :Invoice, @inv_num, placeholder: "Invoice #"  %></td>
-		<td style="vertical-align:top;"><%= text_field_tag :Supplier, @sup_name, placeholder: "Supplier Name"  %></td>
+		<td style="vertical-align:top;"><%= text_field_tag :Supplier, @sup_name, placeholder: "Supplier Name", data: {autocomplete_source: autocomplete_suppliers_path}, class: "autocomplete_sup" %></td>
 		<td style="vertical-align:top;"><%= select_tag :event_type, options_for_select(["All Shipments", "Received", "In Transit"], @event_type) %></td>
 		<td style="vertical-align:top;"><%= submit_tag "Submit", class: "btn btn-primary" %></td>
 	</tr>
 	</table>
 	<% end %>
+		<script>
+$(function() {
+	 $( ".autocomplete_sup" ).autocomplete({
+			source: $( ".autocomplete_sup" ).data('autocomplete-source')
+	});
+});
+
+</script>
 	<%= link_to "New Product Order", new_po_events_path %>
 <% elsif @title == "Inventory" %>
 	<%= link_to "New Inventory Count", new_inventory_events_path %>
@@ -47,7 +55,7 @@
   <td><%= event.date %></td>
 <% if @title == "Product Order" %>
 	<td><%= event.invoice %></td>
-	<td><%= event.supplier %></td>
+	<td><%= event.supplier.blank? ? "" : event.supplier.name %></td>
 	<td><%= event.expected_date %></td>
 	<td><%= event.received_date if event.received %></td>
 <% end %>

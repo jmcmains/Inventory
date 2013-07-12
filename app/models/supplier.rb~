@@ -1,0 +1,4 @@
+class Supplier < ActiveRecord::Base
+  attr_accessible :contact_name, :email, :name, :payment_terms
+  has_many :events
+end

@@ -1,0 +1,5 @@
+class RenameOldSupplier < ActiveRecord::Migration
+  def change
+  	rename_column :event, :supplier, :oldsup
+  end
+end

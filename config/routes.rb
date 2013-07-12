@@ -7,6 +7,11 @@ Inventory::Application.routes.draw do
 	match '/signin', to: 'sessions#new'
 	match '/signout', to: 'sessions#destroy', via: :delete
 	
+	resources :suppliers do
+		collection do
+			get :autocomplete
+		end
+	end
 	resources :customers do
 		member do
 			get :send_email

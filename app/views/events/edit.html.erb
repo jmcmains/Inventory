@@ -5,8 +5,8 @@
 	<% if @event.event_type == "Product Order" %>
 		<%=f.label :invoice, "Invoice # (PO#):" %>
 		<%= f.text_field :invoice %>
-		<%= f.label :supplier %>
-		<%= f.text_field :supplier %>
+		<%= f.label :supplier_name %>
+		<%= f.text_field :supplier_name, data: {autocomplete_source: autocomplete_suppliers_path}, placeholder: "Supplier", class: "autocomplete_sup" %>
 		<%= f.label :expected_date %>
 		<%= f.date_select :expected_date, {order: [:month, :day, :year]}, {:class => "input-small"}  %>
 		<%= f.label :received_date %>
@@ -26,4 +26,12 @@
 	<center><div style="width:500px"><%= f.submit "Submit", style: "width:200px;height:50px;font-size:40px;text-align:center" %></div></center>
 <% end %>
 
+	
+	<script>
+$(function() {
+	 $( ".autocomplete_sup" ).autocomplete({
+			source: $( ".autocomplete_sup" ).data('autocomplete-source')
+	});
+});
 
+</script>

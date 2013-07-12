@@ -6,11 +6,14 @@
 		<%= f.label :invoice, "Invoice # (PO#)" %>
 		<%= f.text_field :invoice %>
 		<%= f.label :supplier %>
-		<%= f.text_field :supplier %>
+		<%= f.text_field :supplier_name, data: {autocomplete_source: autocomplete_suppliers_path}, placeholder: "Supplier", class: "autocomplete_sup" %>
 		<%= f.label :expected_date %>
 		<%= f.date_select :expected_date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
-		<%= f.hidden_field :received, value: false %>
-				<%= f.label :additional_cost %>
+		<%= f.label :received_date %>
+		<%= f.date_select :received_date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
+		<%= f.label :received %>
+		<%= f.radio_button :received, "true" %> yes	<%= f.radio_button :received, "false", checked: true %> no
+		<%= f.label :additional_cost %>
 		<%= f.text_field :additional_cost %>
 	<% end %>
 	</p>
@@ -24,3 +27,12 @@
 	<%= f.submit "Save" %>
 </div>
 	<% end %>
+	
+	<script>
+$(function() {
+	 $( ".autocomplete_sup" ).autocomplete({
+			source: $( ".autocomplete_sup" ).data('autocomplete-source')
+	});
+});
+
+</script>
