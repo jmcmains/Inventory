@@ -1,4 +1,4 @@
-<% if product.display %>
+<% if product.display? %>
 <div class="product">
 	<h3><%= product.name %></h3>
 	<%= f.hidden_field :product_id, value: product.id %>
