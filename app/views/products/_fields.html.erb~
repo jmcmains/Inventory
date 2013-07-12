@@ -19,6 +19,6 @@
 	<%= f.text_field :weight %><br>
 </div>
 <div class="field">
-	<%= f.check_box :display %> 	<%= f.label :display, "Show In Inventory" %>
+	<%= f.check_box :display %> Show In Inventory
 </div>
 
