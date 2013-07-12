@@ -1,0 +1,23 @@
+<%= link_to 'Edit', edit_supplier_path(@supplier) %> | <%= link_to "Delete", @supplier, :method => :delete, :confirm => "You sure?", :title => "Delete #{@supplier.name}" %> <br>
+Contact Name: <%= link_to @supplier.contact_name, "mailto:#{@supplier.email}" %><br>
+Payment Terms: <%= @supplier.payment_terms %>
+<br>
+<b>Pricing</b>
+<table class="table">
+<tr>
+<th>Date</th>
+<th>Shipping Terms</th>
+<th>Product</th>
+<th>Quantity</th>
+<th>Price</th>
+</tr>
+<% @supplier.supplier_prices.each do |sp| %>
+<tr>
+<td><%= sp.date %></td>
+<td><%= sp.ship_term.term %></td>
+<td><%= sp.product.name %></td>
+<td><%= sp.quantity %></td>
+<td><%= sp.price %></td>
+</tr>
+<% end %>
+</table>

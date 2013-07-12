@@ -1,0 +1,17 @@
+<div class="field">
+	<%= f.label :name %>
+	<%= f.text_field :name %>
+</div>
+<div class="field">
+	<%= f.label :contact_name %>
+	<%= f.text_field :contact_name %>
+</div>
+<div class="field">
+	<%= f.label :email %>
+	<%= f.text_field :email %>
+</div>
+<div class="field">
+	<%= f.label :payment_terms %>
+	<%= f.text_field :payment_terms %>
+</div>
+

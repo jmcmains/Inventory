@@ -15,6 +15,14 @@
 	</tr>
 	</table>
 	<% end %>
+		<script>
+$(function() {
+	 $( ".autocomplete_sup" ).autocomplete({
+			source: $( ".autocomplete_sup" ).data('autocomplete-source')
+	});
+});
+
+</script>
 	<%= link_to "New Product Order", new_po_events_path %>
 <% elsif @title == "Inventory" %>
 	<%= link_to "New Inventory Count", new_inventory_events_path %>

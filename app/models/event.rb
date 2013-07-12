@@ -22,12 +22,12 @@ def per_unit_cost
 end
 
 def supplier_name
-	supplier.try(:name)
-end
-
-def supplier_name=(name)
-	self.supplier = Supplier.find_or_create_by_name(name) if name.present?
-end
+  	supplier.try(:name)
+  end
+  
+  def supplier_name=(name)
+  	self.supplier = Supplier.find_or_create_by_name(name) if name.present?
+  end
 
 protected
 

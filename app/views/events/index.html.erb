@@ -55,7 +55,7 @@ $(function() {
   <td><%= event.date %></td>
 <% if @title == "Product Order" %>
 	<td><%= event.invoice %></td>
-	<td><%= event.supplier.blank? ? "" : event.supplier.name %></td>
+	<td><%= event.supplier.blank? ? "" : (link_to event.supplier.name, supplier_path(event.supplier)) %></td>
 	<td><%= event.expected_date %></td>
 	<td><%= event.received_date if event.received %></td>
 <% end %>

@@ -1,8 +1,12 @@
 class Product < ActiveRecord::Base
 	has_many :offering_products
+	has_many :offerings, through: :offering_products
+	
 	has_many :product_counts, :dependent => :destroy
 	has_many :events, through: :product_counts
-	has_many :offerings, through: :offering_products
+	
+	has_many :supplier_prices, :dependent => :destroy
+	has_many :suppliers, through: :supplier_prices
 	
 	def get_last(event_name)
 		self.events.find_all_by_event_type(event_name).sort_by(&:date).last

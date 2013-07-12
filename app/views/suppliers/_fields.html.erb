@@ -1,0 +1,21 @@
+<div class="field">
+	<%= f.label :name %>
+	<%= f.text_field :name %>
+</div>
+<div class="field">
+	<%= f.label :contact_name %>
+	<%= f.text_field :contact_name %>
+</div>
+<div class="field">
+	<%= f.label :email %>
+	<%= f.text_field :email %>
+</div>
+<div class="field">
+	<%= f.label :payment_terms %>
+	<%= f.text_field :payment_terms %>
+</div>
+<%= f.fields_for(:supplier_prices, :html => { :class => "form-inline"}) do |builder| %>
+	<%= render "supplier_price_fields", :f => builder %>
+<% end %>
+<p><%= link_to_add_fields "Add Supplier Price", f, :supplier_prices %></p>
+

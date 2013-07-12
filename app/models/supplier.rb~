@@ -1,4 +1,20 @@
 class Supplier < ActiveRecord::Base
-  attr_accessible :contact_name, :email, :name, :payment_terms
   has_many :events
+	has_many :supplier_prices
+	has_many :products, through: :supplier_prices
+	has_many :ship_terms, through: :supplier_prices
+	
+	accepts_nested_attributes_for :supplier_prices, :reject_if => proc { |attributes| attributes['quantity'].blank?},:allow_destroy => true
+	
+  def self.search(search)
+  	if search
+			words = search.to_s.strip.split
+		  words.inject(scoped) do |combined_scope, word|
+		    combined_scope.where('LOWER(name) LIKE ?',"%#{word.downcase}%")
+		  end
+  	else
+  		return find(:all)
+  	end
+  end
+
 end

@@ -12,6 +12,13 @@ Inventory::Application.routes.draw do
 			get :autocomplete
 		end
 	end
+	
+	resources :ship_terms do
+		collection do
+			get :autocomplete
+		end
+	end
+	
 	resources :customers do
 		member do
 			get :send_email
