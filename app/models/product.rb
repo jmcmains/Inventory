@@ -62,11 +62,11 @@ class Product < ActiveRecord::Base
 	end
 	
 	def next
-    Product.where("id > ?", id).order("id ASC").first
+    Product.where("display = ? AND name > ?",'t',name).order("name ASC").first
   end
 
   def previous
-    Product.where("id < ?", id).order("id DESC").first
+    Product.where("display = ? AND name < ?",'t', name).order("name DESC").first
   end
 	
 	def product_orders

@@ -42,7 +42,7 @@ class ProductsController < ApplicationController
 	def create_csv
 		csv = CSV.generate(col_sep: "\t") do |csv|
 			csv << ["name", "quantity per box", "60 day need", "90 day need", "120 day need"]
-			Product.all.sort_by(&:id).each do |product|
+			Product.find_all_by_display(true).sort_by(&:id).each do |product|
 				csv << [product.name, product.per_box, product.need(60).round, product.need(90).round, product.need(120).round]
 			end
 		end
@@ -109,7 +109,7 @@ class ProductsController < ApplicationController
 	
 	def index
 		@title = "All Products"
-    @products = Product.all.sort_by { |a| a.name }.paginate(:page => params[:page], :per_page => 10)
+    @products = Product.find_all_by_display(true).sort_by { |a| a.name }.paginate(:page => params[:page], :per_page => 10)
 	end
 	
 	def destroy
