@@ -1,23 +1,40 @@
 <%= link_to 'Edit', edit_supplier_path(@supplier) %> | <%= link_to "Delete", @supplier, :method => :delete, :confirm => "You sure?", :title => "Delete #{@supplier.name}" %> <br>
 Contact Name: <%= link_to @supplier.contact_name, "mailto:#{@supplier.email}" %><br>
+Phone Number: <%= @supplier.phone_number %><br>
 Payment Terms: <%= @supplier.payment_terms %>
 <br>
+Search: <%= form_tag(supplier_path(@supplier), method: :get) do %>
+<table class="table-condensed">
+	<tr>
+		<td>Shipping Terms:</td>
+		<td>Product Name:</td>
+		<td>Quantity:</td>
+		<td></td>
+	</tr>
+	<tr style="vertical-align:middle;">
+		<td style="vertical-align:top;"><%= text_field_tag :shipterm, @shipterm, placeholder: "Shipping Terms", data: {autocomplete_source: autocomplete_ship_terms_path}, class: "autocomplete_ship_terms"   %></td>
+		<td style="vertical-align:top;"><%= text_field_tag :product_name, @product_name, placeholder: "Product Name", data: {autocomplete_source: autocomplete_products_path}, class: "autocomplete_products" %></td>
+		<td style="vertical-align:top;"><%= text_field_tag :quantity, @quantity, placeholder: "Quantity" %></td>
+		<td style="vertical-align:top;"><%= submit_tag "Submit", class: "btn btn-primary" %></td>
+	</tr>
+	</table>
+<% end %>
 <b>Pricing</b>
 <table class="table">
 <tr>
-<th>Date</th>
-<th>Shipping Terms</th>
-<th>Product</th>
-<th>Quantity</th>
+<th>Date<%= render "sort_buttons", name: "DS", shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
+<th>Shipping Terms<%= render "sort_buttons", name: "ST", shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
+<th>Product<%= render "sort_buttons", name: "PN", shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
+<th>Quantity<%= render "sort_buttons", name: "QTY", shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
 <th>Price</th>
 </tr>
-<% @supplier.supplier_prices.each do |sp| %>
+<% @supplier_prices.each do |sp| %>
 <tr>
 <td><%= sp.date %></td>
-<td><%= sp.ship_term.term %></td>
+<td><%= sp.ship_term.blank? ? nil : sp.ship_term.term %></td>
 <td><%= sp.product.name %></td>
-<td><%= sp.quantity %></td>
-<td><%= sp.price %></td>
+<td><%= sp.quantity.round(0) %></td>
+<td><%= number_to_currency(sp.price) %></td>
 </tr>
 <% end %>
 </table>

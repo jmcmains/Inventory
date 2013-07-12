@@ -37,6 +37,59 @@ class SuppliersController < ApplicationController
 	def show
 		@supplier = Supplier.find(params[:id])
 		@title=@supplier.name
+		@shipterm = params[:shipterm]
+		@product_name = params[:product_name]
+		@quantity = params[:quantity]
+		if !params[:shipterm].blank?
+			st = ShipTerm.where("LOWER(term) LIKE ?","%#{params[:shipterm].downcase}%").first.id
+			if !params[:product_name].blank?
+				pn = Product.where("LOWER(name) LIKE ?","%#{params[:product_name].downcase}%").first.id
+				if !params[:quantity].blank?
+					@supplier_prices=@supplier.supplier_prices.where("ship_term_id = ? AND product_id = ? AND quantity = ?",st,pn,params[:quantity])
+				else
+					@supplier_prices=@supplier.supplier_prices.where("ship_term_id = ? AND product_id = ?",st,pn)
+				end
+			else
+				if !params[:quantity].blank?
+					@supplier_prices=@supplier.supplier_prices.where("ship_term_id = ?  AND quantity = ?",st,params[:quantity])
+				else
+					@supplier_prices=@supplier.supplier_prices.where("ship_term_id = ?",st)
+				end
+			end
+		else
+			if !params[:product_name].blank?
+				pn = Product.where("LOWER(name) LIKE ?","%#{params[:product_name].downcase}%").first.id
+				if !params[:quantity].blank?
+					@supplier_prices=@supplier.supplier_prices.where("product_id = ? AND quantity = ?",pn,params[:quantity])
+				else
+					@supplier_prices=@supplier.supplier_prices.where("product_id = ?",pn)
+				end
+			else
+				if !params[:quantity].blank?
+					@supplier_prices=@supplier.supplier_prices.where("quantity = ?",params[:quantity])
+				else
+					@supplier_prices=@supplier.supplier_prices
+				end
+			end
+		end
+				
+		if params[:sort_by] == "DS_ASC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.date }
+  	elsif params[:sort_by] == "DS_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.date }.reverse
+  	elsif params[:sort_by] == "ST_ASC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.ship_term_term }
+  	elsif params[:sort_by] == "ST_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.ship_term_term }.reverse
+  	elsif params[:sort_by] == "PN_ASC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.product_name }
+  	elsif params[:sort_by] == "PN_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.product_name }.reverse
+  	elsif params[:sort_by] == "QTY_ASC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.quantity }
+  	elsif params[:sort_by] == "QTY_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.quantity }.reverse
+  	end
 	end
 	
 	def index
