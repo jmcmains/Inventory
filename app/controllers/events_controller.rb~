@@ -45,11 +45,12 @@ class EventsController < ApplicationController
   end
   
   def destroy
-  	if Event.find(params[:id]).event_type == "Inventory"
-  		Event.find(params[:id]).destroy
+  	@event=Event.find(params[:id])
+  	event_type=@event.event_type
+  	@event.destroy
+  	if event_type == "Inventory"
   	  redirect_to inventory_events_path
   	else
-  		Event.find(params[:id]).destroy
   	  redirect_to po_events_path
   	end
   end

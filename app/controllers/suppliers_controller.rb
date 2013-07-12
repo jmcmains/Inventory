@@ -74,21 +74,21 @@ class SuppliersController < ApplicationController
 		end
 				
 		if params[:sort_by] == "DS_ASC"
-  		@supplier_prices=@supplier_prices.sort_by {|a| a.date }
-  	elsif params[:sort_by] == "DS_DESC"
   		@supplier_prices=@supplier_prices.sort_by {|a| a.date }.reverse
+  	elsif params[:sort_by] == "DS_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.date }
   	elsif params[:sort_by] == "ST_ASC"
-  		@supplier_prices=@supplier_prices.sort_by {|a| a.ship_term_term }
-  	elsif params[:sort_by] == "ST_DESC"
   		@supplier_prices=@supplier_prices.sort_by {|a| a.ship_term_term }.reverse
+  	elsif params[:sort_by] == "ST_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.ship_term_term }
   	elsif params[:sort_by] == "PN_ASC"
-  		@supplier_prices=@supplier_prices.sort_by {|a| a.product_name }
-  	elsif params[:sort_by] == "PN_DESC"
   		@supplier_prices=@supplier_prices.sort_by {|a| a.product_name }.reverse
+  	elsif params[:sort_by] == "PN_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.product_name }
   	elsif params[:sort_by] == "QTY_ASC"
-  		@supplier_prices=@supplier_prices.sort_by {|a| a.quantity }
-  	elsif params[:sort_by] == "QTY_DESC"
   		@supplier_prices=@supplier_prices.sort_by {|a| a.quantity }.reverse
+  	elsif params[:sort_by] == "QTY_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.quantity }
   	end
 	end
 	
