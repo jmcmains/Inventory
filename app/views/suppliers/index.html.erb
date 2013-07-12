@@ -1,0 +1,18 @@
+<table class="table">
+<tr>
+<th></th>
+<th>Supplier</th>
+<th>Contact(email)</th>
+<th>Payment Terms</th>
+</tr>
+
+<% @suppliers.each do |s| %>
+<tr>
+<td><%= link_to 'Show', supplier_path(s) %> | <%= link_to 'Edit', edit_supplier_path(s) %> | <%= link_to "Delete", s, :method => :delete, :confirm => "You sure?", :title => "Delete #{s.name}" %></td>
+<td><%= s.name %></td>
+<td><%= s.contact_name %>(<%= link_to s.email, "mailto:#{s.email}" %>)</td>
+<td><%= s.payment_terms %></td>
+</tr>
+<% end %>
+
+</table>

@@ -18,7 +18,7 @@ class SuppliersController < ApplicationController
 	def edit
 		@title = "Edit Supplier"
   	@supplier = Supplier.find(params[:id])
-		if @supplier.supplier_prices.count = 0
+		if @supplier.supplier_prices.count == 0
 			@supplier.supplier_prices.build
 		end
 	end

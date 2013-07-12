@@ -41,6 +41,7 @@ class SuppliersController < ApplicationController
 	
 	def index
 		@suppliers = Supplier.all
+		@title ="Suppliers"
 	end
 	
 	def destroy
