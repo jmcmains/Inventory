@@ -32,13 +32,18 @@ $(function() {
 	});
 });
 </script>
+<%= form_for csv_supplier_path(@supplier), do |f| %>
+  Load Prices: <%= f.file_field :file %>
+  <%= f.hidden_field :supplier_id, value: @supplier.id %>
+  <%= f.submit "Load Supplier", class: "btn btn-primary" %>
+<% end %>
 <b>Pricing</b>
 <table class="table">
 <tr>
 <th>Date<%= render "sort_buttons", name: "DS", supplier: @supplier, shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
 <th>Shipping Terms<%= render "sort_buttons", supplier: @supplier, name: "ST", shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
 <th>Product<%= render "sort_buttons", name: "PN", supplier: @supplier, shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
-<th>Quantity<%= render "sort_buttons", name: "QTY", shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
+<th>Quantity<%= render "sort_buttons", name: "QTY", supplier: @supplier, shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
 <th>Price</th>
 </tr>
 <% @supplier_prices.each do |sp| %>

@@ -1,4 +1,18 @@
 class SuppliersController < ApplicationController
+	require 'csv'
+
+	def csv
+		infile = params[:supplier][:file].read
+		@supplier = Supplier.find(params[:supplier][:supplier_id])
+	  CSV.parse(infile, headers: true) do |row|
+	  	(3..(row.length-1)).each do |i|
+	  		sp=SupplierPrice.new(date: Date.strptime(row[0], '%m/%d/%Y'),supplier_id: @supplier.id,product_id: Product.find_by_name(row[2]),ship_term_id: ShipTerm.find_by_term(row[1]),quantity: row.headers[i],price: row[i])
+	  		sp.save
+	  	end
+		end
+		redirect_to @supplier
+	end
+	
 	def new
 		@title = "New Supplier"
 		@supplier=Supplier.new
@@ -74,9 +88,9 @@ class SuppliersController < ApplicationController
 		end
 				
 		if params[:sort_by] == "DS_ASC"
-  		@supplier_prices=@supplier_prices.sort_by {|a| a.date }
-  	elsif params[:sort_by] == "DS_DESC"
   		@supplier_prices=@supplier_prices.sort_by {|a| a.date }.reverse
+  	elsif params[:sort_by] == "DS_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.date }
   	elsif params[:sort_by] == "ST_ASC"
   		@supplier_prices=@supplier_prices.sort_by {|a| a.ship_term_term }.reverse
   	elsif params[:sort_by] == "ST_DESC"

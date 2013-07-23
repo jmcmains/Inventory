@@ -1,0 +1,6 @@
+<%= form_for(@supplier) do |f| %>
+	<%= render 'fields', :f => f %>
+	<div class="actions">
+		<%= f.submit "Update" %>
+	</div>
+<% end %>

@@ -11,6 +11,9 @@ Inventory::Application.routes.draw do
 		collection do
 			get :autocomplete
 		end
+		member do
+			post :csv
+		end
 	end
 	
 	resources :ship_terms do
