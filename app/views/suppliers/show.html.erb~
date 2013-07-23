@@ -32,8 +32,8 @@ $(function() {
 	});
 });
 </script>
-<%= form_for csv_supplier_path(@supplier), do |f| %>
-  Load Prices: <%= f.file_field :file %>
+<%= form_for :supplier,:url=>{:controller=>"suppliers", :action=>"csv", class: "form-inline"}, do |f| %>
+  Load Prices(headers should be date,shipping terms,product name,quantities): <br><%= f.file_field :file %>
   <%= f.hidden_field :supplier_id, value: @supplier.id %>
   <%= f.submit "Load Supplier", class: "btn btn-primary" %>
 <% end %>
