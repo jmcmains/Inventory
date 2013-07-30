@@ -1,7 +1,6 @@
 <%= form_tag(offerings_path, class: "form-inline", :style => "display:inline", method: :get) do %>
 <%= hidden_field_tag :sort_by, input_name  %>
 <%= hidden_field_tag :search, search  %>
-<%= hidden_field_tag :blank, blank  %>
 <button class="btn btn-mini" name="commit" type="submit">
 		<i class="icon-chevron-<%= direction %>"></i>
 </button>

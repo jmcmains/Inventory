@@ -110,7 +110,7 @@ Average Cost of Goods Sold During Period: <span id="averagecogs">$<%= number_wit
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
 <% endY = (x.last*m)+b %>
 <% preY = (x.last+leadTimeWeeks)*m+b %>
-<% prediction_x = (x.last..(x.last+leadTimeWeeks)).to_a %>
+<% prediction_x = ((x.last.round(0))..(x.last.round(0)+leadTimeWeeks)).to_a %>
 <% prediction_y = prediction_x.map { |x| x*m+b } %>
 <% sigma = lineFit.sigma %>
 

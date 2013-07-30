@@ -26,7 +26,7 @@ class OfferingsController < ApplicationController
 		replace=Offering.find_or_create_by_name(params[:offering][:name])
 		Order.where(offering_id: @offering.id).update_all({:offering_id => replace.id})
 		@offering.destroy
-	  redirect_to offerings_path
+	  redirect_to blank_offerings_path
 	end
 	
 	def autocomplete
@@ -44,11 +44,6 @@ class OfferingsController < ApplicationController
 		render json: @offerings.map(&:price)
 	end
 	
-	def blank
-		@offerings=Offering.all(:include => :products, :conditions => "products.id IS NULL").paginate(:page => params[:page], :per_page => 10)
-		render :index
-	end
-	
 	def show
 		sql = ActiveRecord::Base.connection()
 		@d=sql.execute("SELECT theother.offering_id, offerings.name, count(*) AS how_many_other_times FROM orders as this INNER JOIN orders AS that ON that.offering_id = this.offering_id INNER JOIN orders AS theother ON that.order_number = theother.order_number AND that.offering_id <> theother.offering_id INNER JOIN offerings ON offerings.id = theother.offering_id WHERE this.offering_id = #{params[:id]} GROUP BY theother.offering_id, offerings.name ORDER BY how_many_other_times DESC")
@@ -58,11 +53,21 @@ class OfferingsController < ApplicationController
   def index
     @title = "Current Offerings and their products"
     @search=params[:search]
+    
   	@offerings = Offering.search(@search,false)
+  	@blank=params[:blank]
+  	if @blank.blank?
+  	else
+  		@offerings=@offerings.all(:include => :products, :conditions => "products.id IS NULL")
+  	end
   	if params[:sort_by] == "US_ASC"
   		@offerings=@offerings.sort_by {|o| o.orders.amzus.count }
   	elsif params[:sort_by] == "US_DESC"
   	  @offerings=@offerings.sort_by {|o| o.orders.amzus.count }.reverse
+  	elsif params[:sort_by] == "NAME_ASC"
+  	  @offerings=@offerings.sort_by {|o| o.orders.name }.reverse
+  	elsif params[:sort_by] == "NAME_DESC"
+  	  @offerings=@offerings.sort_by {|o| o.orders.name }
   	elsif params[:sort_by] == "CA_ASC"
   	  @offerings=@offerings.sort_by {|o| o.orders.amzca.count }
   	elsif params[:sort_by] == "CA_DESC"
