@@ -1,0 +1,22 @@
+
+<table class="table table-condensed table-bordered" style="text-align:center">
+<tr>
+<th></th>
+<th>Supplier <%= render "products/sort_buttons", name: "SUP", id: id %></th>
+<th>Date <%= render "products/sort_buttons", name: "DATE", id: id %></th>
+<th>Terms <%= render "products/sort_buttons", name: "TERM", id: id %></th>
+<th>MOQ <%= render "products/sort_buttons", name: "MOQ", id: id %></th>
+<th>Price <%= render "products/sort_buttons", name: "PRICE", id: id %></th>
+</tr>
+<% supplier_prices.each do |sp| %>
+<tr id="sp<%= sp.id %>">
+<td style="text-align:center;vertical-align:middle"><%= link_to "-", sp, :method => :delete, remote: true, :confirm => "You sure?", :title => "Delete #{sp.id}", class: "btn btn-danger" %></td>
+<td style="text-align:center;vertical-align:middle"><%= !sp.supplier.blank? ? sp.supplier.name : "" %></td>
+<td style="text-align:center;vertical-align:middle"><%= sp.date %></td>
+<td style="text-align:center;vertical-align:middle"><%= !sp.ship_term.blank? ? sp.ship_term.term : "" %></td>
+<td style="text-align:center;vertical-align:middle"><%= sp.quantity.round(0) %></td>
+<td style="text-align:center;vertical-align:middle"><%= number_to_currency(sp.price) %></td>
+</tr>
+<% end %>
+</table>
+</div>

@@ -54,6 +54,9 @@ class ProductsController < ApplicationController
 	def edit
 		@title = "Edit Product"
 		@product = Product.find(params[:id])
+		if @product.supplier_prices.count == 0
+			@product.supplier_prices.build
+		end
 	end
 
 	def autocomplete

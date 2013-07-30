@@ -36,24 +36,8 @@ Average Cost of Goods Sold During Period: <span id="averagecogs">$<%= number_wit
 
 <h2><a href="#", style="color:#999">Supplier Prices</a></h2>
 <blockquote>
-<table class="table">
-<tr>
-<th>Supplier</th>
-<th>Date</th>
-<th>Terms</th>
-<th>MOQ</th>
-<th>Price</th>
-</tr>
-<% @product.supplier_prices.each do |sp| %>
-<tr>
-<td><%= !sp.supplier.blank? ? sp.supplier.name : "" %></td>
-<td><%= sp.date %></td>
-<td><%= !sp.ship_term.blank? ? sp.ship_term.term : "" %></td>
-<td><%= sp.quantity %></td>
-<td><%= sp.price %></td>
-</tr>
-<% end %>
-</table>
+<div id="supplier_prices"%>
+<%= render 'supplier_prices', supplier_prices: @supplier_prices, id: @product.id %>
 </blockquote>
 
 

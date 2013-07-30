@@ -1,0 +1,1 @@
+$("#supplier_prices").html("<%= render escape_javascript 'products/supplier_prices', supplier_prices: @supplier_prices, id: @product.id %>")

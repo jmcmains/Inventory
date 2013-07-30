@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 
-gem 'rails'
+gem 'rails', '3.2.13'
 gem 'linefit'
 gem 'bootstrap-sass'
 gem 'will_paginate'

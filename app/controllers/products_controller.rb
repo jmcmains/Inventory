@@ -101,6 +101,7 @@ class ProductsController < ApplicationController
 	
 	def show
     @product = Product.find(params[:id])
+    @supplier_prices=@product.supplier_prices
     @title = @product.name
     if params[:start_date]
   		@start_date = Date.new(params[:start_date][:year].to_i,params[:start_date][:month].to_i,params[:start_date][:day].to_i)

@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 gem 'rails', '3.2.13'
 gem 'linefit'
 gem 'bootstrap-sass'
@@ -23,6 +22,7 @@ end
 gem 'jquery-rails'
 
 group :production do
+	ruby '2.0.0'
   gem 'pg'
 end
 
