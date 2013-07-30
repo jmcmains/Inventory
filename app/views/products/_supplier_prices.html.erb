@@ -2,11 +2,11 @@
 <table class="table table-condensed table-bordered" style="text-align:center">
 <tr>
 <th></th>
-<th>Supplier <%= render "products/sort_buttons", name: "SUP", id: id %></th>
-<th>Date <%= render "products/sort_buttons", name: "DATE", id: id %></th>
-<th>Terms <%= render "products/sort_buttons", name: "TERM", id: id %></th>
-<th>MOQ <%= render "products/sort_buttons", name: "MOQ", id: id %></th>
-<th>Price <%= render "products/sort_buttons", name: "PRICE", id: id %></th>
+<th>Supplier<br><%= render "products/sort_buttons", name: "SUP", id: id %></th>
+<th>Date<br><%= render "products/sort_buttons", name: "DATE", id: id %></th>
+<th>Terms<br><%= render "products/sort_buttons", name: "TERM", id: id %></th>
+<th>MOQ<br><%= render "products/sort_buttons", name: "MOQ", id: id %></th>
+<th>Price<br><%= render "products/sort_buttons", name: "PRICE", id: id %></th>
 </tr>
 <% supplier_prices.each do |sp| %>
 <tr id="sp<%= sp.id %>">

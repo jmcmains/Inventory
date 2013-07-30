@@ -14,8 +14,8 @@
 <td style="text-align:center;vertical-align:middle"><%= !sp.supplier.blank? ? sp.supplier.name : "" %></td>
 <td style="text-align:center;vertical-align:middle"><%= sp.date %></td>
 <td style="text-align:center;vertical-align:middle"><%= !sp.ship_term.blank? ? sp.ship_term.term : "" %></td>
-<td style="text-align:center;vertical-align:middle"><%= sp.quantity %></td>
-<td style="text-align:center;vertical-align:middle"><%= sp.price %></td>
+<td style="text-align:center;vertical-align:middle"><%= sp.quantity.round(0) %></td>
+<td style="text-align:center;vertical-align:middle"><%= number_to_currency(sp.price) %></td>
 </tr>
 <% end %>
 </table>
