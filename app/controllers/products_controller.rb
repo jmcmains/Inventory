@@ -54,6 +54,9 @@ class ProductsController < ApplicationController
 	def edit
 		@title = "Edit Product"
 		@product = Product.find(params[:id])
+		if @product.supplier_prices.count == 0
+			@product.supplier_prices.build
+		end
 	end
 
 	def autocomplete
@@ -63,8 +66,12 @@ class ProductsController < ApplicationController
 	
 	def update
 		@product = Product.find(params[:id])
-		@product.update_attributes(params[:product])
-		redirect_to @product
+  	if @product.update_attributes(params[:product])
+  		flash[:success]= "Product Updated"
+  		redirect_to @product
+  	else
+  		render 'edit'
+  	end
 	end
 	
 	def all_cogs

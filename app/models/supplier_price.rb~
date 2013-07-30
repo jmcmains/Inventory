@@ -1,5 +1,5 @@
 class SupplierPrice < ActiveRecord::Base
-
+	
   belongs_to :supplier, :class_name => "Supplier"
   belongs_to :ship_term, :class_name => "ShipTerm"
   belongs_to :product, :class_name => "Product"
@@ -9,7 +9,7 @@ class SupplierPrice < ActiveRecord::Base
   end
   
   def product_name=(name)
-  	Product.find_or_create_by_name(name) if name.present?
+  	self.product=Product.find_or_create_by_name(name) if name.present?
   end
   
   def ship_term_term
@@ -17,6 +17,6 @@ class SupplierPrice < ActiveRecord::Base
   end
   
   def ship_term_term=(term)
-  	ShipTerm.find_or_create_by_term(term) if term.present?
+  	self.ship_term=ShipTerm.find_or_create_by_term(term) if term.present?
   end
 end

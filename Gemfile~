@@ -7,6 +7,7 @@ gem 'bootstrap-sass'
 gem 'will_paginate'
 gem 'active_shipping'
 gem 'bcrypt-ruby'
+gem 'rake','10.0.4'
 group :development, :test do
   gem 'sqlite3'
 end

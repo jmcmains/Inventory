@@ -33,6 +33,30 @@ Total Orders During Period: <span id="orders"><%= number_with_precision(@orders,
 Total Cost of Goods Sold During Period: <span id="cogs">$<%= number_with_precision(@value, :precision => 2, :delimiter => ',') %></span><br>
 Average Cost of Goods Sold During Period: <span id="averagecogs">$<%= number_with_precision((@orders > 0 ? @value/@orders : 0), :precision => 2, :delimiter => ',') %></span>
 </blockquote>
+
+<h2><a href="#", style="color:#999">Supplier Prices</a></h2>
+<blockquote>
+<table class="table">
+<tr>
+<th>Supplier</th>
+<th>Date</th>
+<th>Terms</th>
+<th>MOQ</th>
+<th>price</th>
+</tr>
+<% @product.supplier_prices.each do |sp| %>
+<tr>
+<td><%= !sp.supplier.blank? ? sp.supplier.name : "" %></td>
+<td><%= sp.date %></td>
+<td><%= !sp.ship_term.blank? ? sp.ship_term.term : "" %></td>
+<td><%= sp.quantity %></td>
+<td><%= sp.price %></td>
+</tr>
+<% end %>
+</table>
+</blockquote>
+
+
 <h2><a href="#", style="color:#999">Orders Currently Out</a></h2>
 <blockquote>
 <% oco = 0 %>
@@ -69,25 +93,24 @@ Average Cost of Goods Sold During Period: <span id="averagecogs">$<%= number_wit
 <% end %>
 </blockquote>
 <% if @product.inventory.count>0 && y.count>1 %>
-<% x = [] %>
-<% d2.each_with_index do |d,i| %>
-	<% x[i]=((d-d2[0])/7).to_f %>
-<% end %>
-<% x =(1..y.length).to_a %>
-<% lineFit = LineFit.new %>
-<% lineFit.setData(x,y) %>
-<% if x.length > 1 %>
-<% b, m = lineFit.coefficients %>
+	<% x = [] %>
+	<% d2.each_with_index do |d,i| %>
+		<% x[i]=((d-d2[0])/7).to_f %>
+	<% end %>
+	<% lineFit = LineFit.new %>
+	<% lineFit.setData(x,y) %>
+	<% if x.length > 1 %>
+	<% b, m = lineFit.coefficients %>
 <% else %>
 	<% b = 0 %>
 	<% m = 0 %>
 <% end %>
-<% startY = m+b %>
+<% startY = x[0]*m+b %>
 <% leadTime = 120 %>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
-<% endY = (y.length*m)+b %>
-<% preY = (y.length+leadTimeWeeks)*m+b %>
-<% prediction_x = (y.length..(y.length+leadTimeWeeks)).to_a %>
+<% endY = (x.last*m)+b %>
+<% preY = (x.last+leadTimeWeeks)*m+b %>
+<% prediction_x = ((x.last.round(0))..(x.last.round(0)+leadTimeWeeks)).to_a %>
 <% prediction_y = prediction_x.map { |x| x*m+b } %>
 <% sigma = lineFit.sigma %>
 

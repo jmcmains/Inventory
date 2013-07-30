@@ -6,12 +6,15 @@ class SuppliersController < ApplicationController
 		@supplier = Supplier.find(params[:supplier][:supplier_id])
 	  CSV.parse(infile, headers: true) do |row|
 	  	(3..(row.length-1)).each do |i|
-	  		product = Product.find_or_create_by_name(row[2])
-	  		product.save
-	  		ship_term = ShipTerm.find_or_create_by_term(row[1])
-	  		ship_term.save
-	  		sp=SupplierPrice.new(date: Date.strptime(row[0], '%m/%d/%Y'),supplier_id: @supplier.id,product_id: product.id,ship_term_id: ship_term.id,quantity: row.headers[i],price: row[i])
-	  		sp.save
+	  		if !row[2].blank? && !row[1].blank?
+					product = Product.find_or_create_by_name(row[2])
+					product.save
+					ship_term = ShipTerm.find_or_create_by_term(row[1])
+					ship_term.save
+					date=Date.strptime(row[0], '%m/%d/%Y')
+		  		sp=SupplierPrice.new(date: date,supplier_id: @supplier.id,product_id: product.id,ship_term_id: ship_term.id,quantity: row.headers[i],price: row[i])
+	  			sp.save
+	  		end
 	  	end
 		end
 		redirect_to @supplier

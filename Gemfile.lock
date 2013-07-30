@@ -126,7 +126,7 @@ DEPENDENCIES
   jquery-rails
   linefit
   pg
-  rails
+  rails (= 3.2.13)
   rake (= 10.0.4)
   sass-rails
   sqlite3

@@ -42,7 +42,7 @@ class ProductsController < ApplicationController
 	def create_csv
 		csv = CSV.generate(col_sep: "\t") do |csv|
 			csv << ["name", "quantity per box", "60 day need", "90 day need", "120 day need"]
-			Product.all.sort_by(&:id).each do |product|
+			Product.find_all_by_display(true).sort_by(&:id).each do |product|
 				csv << [product.name, product.per_box, product.need(60).round, product.need(90).round, product.need(120).round]
 			end
 		end
@@ -63,8 +63,12 @@ class ProductsController < ApplicationController
 	
 	def update
 		@product = Product.find(params[:id])
-		@product.update_attributes(params[:product])
-		redirect_to @product
+  	if @product.update_attributes(params[:product])
+  		flash[:success]= "Product Updated"
+  		redirect_to @product
+  	else
+  		render 'edit'
+  	end
 	end
 	
 	def all_cogs

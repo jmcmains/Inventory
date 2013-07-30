@@ -22,3 +22,8 @@
 	<%= f.check_box :display,{:checked => (f.object.new_record? ? true : f.object.display)} %> Show In Inventory
 </div>
 
+<%= f.fields_for(:supplier_prices, :html => { :class => "form-inline"}) do |builder| %>
+	<%= render "supplier_price_fields", :f => builder %>
+<% end %>
+<p><%= link_to_add_fields "Add Supplier Price", f, :supplier_prices %></p>
+

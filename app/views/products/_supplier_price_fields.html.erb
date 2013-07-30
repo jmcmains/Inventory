@@ -1,20 +1,20 @@
 <p class="fields form-inline">
 	<%= f.date_select :date, {order: [:month, :day, :year]}, {:class => "btn-mini input-mini"}  %>
   <%= f.text_field :ship_term_term, data: {autocomplete_source: autocomplete_ship_terms_path}, placeholder: "Shipping Terms", class: "input-small autocomplete_terms" %>
-  <%= f.text_field :product_name, data: {autocomplete_source: autocomplete_products_path}, placeholder: "Product", class: "input autocomplete_product" %>
+  <%= f.text_field :supplier_name, data: {autocomplete_source: autocomplete_suppliers_path}, placeholder: "Supplier", class: "input autocomplete_supplier" %>
   <%= f.text_field :quantity, placeholder: "Quantity", class: "input-mini" %>
   <%= f.text_field :price, placeholder: "Price", class: "input-mini" %>
   <%= link_to_remove_fields "-", f %>
 </p>
 <script>
 $(function() {
-	 $( ".autocomplete_product" ).autocomplete({
-			source: $( "#supplier_supplier_prices_attributes_0_product_name" ).data('autocomplete-source')
+	 $( ".autocomplete_supplier" ).autocomplete({
+			source: $( "#product_supplier_prices_supplier_name" ).data('autocomplete-source')
 	});
 });
 $(function() {
 	 $( ".autocomplete_terms" ).autocomplete({
-			source: $( "#supplier_supplier_prices_attributes_0_ship_term_term" ).data('autocomplete-source')
+			source: $( "#product_supplier_prices_ship_term_term" ).data('autocomplete-source')
 	});
 });
 </script>
