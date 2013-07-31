@@ -1,0 +1,21 @@
+<table class="table table-bordered table-condensed" style="text-align:center">
+<tr>
+<th></th>
+<th style="text-align:center;vertical-align:middle">Product<br><%= render "suppliers/sort_buttons", name: "PN", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
+<th style="text-align:center;vertical-align:middle">Date<br><%= render "suppliers/sort_buttons", name: "DS", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
+<th style="text-align:center;vertical-align:middle">Terms<br><%= render "suppliers/sort_buttons", name: "ST", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
+<th style="text-align:center;vertical-align:middle">MOQ<br><%= render "suppliers/sort_buttons", name: "QTY", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
+<th style="text-align:center;vertical-align:middle">Price<br><%= render "suppliers/sort_buttons", name: "PRICE", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
+</tr>
+<% supplier_prices.each do |sp| %>
+<tr id="sp<%= sp.id %>">
+<td style="text-align:center;vertical-align:middle"><%= link_to "-", sp, :method => :delete, remote: true, :confirm => "You sure?", :title => "Delete #{sp.id}", class: "btn btn-danger" %></td>
+<td style="text-align:center;vertical-align:middle"><%= !sp.product.blank? ? sp.product.name : "" %></td>
+<td style="text-align:center;vertical-align:middle"><%= sp.date %></td>
+<td style="text-align:center;vertical-align:middle"><%= !sp.ship_term.blank? ? sp.ship_term.term : "" %></td>
+<td style="text-align:center;vertical-align:middle"><%= sp.quantity.round(0) %></td>
+<td style="text-align:center;vertical-align:middle"><%= number_to_currency(sp.price) %></td>
+</tr>
+<% end %>
+</table>
+</div>

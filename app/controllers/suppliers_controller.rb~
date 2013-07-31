@@ -13,7 +13,8 @@ class SuppliersController < ApplicationController
 					ship_term.save
 					date=Date.strptime(row[0], '%m/%d/%Y')
 		  		sp=SupplierPrice.new(date: date,supplier_id: @supplier.id,product_id: product.id,ship_term_id: ship_term.id,quantity: row.headers[i],price: row[i])
-	  		sp.save
+	  			sp.save
+	  		end
 	  	end
 		end
 		redirect_to @supplier

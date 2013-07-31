@@ -111,6 +111,11 @@ class SuppliersController < ApplicationController
   	elsif params[:sort_by] == "QTY_DESC"
   		@supplier_prices=@supplier_prices.sort_by {|a| a.quantity }
   	end
+  	
+  	respond_to do |format|
+      format.js
+      format.html
+    end
 	end
 	
 	def index
