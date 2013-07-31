@@ -7,6 +7,7 @@ class Product < ActiveRecord::Base
 	
 	has_many :supplier_prices, :foreign_key => "product_id", :dependent => :destroy
 	has_many :suppliers, through: :supplier_prices
+	has_many :ship_terms, through: :supplier_prices
 	accepts_nested_attributes_for :supplier_prices, :reject_if => lambda { |attributes| attributes[:price].blank? || attributes[:quantity].blank? }, :allow_destroy => true
 	
 	def get_last(event_name)

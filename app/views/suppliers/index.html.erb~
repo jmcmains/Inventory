@@ -1,7 +1,4 @@
-<%= form_for :suppliers,:url=>{:controller=>"suppliers", :action=>"csv", class: "form-inline"}, do |f| %>
-  <%= f.file_field :file %>
-  <%= f.submit "Load Supplier", class: "btn btn-primary" %>
-<% end %>
+
 <table class="table">
 <tr>
 <th></th>
@@ -18,5 +15,30 @@
 <td><%= s.payment_terms %></td>
 </tr>
 <% end %>
-
 </table>
+
+<div id="accordion">
+<h2><a href="#", style="color:#999">Supplier Prices</a></h2>
+<blockquote>
+<table class="table table-condensed table-bordered">
+	<tr>
+		<td>Date:</td>
+		<td>Supplier:</td>
+		<td>Shipping Terms:</td>
+		<td>Product Name:</td>
+		<td>Quantity:</td>
+				<td>Price:</td>
+	</tr>
+<% SupplierPrice.all.each do |sp| %>
+<tr>
+		<td><%= sp.date %></td>
+		<td><%= !sp.supplier.blank? ? sp.supplier.name : "" %></td>
+		<td><%= !sp.ship_term.blank? ? sp.ship_term.term : "" %></td>
+		<td><%= !sp.product.blank? ? sp.product.name : "" %></td>
+		<td><%= sp.quantity %></td>
+		<td><%= sp.price %></td>
+</tr>
+<% end %>
+</table>
+</blockquote>
+</div>
