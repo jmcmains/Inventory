@@ -19,7 +19,7 @@ class OfferingsController < ApplicationController
 	  @offerings=Offering.all(:include => :products, :conditions => "products.id IS NULL").paginate(:page => params[:page], :per_page => 10)
 	  @blank = true
 	  respond_to do |format|
-			format.html { redirect_to offerings_path }
+			format.html { render :index }
 			format.js
 		end
 	end

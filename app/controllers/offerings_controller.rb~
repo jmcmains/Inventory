@@ -17,6 +17,7 @@ class OfferingsController < ApplicationController
 	  @offering.update_attributes(params[:offering])
 	  @title = "Current Offerings and their products"
 	  @offerings=Offering.all(:include => :products, :conditions => "products.id IS NULL").paginate(:page => params[:page], :per_page => 10)
+	  @blank = true
 	  respond_to do |format|
 			format.html { redirect_to offerings_path }
 			format.js
