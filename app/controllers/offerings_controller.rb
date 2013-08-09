@@ -31,7 +31,10 @@ class OfferingsController < ApplicationController
 		@offering.destroy
 		@title = "Current Offerings and their products"
 		@offerings=Offering.all(:include => :products, :conditions => "products.id IS NULL").paginate(:page => params[:page], :per_page => 10)
-	  redirect_to offerings_path
+	  @blank = true
+	  respond_to do |format|
+			format.html { render :index }
+		end
 	end
 	
 	def autocomplete
