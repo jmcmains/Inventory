@@ -15,8 +15,10 @@ class OfferingsController < ApplicationController
 	def update
 		@offering = Offering.find(params[:id])
 	  @offering.update_attributes(params[:offering])
+	  @title = "Current Offerings and their products"
+	  @offerings=Offering.all(:include => :products, :conditions => "products.id IS NULL").paginate(:page => params[:page], :per_page => 10)
 	  respond_to do |format|
-			format.html { redirect_to blank_offerings_path }
+			format.html { redirect_to offerings_path }
 			format.js
 		end
 	end
@@ -26,7 +28,9 @@ class OfferingsController < ApplicationController
 		replace=Offering.find_or_create_by_name(params[:offering][:name])
 		Order.where(offering_id: @offering.id).update_all({:offering_id => replace.id})
 		@offering.destroy
-	  redirect_to blank_offerings_path
+		@title = "Current Offerings and their products"
+		@offerings=Offering.all(:include => :products, :conditions => "products.id IS NULL").paginate(:page => params[:page], :per_page => 10)
+	  redirect_to offerings_path
 	end
 	
 	def autocomplete
