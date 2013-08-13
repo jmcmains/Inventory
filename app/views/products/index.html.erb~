@@ -16,8 +16,8 @@
 <% prediction_x = (y.length..(y.length+leadTimeWeeks)).to_a %>
 <% prediction_y = prediction_x.map { |x| x*m+b } %>
 <% sigma = lineFit.sigma %>
-<div id="orders_chart" style="width:560px; height:300px;display:block-inline"></div>
-<div id="orders_chart1" style="width:560px; height:300px;display:block-inline"></div>
+<div id="orders_chart" style="width:560px; height:300px;display:block-inline;float:left;"></div>
+<div id="orders_chart1" style="width:560px; height:300px;display:block-inline;float:right;"></div>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
@@ -226,8 +226,8 @@
 <div class="pagination">
      <%= will_paginate @offerings, :container => false %>
 </div>
-<%= link_to "Download to CSV", create_csv_products_path %>
-<table class="info" id='main'>
+<div style="float:left;width:100%;"><%= link_to "Download to CSV", create_csv_products_path %></div>
+<table style="float:left;width:100%;" class="table table-bordered table-striped table-condensed info" id='main'>
 <tr'>
 	<td id='td1'>Modify</td>
 	<td id='td2'>Name</td>
@@ -243,8 +243,6 @@
 	<%= render @products.sort_by(&:name) %>
 </table>
 </center>
-<%= link_to 'New Product', new_product_path %>
-
 <div id='floater' style="background-color:#fff;position:fixed;top:40px;">
 <table class='info' id='inflo'>
 	<tr>
