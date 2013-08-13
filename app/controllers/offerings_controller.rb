@@ -73,9 +73,9 @@ class OfferingsController < ApplicationController
   	elsif params[:sort_by] == "US_DESC"
   	  @offerings=@offerings.sort_by {|o| o.orders.amzus.count }.reverse
   	elsif params[:sort_by] == "NAME_ASC"
-  	  @offerings=@offerings.sort_by {|o| o.orders.name }.reverse
+  	  @offerings=@offerings.sort_by {|o| o.name }.reverse
   	elsif params[:sort_by] == "NAME_DESC"
-  	  @offerings=@offerings.sort_by {|o| o.orders.name }
+  	  @offerings=@offerings.sort_by {|o| o.name }
   	elsif params[:sort_by] == "CA_ASC"
   	  @offerings=@offerings.sort_by {|o| o.orders.amzca.count }
   	elsif params[:sort_by] == "CA_DESC"
