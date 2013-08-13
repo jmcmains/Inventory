@@ -26,39 +26,30 @@
 </div>
 <br>
 Entries shown: <%= @offerings.total_entries %>
-<table class="info">
+<table class="table table-bordered table-striped table-condensed info">
 	<tr>
 	<td colspan="5"></td>
-	<td colspan="7" style="margin:0;padding:0;text-align:center">Sales</td>
+	<td colspan="7" style="text-align:center">Sales</td>
 	</tr>
 	<tr>
-		<td style="margin:0;padding:0;text-align:center;width:91px">Modify</span></td>
-		<td style="margin:0;padding:0;text-align:center;width:250px">Offering Name<%= render "sort_buttons", name: "NAME", search: @search, blank: @blank %></td>
-		<td style="margin:0;padding:0;text-align:center;width:90px">Price</td>
-		<td style="margin:0;padding:0;text-align:center;width:75px">Weight (Lbs)</td>
-		<td  style="margin:0;padding:0;text-align:center;width:150px">Included</td>
-		<td style="margin:0;padding:0;text-align:center">AMZ US<br>
-		<%= render "sort_buttons", name: "US", search: @search, blank: @blank %>
-		</td>
-		<td style="margin:0;padding:0;text-align:center">AMZ CAD<br>
-		<%= render "sort_buttons", name: "CA", search: @search, blank: @blank %>
-		</td>
-		<td style="margin:0;padding:0;text-align:center">RBZ.COM<br>
-		<%= render "sort_buttons", name: "WS", search: @search, blank: @blank %>
-		</td>
-		<td style="margin:0;padding:0;text-align:center">Buy<br>
-		<%= render "sort_buttons", name: "BC", search: @search, blank: @blank %>
-		</td>
-		<td style="margin:0;padding:0;text-align:center">Ebay<br>
-		<%= render "sort_buttons", name: "EB", search: @search, blank: @blank %>
-		</td>
-		<td style="margin:0;padding:0;text-align:center">Phone<br>
-		<%= render "sort_buttons", name: "PE", search: @search, blank: @blank %>
-		</td>
-		<td style="margin:0;padding:0;text-align:center">All<br>
-		<%= render "sort_buttons", name: "ALL", search: @search, blank: @blank %>
-		</td>
+		<td style="width:91px">Modify</span></td>
+		<td style="text-align:center;width:250px">Offering Name<%= render "sort_buttons", name: "NAME", search: @search, blank: @blank %></td>
+		<td style="text-align:center;width:90px">Price</td>
+		<td style="text-align:center;width:75px">Weight (Lbs)</td>
+		<td  style="text-align:center;width:150px">Included</td>
+		<td style="text-align:center">AMZ US<br><%= render "sort_buttons", name: "US", search: @search, blank: @blank %></td>
+		<td style="text-align:center">AMZ CAD<br><%= render "sort_buttons", name: "CA", search: @search, blank: @blank %></td>
+		<td style="text-align:center">RBZ.COM<br><%= render "sort_buttons", name: "WS", search: @search, blank: @blank %></td>
+		<td style="text-align:center">Buy<br><%= render "sort_buttons", name: "BC", search: @search, blank: @blank %></td>
+		<td style="text-align:center">Ebay<br><%= render "sort_buttons", name: "EB", search: @search, blank: @blank %></td>
+		<td style="text-align:center">Phone<br><%= render "sort_buttons", name: "PE", search: @search, blank: @blank %></td>
+		<td style="text-align:center">All<br><%= render "sort_buttons", name: "ALL", search: @search, blank: @blank %></td>
 	</tr>
+	<style>
+	form {
+	margin:0;
+	}
+	</style>
 <% @offerings.each do |offer| %>
 	<tr>
 	<td><%= link_to 'Edit', edit_offering_path(offer) %> | <%= link_to "Delete", offer, :method => :delete, :confirm => "You sure?",
@@ -67,8 +58,8 @@ Entries shown: <%= @offerings.total_entries %>
   <td>
   <div id="price_<%= offer.id %>">
 		<% if offer.price.blank? %>
-			<%= form_for offer, remote: true do |f| %>
-					<%= f.text_field :price, placeholder: "enter price", :class => "input-mini", style: "display:inline" %>
+			<%= form_for offer, style: "display:inline;margin:0;padding:0;", remote: true do |f| %>
+					<%= f.text_field :price, placeholder: "enter price", :class => "input-mini", style: "display:inline;margin:0" %>
 			<% end %>
 		<% else %>
 		  <%= offer.price %>
@@ -87,13 +78,13 @@ Entries shown: <%= @offerings.total_entries %>
 		<% end %>
 		</ul>
 	</td>
-	<td><%= offer.orders.amzus.count %></td>
-	<td><%= offer.orders.amzca.count %></td>
-	<td><%= offer.orders.website.count %></td>
-	<td><%= offer.orders.buy.count %></td>
-	<td><%= offer.orders.ebay.count %></td>
-	<td><%= offer.orders.phone.count %></td>
-	<td><%= offer.orders.count %></td>
+	<td class="number"><%= offer.orders.amzus.count %></td>
+	<td class="number"><%= offer.orders.amzca.count %></td>
+	<td class="number"><%= offer.orders.website.count %></td>
+	<td class="number"><%= offer.orders.buy.count %></td>
+	<td class="number"><%= offer.orders.ebay.count %></td>
+	<td class="number"><%= offer.orders.phone.count %></td>
+	<td class="number"><%= offer.orders.count %></td>
 	</tr>
 <% end %>
 </table>

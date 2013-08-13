@@ -72,7 +72,7 @@ p {
   line-height: 1.7em;
 }
 
-table.info {
+table.table {
 	tr {
 		&.error {
 			background-color: #F2DEDE;
@@ -80,8 +80,6 @@ table.info {
 			text-color: #fff;
 		}
 		td {
-			border:1px solid #000;
-			padding:10px;
 			&.number {
 				text-align:right;
 			}
@@ -170,7 +168,7 @@ ul.ui-autocomplete {
 }
 div.product {
 	width: 250px;
-	height: 175px;
+	height: 200px;
 	float:left;
 	margin:5px;
 	padding:5px;
@@ -186,5 +184,8 @@ div.product {
 	img {
 		max-height:100 px;
 		max-width:100px;
+	}
+	h3 {
+		font-size:20px
 	}
 }
