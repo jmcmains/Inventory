@@ -1,5 +1,5 @@
 <% if @title == "Inventory Worksheet" %>
-	<%= link_to "Print Worksheet", inventory_worksheet_print_products_path, target: "_blank", onclick: "return !window.open(this.href, 'Print', 'width=500,height=500')", class: "btn btn-primary"  %>
+	<%= link_to "Print Worksheet", inventory_worksheet_print_products_path, target: "_blank", onclick: "return !window.open(this.href, 'Print', 'width=500,height=500')", class: "btn btn-primary btn-large"  %>
 <script>
 $('#data-popup').onclick('click', function(e) { 
 	window.open(this.href,'create_company', 'height=600, width=600');
