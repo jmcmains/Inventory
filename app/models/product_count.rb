@@ -10,6 +10,22 @@ class ProductCount < ActiveRecord::Base
   	self.product = Product.find_or_create_by_name(name) if name.present?
   end
   
+  def box_count=(bcount)
+  	if self.count.blank?
+  		self.count = ((bcount.blank? ? 0 : bcount) * self.product.per_box)
+  	else
+  		self.count += ((bcount.blank? ? 0 : bcount) * self.product.per_box)
+  	end
+  end
+  
+  def peice_count=(pcount)
+		if self.count.blank?
+  		self.count = (pcount.blank? ? 0 : pcount)
+  	else
+  		self.count += (pcount.blank? ? 0 : pcount)
+  	end
+  end
+  
   def product_image
   	product.try(:imloc)
   end
@@ -17,6 +33,7 @@ class ProductCount < ActiveRecord::Base
   def product_image=(imloc)
   	self.product = Product.find_or_create_by_imloc(imloc) if imloc.present?
   end
+  
   def product_description
   	product.try(:description)
   end

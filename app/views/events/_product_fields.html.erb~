@@ -1,21 +1,10 @@
-<% if product.display %>
+<% if product.display? %>
 <div class="product">
 	<h3><%= product.name %></h3>
 	<%= f.hidden_field :product_id, value: product.id %>
-	<% if event.product_counts.find_by_product_id(product) %>
-		<%= f.text_field :count, value: event.product_counts.find_by_product_id(product).count, class: "input-small", placeholder: "Quantity"  %>
-		<% if event.product_counts.find_by_product_id(product).is_box %>
-			<%= f.radio_button :is_box, "true", checked: true %> boxes
-			<%= f.radio_button :is_box, "false" %> pieces 
-		<% else %>
-			<%= f.radio_button :is_box, "true" %> boxes
-			<%= f.radio_button :is_box, "false", checked: true %> pieces 
-		<% end %>
-	<% else %>
-		<%= f.text_field :count, value: nil, 	class: "input-small", placeholder: "Quantity"  %>
-		<%= f.radio_button :is_box, "true", checked: true %> boxes
-		<%= f.radio_button :is_box, "false" %> pieces 
-	<% end %>
+	<%= f.hidden_field :is_box, value: "false" %>
+	<%= f.text_field :box_count, value: nil, 	class: "input-small", placeholder: "Box Count"  %>
+	<%= f.text_field :peice_count, value: nil, 	class: "input-small", placeholder: "Peice Count"  %>
 	<br>
 	<table>
 		<tr>

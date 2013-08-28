@@ -141,25 +141,34 @@ class Product < ActiveRecord::Base
 		data= {}
 		data['y'] = []
 		data['dates'] = []
+		y=[]
+		dates=[]
 		if Rails.env.production?
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year, week ORDER BY year, week ")
-			data["y"]=d.map { |a| a["sum"].to_i }
-			data["dates"] = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) if !a['year'].nil? && !a['week'].nil? }
+			y=d.map { |a| a["sum"].to_i }
+			dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) if !a['year'].nil? && !a['week'].nil? }
 		else
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year") 
 			i=0
 			d.each do |a|
 				if a[2]
-					data["y"][i] = a[0]
-					data["dates"][i] = a[2].to_date.beginning_of_week
+					y[i] = a[0]
+					dates[i] = a[2].to_date.beginning_of_week
 					i=i+1
 				end
 			end
 		end
-		if data["y"].count > 0
-			if data["dates"].last >= Date.today.beginning_of_week-1
-				data["dates"].pop
-				data["y"].pop	
+		if y.count > 0
+			if dates.last >= Date.today.beginning_of_week-1
+				dates.pop
+				y.pop	
+			end
+		end
+		if !dates.blank?
+			data["dates"]=(dates.first..dates.last).step(7)
+			data["y"]=Array.new(data["dates"].length,0)
+			dates.each_with_index do |d,i|
+				data["y"][data["dates"].index(d)]=y[i]
 			end
 		end
 		return data
@@ -170,24 +179,34 @@ class Product < ActiveRecord::Base
 		data= {}
 		data['y']=[]
 		data['dates']=[]
+		y=[]
+		dates=[]
 		if Rails.env.production?
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year, week ORDER BY year, week ")
-			data["y"]=d.map { |a| a["sum"].to_i }
-			data["dates"] = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) }
+			y=d.map { |a| a["sum"].to_i }
+			dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) }
 		else
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year") 
 			i=0
 			d.each do |a|
 				if a[2]
-					data["y"][i] = a[0]
-					data["dates"][i] = a[2].to_date.beginning_of_week
+					y[i] = a[0]
+					dates[i] = a[2].to_date.beginning_of_week
 					i=i+1
 				end
 			end
 		end
-		if data["dates"].last >= Date.today.beginning_of_week-1
-			data["dates"].pop
-			data["y"].pop	
+		if dates.last >= Date.today.beginning_of_week-1
+			dates.pop
+			y.pop	
+		end
+		
+		if !dates.blank?
+			data["dates"]=(dates.first..dates.last).step(7)
+			data["y"]=Array.new(data["dates"].length,0)
+			dates.each_with_index do |d,i|
+				data["y"][data["dates"].index(d)]=y[i]
+			end
 		end
 		return data
 	end

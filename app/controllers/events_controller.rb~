@@ -81,25 +81,25 @@ class EventsController < ApplicationController
 			@sup_name=[]
 		end
   	if params[:sort_by] == "INV_ASC"
-  		@events=@events.sort_by {|a| a.invoice }
-  	elsif params[:sort_by] == "INV_DESC"
   		@events=@events.sort_by {|a| a.invoice }.reverse
+  	elsif params[:sort_by] == "INV_DESC"
+  		@events=@events.sort_by {|a| a.invoice }
   	elsif params[:sort_by] == "SUP_ASC"
-  		@events=@events.sort_by {|a| a.supplier.blank? ? "" : a.supplier.name }
-  	elsif params[:sort_by] == "SUP_DESC"
   		@events=@events.sort_by {|a| a.supplier.blank? ? "" : a.supplier.name }.reverse
+  	elsif params[:sort_by] == "SUP_DESC"
+  		@events=@events.sort_by {|a| a.supplier.blank? ? "" : a.supplier.name }
   	elsif params[:sort_by] == "DC_ASC"
-  		@events=@events.sort_by {|a| a.date }
-  	elsif params[:sort_by] == "DC_DESC"
   		@events=@events.sort_by {|a| a.date }.reverse
+  	elsif params[:sort_by] == "DC_DESC"
+  		@events=@events.sort_by {|a| a.date }
   	elsif params[:sort_by] == "DE_ASC"
-  		@events=@events.sort_by {|a| a.expected_date }
-  	elsif params[:sort_by] == "DE_DESC"
   		@events=@events.sort_by {|a| a.expected_date }.reverse
+  	elsif params[:sort_by] == "DE_DESC"
+  		@events=@events.sort_by {|a| a.expected_date }
   	elsif params[:sort_by] == "DA_ASC"
-  		@events=@events.sort_by {|a| a.received_date }
-  	elsif params[:sort_by] == "DA_DESC"
   		@events=@events.sort_by {|a| a.received_date }.reverse
+  	elsif params[:sort_by] == "DA_DESC"
+  		@events=@events.sort_by {|a| a.received_date }
   	end
   	@title= "Product Order"
   	@events=@events.paginate(:page => params[:page], :per_page => 10)
