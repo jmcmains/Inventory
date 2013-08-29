@@ -1,25 +1,15 @@
 <% if product.display? %>
-<div class="product">
+<div class="product" style="position:relative">
 	<h3><%= product.name %></h3>
 	<% if product.imloc %>
-		<%= image_tag product.imloc %>
+		<%= image_tag product.imloc, style: "float:left" %>
 	<% else %>
-		<img src="http://terryshoemaker.files.wordpress.com/2013/03/placeholder1.jpg">
+		<img src="http://terryshoemaker.files.wordpress.com/2013/03/placeholder1.jpg" style="float:left">
 	<% end %>
 	<%= f.hidden_field :product_id, value: product.id %>
 	<%= f.hidden_field :is_box, value: "false" %>
 	<%= f.hidden_field :count, value: 0 %>
-	<center><table class="table-condensed">
-	<tr>
-	<td style="text-align:center">Box Count</td>
-	<td style="text-align:center">Loose Piece Count</td>
-	</tr>
-	<tr>
-	<td style="text-align:center"><%= f.text_field :box_count, value: nil, 	class: "input-small", placeholder: "Box Count"  %></td>
-	<td style="text-align:center"><%= f.text_field :piece_count, value: nil, 	class: "input-small", placeholder: "Piece Count"  %></td>
-	</tr>
-	</table></center>
-				<% if product.description %>
+	<% if product.description %>
 					<%= product.description %> - 
 				<% end %>
 				<% if product.per_box %>
@@ -28,5 +18,16 @@
 				1
 				<% end %>
 				 pc/box
+	<center>
+	<table class="table-condensed" style="position:absolute;bottom:5px">
+	<tr>
+	<th style="text-align:center">Box Count</th>
+	<th style="text-align:center">Loose Piece Count</th>
+	</tr>
+	<tr>
+	<td style="text-align:center"><%= f.text_field :box_count, value: nil, 	class: "input-small", placeholder: "Box Count"  %></td>
+	<td style="text-align:center"><%= f.text_field :piece_count, value: nil, 	class: "input-small", placeholder: "Piece Count"  %></td>
+	</tr>
+	</table></center>
 </div>
 <% end %>
