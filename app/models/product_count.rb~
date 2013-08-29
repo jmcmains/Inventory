@@ -12,17 +12,33 @@ class ProductCount < ActiveRecord::Base
   
   def box_count=(bcount)
   	if self.count.blank?
-  		self.count = ((bcount.blank? ? 0 : bcount) * self.product.per_box)
+  		self.count = ((bcount.to_f.blank? ? 0 : bcount.to_f) * (self.product.per_box.blank? ? 1 : self.product.per_box))
   	else
-  		self.count += ((bcount.blank? ? 0 : bcount) * self.product.per_box)
+  		self.count += ((bcount.to_f.blank? ? 0 : bcount.to_f) * (self.product.per_box.blank? ? 1 : self.product.per_box))
   	end
   end
   
-  def peice_count=(pcount)
-		if self.count.blank?
-  		self.count = (pcount.blank? ? 0 : pcount)
+  def box_count
+  	if is_box
+  		count
   	else
-  		self.count += (pcount.blank? ? 0 : pcount)
+  		(self.count/(self.product.per_box.blank? ? 1 : self.product.per_box)).floor
+  	end
+  end
+  
+  def piece_count=(pcount)
+		if self.count.blank?
+  		self.count = (pcount.to_f.blank? ? 0 : pcount.to_f)
+  	else
+  		self.count += (pcount.to_f.blank? ? 0 : pcount.to_f)
+  	end
+  end
+  
+  def piece_count
+  	if is_box
+  		0
+  	else
+  		self.count-((self.count/(self.product.per_box.blank? ? 1 : self.product.per_box)).floor*(self.product.per_box.blank? ? 1 : self.product.per_box))
   	end
   end
   
@@ -33,6 +49,7 @@ class ProductCount < ActiveRecord::Base
   def product_image=(imloc)
   	self.product = Product.find_or_create_by_imloc(imloc) if imloc.present?
   end
+  
   def product_description
   	product.try(:description)
   end

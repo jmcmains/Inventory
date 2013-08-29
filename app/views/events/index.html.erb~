@@ -55,20 +55,25 @@ $(function() {
   <td><%= event.date %></td>
 <% if @title == "Product Order" %>
 	<td><%= event.invoice %></td>
-	<td><%= event.supplier.blank? ? "" : event.supplier.name %></td>
+	<td><%= event.supplier.blank? ? "" : (link_to event.supplier.name, supplier_path(event.supplier)) %></td>
 	<td><%= event.expected_date %></td>
 	<td><%= event.received_date if event.received %></td>
 <% end %>
 	<td>
 		<ul>
 		<% event.product_counts.sort_by(&:product_name).each do |pc| %>
-				<li><%= link_to pc.product.name, product_path(pc.product) %>: <%= pc.count.round %> 
+			<li><%= link_to pc.product.name, product_path(pc.product) %>: 
+			<% if event.event_type = "Inventory" %>
+			<%= pc.box_count.round %> boxes, <%= pc.piece_count.round %> pieces
+			<% else %>
+				<%= pc.count.round %> 
 				<% if pc.is_box %>
 					boxes
 				<% else %>
 					pieces
 				<% end %>
-				</li>
+				
+			<% end %></li>
 		<% end %>
 		</ul>
 	</td>

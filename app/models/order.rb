@@ -1,5 +1,5 @@
 class Order < ActiveRecord::Base
-  # attr_accessible :title, :body
+
   belongs_to :offering, :class_name => "Offering"
   has_many :offering_products, through: :offering
   has_many :products, through: :offering_products

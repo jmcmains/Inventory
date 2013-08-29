@@ -62,13 +62,22 @@ $(function() {
 	<td>
 		<ul>
 		<% event.product_counts.sort_by(&:product_name).each do |pc| %>
-				<li><%= link_to pc.product.name, product_path(pc.product) %>: <%= pc.count.round %> 
+			<li><%= link_to pc.product.name, product_path(pc.product) %>: 
+			<% if event.event_type = "Inventory" %>
+				<% if pc.count > 0 %>
+					<%= "#{pc.box_count.round} boxes" if pc.box_count.round>0 %> <%= "#{pc.piece_count.round} pieces" if pc.piece_count.round>0 %>
+				<% else %>
+					0 boxes
+				<% end %>
+			<% else %>
+				<%= pc.count.round %> 
 				<% if pc.is_box %>
 					boxes
 				<% else %>
 					pieces
 				<% end %>
-				</li>
+				
+			<% end %></li>
 		<% end %>
 		</ul>
 	</td>

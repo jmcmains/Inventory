@@ -72,7 +72,7 @@ p {
   line-height: 1.7em;
 }
 
-table.table {
+table.info {
 	tr {
 		&.error {
 			background-color: #F2DEDE;
@@ -168,7 +168,7 @@ ul.ui-autocomplete {
 }
 div.product {
 	width: 250px;
-	height: 200px;
+	height:300px;
 	float:left;
 	margin:5px;
 	padding:5px;
@@ -182,7 +182,7 @@ div.product {
 		vertical-align: top;
 	}
 	img {
-		max-height:100 px;
+		max-height:100px;
 		max-width:100px;
 	}
 	h3 {

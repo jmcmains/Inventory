@@ -1,8 +1,18 @@
 <p class="fields form-inline">
   <%= f.text_field :product_name, data: {autocomplete_source: autocomplete_products_path}, placeholder: "Product", class: "autocomplete" %>
-  <%= f.text_field :count, class: "input-small", placeholder: "Quantity" %>
-  <%= f.radio_button :is_box, "true", checked: true %> boxes	<%= f.radio_button :is_box, "false" %> pieces
+  <% if @event.event_type != "Inventory" %>
+		<%= f.text_field :count, class: "input-small", placeholder: "Quantity" %>
+		<%= f.radio_button :is_box, "true", checked: true %> boxes	<%= f.radio_button :is_box, "false" %> pieces
+  <% else %>
+		<%= f.hidden_field :count, class: "input-small" %>
+		<%= f.text_field :box_count, class: "input-small", placeholder: "Box Count" %>
+		<%= f.text_field :piece_count, class: "input-small", placeholder: "Piece Count" %>
+  <% end %>
+  <% if @event.event_type != "Inventory" %>
+  <%= f.text_field :price, placeholder: "Price" %>
+  <% end %>
   <%= link_to_remove_fields "-", f %>
+
 </p>
 <script>
 $(function() {

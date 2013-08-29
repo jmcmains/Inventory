@@ -35,20 +35,15 @@ class Order < ActiveRecord::Base
  	end
  	
  	def self.shipworks_csv(row)
- 		order_number = row[0]
- 		type = row[1]
-		date = row[2]
-		quantity = row[3]
-		offering_id=row[4]
-		offering=Offering.find_or_initialize_by_name(offering_id)
+		offering=Offering.find_or_initialize_by_name(row[4])
     offering.save
-    order = Order.find_by_order_number_and_offering_id(order_number,offering.id)
+    order = Order.find_by_order_number_and_offering_id(row[0],offering.id)
     if order
-    	if type == "EBay"
-    		order.update_attributes(origin: type)
+    	if row[1] == "EBay"
+    		order.update_attributes(origin: "EBay")
     	end
     else
-    	order= Order.create(order_number: order_number, date: date,offering_id: offering.id,quantity: quantity, origin: type)
+    	order= Order.create(order_number: row[0], date: Date.strptime(row[2], '%m/%d/%Y'),offering_id: offering.id,quantity: row[3], origin: row[1])
     end
     return order
  	end

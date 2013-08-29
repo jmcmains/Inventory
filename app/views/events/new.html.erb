@@ -1,4 +1,4 @@
-<%= form_for @event do |f| %>
+<center><%= form_for @event do |f| %>
 	<p><%= f.hidden_field :event_type, value: @event.event_type %>
 		<%= f.label :date %>
 		<%= f.date_select :date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
@@ -15,8 +15,8 @@
 	<% end %>
 	</p>
 	<% n=0 %>
-	<h2>Products</h2>
-	<div style="background-color:#aaa;width:100%">
+	<h2 style="text-align:center">Products</h2>
+	<div class="products" style="background-color:#aaa;margin-left:auto;margin-right:auto">
 	<%= f.fields_for :product_counts do |builder| %> 
 		<%= render "product_fields", f: builder, product: @products[n].product, event: @event %>
 		<% n = n+1 %>
@@ -25,6 +25,22 @@
 
 	<div style="width:100%;text-align:center;display:block;margin-left:auto;margin-right:auto;float:left"><%= f.submit "Submit", class: "btn btn-large btn-primary" %></div>
 <% end %>
+</center>
+<script>
+$(window).resize(function() {contresize();});
+$(function() {
+	contresize();
+});
 
+function contresize(){
+  var win_width = $(window).width()-230;
+	var box_width = $('.product').outerWidth()+10;
+	var box_count = Math.floor(win_width/box_width);
+	var total_width = box_count * box_width;
+	$('.products').css('width',total_width)
+  }
+  
+
+</script>
 
 

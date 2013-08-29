@@ -47,10 +47,6 @@
 		</ul>
 	</li>
 </ul>
-Open Paypal Receipt:
-<%= form_tag paypal_path, target: "_blank" do %>
-		<%= text_field_tag :Order_ID, nil,placeholder: "Order ID", class: "input-medium" %>
-<% end %>
 </div>
 <div style="position:absolute;padding:10px;left:230px;right:0">
 <%= yield %>

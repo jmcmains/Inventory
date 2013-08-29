@@ -110,6 +110,7 @@ class EventsController < ApplicationController
   	@event = Event.new(params[:event])
     @event.save
 		if @event.event_type == "Inventory"
+			@event.update_attributes(params[:event])
   	  redirect_to inventory_events_path
   	else
   	  redirect_to po_events_path
