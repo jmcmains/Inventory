@@ -1,5 +1,7 @@
 class OfferingsController < ApplicationController
   require 'will_paginate/array'
+  require 'active_shipping'
+	include ActiveMerchant::Shipping
   def new
   end
 
@@ -12,6 +14,7 @@ class OfferingsController < ApplicationController
 		Offering.find(params[:id]).destroy
 	  redirect_to offerings_path
   end
+  
 	def update
 		@offering = Offering.find(params[:id])
 	  @offering.update_attributes(params[:offering])
@@ -53,9 +56,23 @@ class OfferingsController < ApplicationController
 	end
 	
 	def show
-		sql = ActiveRecord::Base.connection()
-		@d=sql.execute("SELECT theother.offering_id, offerings.name, count(*) AS how_many_other_times FROM orders as this INNER JOIN orders AS that ON that.offering_id = this.offering_id INNER JOIN orders AS theother ON that.order_number = theother.order_number AND that.offering_id <> theother.offering_id INNER JOIN offerings ON offerings.id = theother.offering_id WHERE this.offering_id = #{params[:id]} GROUP BY theother.offering_id, offerings.name ORDER BY how_many_other_times DESC")
 		@offering = Offering.find(params[:id])
+		package=Package.new(@offering.total_weight, [0,0], :units => :imperial)
+		origin = Location.new(:country => 'US',:zip => '27217')
+		destination_US = Location.new(:country => 'US',:zip => '90210')
+		destination_CA = Location.new( :country => 'CA')
+		destination_CN = Location.new( :country => 'CN')
+		destination_EU = Location.new( :country => 'GB')
+		ups = UPS.new(:login => 'rubberbanditz', :password => 'Bandtastic2013', :key => 'DCBBB7D0DD606DD6')
+		usps = USPS.new(:login => '970RUBBE0314')
+		@response_ups_CA = ups.find_rates(origin, destination_CA, package)
+		@response_usps_CA = usps.find_rates(origin, destination_CA, package)
+		@response_ups_CN = ups.find_rates(origin, destination_CN, package)
+		@response_usps_CN = usps.find_rates(origin, destination_CN, package)
+		@response_ups_EU = ups.find_rates(origin, destination_EU, package)
+		@response_usps_EU = usps.find_rates(origin, destination_EU, package)
+		@response_ups_US = ups.find_rates(origin, destination_US, package)
+		@response_usps_US = usps.find_rates(origin, destination_US, package)
 	end
 	
   def index

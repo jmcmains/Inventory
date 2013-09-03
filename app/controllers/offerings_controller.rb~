@@ -1,5 +1,7 @@
 class OfferingsController < ApplicationController
   require 'will_paginate/array'
+  require 'active_shipping'
+	include ActiveMerchant::Shipping
   def new
   end
 
@@ -12,6 +14,7 @@ class OfferingsController < ApplicationController
 		Offering.find(params[:id]).destroy
 	  redirect_to offerings_path
   end
+  
 	def update
 		@offering = Offering.find(params[:id])
 	  @offering.update_attributes(params[:offering])
@@ -53,9 +56,16 @@ class OfferingsController < ApplicationController
 	end
 	
 	def show
-		sql = ActiveRecord::Base.connection()
-		@d=sql.execute("SELECT theother.offering_id, offerings.name, count(*) AS how_many_other_times FROM orders as this INNER JOIN orders AS that ON that.offering_id = this.offering_id INNER JOIN orders AS theother ON that.order_number = theother.order_number AND that.offering_id <> theother.offering_id INNER JOIN offerings ON offerings.id = theother.offering_id WHERE this.offering_id = #{params[:id]} GROUP BY theother.offering_id, offerings.name ORDER BY how_many_other_times DESC")
 		@offering = Offering.find(params[:id])
+		package=Package.new(@offering.total_weight, [0,0], :units => :imperial)
+		origin = Location.new(:country => 'US',:zip => '27217')
+		destination_CA = Location.new( :country => 'CA')
+		destination_CN = Location.new( :country => 'CN')
+		destination_EU = Location.new( :country => 'GB')
+		ups = UPS.new(:login => 'rubberbanditz', :password => 'Bandtastic2013', :key => 'DCBBB7D0DD606DD6')
+		usps = USPS.new(:login => '970RUBBE0314')
+		@response_ups = ups.find_rates(origin, destination, package)
+		@response_usps = usps.find_rates(origin, destination, package)
 	end
 	
   def index
@@ -73,9 +83,9 @@ class OfferingsController < ApplicationController
   	elsif params[:sort_by] == "US_DESC"
   	  @offerings=@offerings.sort_by {|o| o.orders.amzus.count }.reverse
   	elsif params[:sort_by] == "NAME_ASC"
-  	  @offerings=@offerings.sort_by {|o| o.orders.name }.reverse
+  	  @offerings=@offerings.sort_by {|o| o.name }.reverse
   	elsif params[:sort_by] == "NAME_DESC"
-  	  @offerings=@offerings.sort_by {|o| o.orders.name }
+  	  @offerings=@offerings.sort_by {|o| o.name }
   	elsif params[:sort_by] == "CA_ASC"
   	  @offerings=@offerings.sort_by {|o| o.orders.amzca.count }
   	elsif params[:sort_by] == "CA_DESC"
