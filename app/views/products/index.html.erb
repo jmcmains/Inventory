@@ -120,9 +120,8 @@
 			<% orig[oco["origin"]]=[] %>
 		<% end %>
 		<% orig[oco["origin"]] << oco %>
-		<% end %>
-		
 	<% end %>
+
 <% else %>
 	<% oc=Order.count(:all, group: "strftime('%m/%Y', date)") %>
 <% end %>
