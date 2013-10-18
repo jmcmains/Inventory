@@ -46,30 +46,22 @@ Total Weight: <%= @offering.total_weight %> lbs<br>
 <td>USPS</td>
 <td><table class="table">
 <% @response_usps_US.rates.sort_by(&:price).each do |rate| %>
-<% if (rate.service_name == "USPS First-Class Mail Parcel" && @offering.total_weight<1) || (rate.service_name == "USPS Standard Post") %>
 <tr><td><%= rate.service_name %></td><td><%= number_to_currency(rate.price/100.0) %></td></tr>
-<% end %>
 <% end %>
 </table></td>
 <td><table class="table">
 <% @response_usps_CA.rates.sort_by(&:price).each do |rate| %>
-<% if (rate.service_name == "USPS First-Class Package International Service" && @offering.total_weight<4) || (rate.service_name == "USPS Priority Mail International" && @offering.total_weight>=4) %>
 <tr><td><%= rate.service_name %></td><td><%= number_to_currency(rate.price/100.0) %></td></tr>
-<% end %>
 <% end %>
 </table></td>
 <td><table class="table">
 <% @response_usps_EU.rates.sort_by(&:price).each do |rate| %>
-<% if (rate.service_name == "USPS First-Class Package International Service" && @offering.total_weight<4) || (rate.service_name == "USPS Priority Mail International" && @offering.total_weight>=4) %>
 <tr><td><%= rate.service_name %></td><td><%= number_to_currency(rate.price/100.0) %></td></tr>
-<% end %>
 <% end %>
 </table></td>
 <td><table class="table">
 <% @response_usps_CN.rates.sort_by(&:price).each do |rate| %>
-<% if (rate.service_name == "USPS First-Class Package International Service" && @offering.total_weight<4) || (rate.service_name == "USPS Priority Mail International" && @offering.total_weight>=4) %>
 <tr><td><%= rate.service_name %></td><td><%= number_to_currency(rate.price/100.0) %></td></tr>
-<% end %>
 <% end %>
 </table></td>
 </tr>

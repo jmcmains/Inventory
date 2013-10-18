@@ -57,15 +57,22 @@ class OfferingsController < ApplicationController
 	
 	def show
 		@offering = Offering.find(params[:id])
-		package=Package.new(@offering.total_weight, [0,0], :units => :imperial)
+		package=Package.new(@offering.total_weight, [11,14], :units => :imperial)
 		origin = Location.new(:country => 'US',:zip => '27217')
+		destination_US = Location.new(:country => 'US',:zip => '90210')
 		destination_CA = Location.new( :country => 'CA')
 		destination_CN = Location.new( :country => 'CN')
 		destination_EU = Location.new( :country => 'GB')
 		ups = UPS.new(:login => 'rubberbanditz', :password => 'Bandtastic2013', :key => 'DCBBB7D0DD606DD6')
 		usps = USPS.new(:login => '970RUBBE0314')
-		@response_ups = ups.find_rates(origin, destination, package)
-		@response_usps = usps.find_rates(origin, destination, package)
+		@response_ups_CA = ups.find_rates(origin, destination_CA, package)
+		@response_usps_CA = usps.find_rates(origin, destination_CA, package)
+		@response_ups_CN = ups.find_rates(origin, destination_CN, package)
+		@response_usps_CN = usps.find_rates(origin, destination_CN, package)
+		@response_ups_EU = ups.find_rates(origin, destination_EU, package)
+		@response_usps_EU = usps.find_rates(origin, destination_EU, package)
+		@response_ups_US = ups.find_rates(origin, destination_US, package)
+		@response_usps_US = usps.find_rates(origin, destination_US, package)
 	end
 	
   def index

@@ -57,7 +57,7 @@ class OfferingsController < ApplicationController
 	
 	def show
 		@offering = Offering.find(params[:id])
-		package=Package.new(@offering.total_weight, [0,0], :units => :imperial)
+		package=Package.new(@offering.total_weight, [5,5], :units => :imperial)
 		origin = Location.new(:country => 'US',:zip => '27217')
 		destination_US = Location.new(:country => 'US',:zip => '90210')
 		destination_CA = Location.new( :country => 'CA')

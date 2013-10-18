@@ -165,7 +165,7 @@ class Product < ActiveRecord::Base
 			end
 		end
 		if !dates.blank?
-			data["dates"]=(dates.first..dates.last).step(7)
+			data["dates"]=(dates.first..(Date.today.beginning_of_week-7)).step(7)
 			data["y"]=Array.new(data["dates"].length,0)
 			dates.each_with_index do |d,i|
 				data["y"][data["dates"].index(d)]=y[i]
@@ -202,7 +202,7 @@ class Product < ActiveRecord::Base
 		end
 		
 		if !dates.blank?
-			data["dates"]=(dates.first..dates.last).step(7)
+			data["dates"]=(dates.first..(Date.today.beginning_of_week-7)).step(7)
 			data["y"]=Array.new(data["dates"].length,0)
 			dates.each_with_index do |d,i|
 				data["y"][data["dates"].index(d)]=y[i]

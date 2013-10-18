@@ -46,7 +46,7 @@ Total Weight: <%= @offering.total_weight %> lbs<br>
 <td>USPS</td>
 <td><table class="table">
 <% @response_usps_US.rates.sort_by(&:price).each do |rate| %>
-<% if (rate.service_name == USPS First-Class Mail Parcel && @offering.total_weight<1) || (rate.service_name == "USPS Standard Post") %>
+<% if (rate.service_name == "USPS First-Class Mail Parcel" && @offering.total_weight<1) || (rate.service_name == "USPS Standard Post") %>
 <tr><td><%= rate.service_name %></td><td><%= number_to_currency(rate.price/100.0) %></td></tr>
 <% end %>
 <% end %>
