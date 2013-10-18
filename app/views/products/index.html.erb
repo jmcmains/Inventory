@@ -159,27 +159,27 @@
 					<% end %>	
 				<% end %>	
 		    ]
-		  }<% if Rails.env.production? %>
-		  ,{
+		  },
+		  <% if Rails.env.production? %>
+		  <% orig.each do |o| %>
+		    {
+				name: "<%= o[0] %>",
+		    data: [
+		    	<% o[1].each_with_index do |a,i| %>
+		    		[Date.UTC(<%= a['year'].to_i %>, <%= a['month'].to_i-1 %>, 1),<%= a['count'].to_i %>],
+		    	<% end %>
+		    	[]
+		    	]
+		    },
+		  <% end %>
+		  {
 				name: 'Monthly Product',
 		    data: [
 		    	<% (0..(oc2['dates'].count-1)).each do |val| %>
 		    		[Date.UTC(<%= oc2['dates'][val].year.to_i %>, <%= oc2['dates'][val].month.to_i-1 %>, 1),<%= oc2['y'][val].to_i %>]<%= "," if val != (oc2['dates'].count-1) %>
 		    	<% end %>
 		    	]
-		    },
-		    <% orig.each do |o| %>
-		    {
-				name: "<% o[0] %>",
-		    data: [
-		    	<% o[1].each_with_index do |a,i| %>
-		    		[Date.UTC(<%= a['year'].to_i %>, <%= a['month'].to_i-1 %>, 1),<%= a['count'].to_i %>],
-		    	<% end %>
-		    	[,]
-		    	]
-		    },
-		    <% end %>
-		    {}
+		    }
 				<% end %>
 				]
     });

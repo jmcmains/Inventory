@@ -120,9 +120,8 @@
 			<% orig[oco["origin"]]=[] %>
 		<% end %>
 		<% orig[oco["origin"]] << oco %>
-		<% end %>
-		
 	<% end %>
+
 <% else %>
 	<% oc=Order.count(:all, group: "strftime('%m/%Y', date)") %>
 <% end %>
@@ -161,15 +160,8 @@
 				<% end %>	
 		    ]
 		  }<% if Rails.env.production? %>
-		  ,{
-				name: 'Monthly Product',
-		    data: [
-		    	<% (0..(oc2['dates'].count-1)).each do |val| %>
-		    		[Date.UTC(<%= oc2['dates'][val].year.to_i %>, <%= oc2['dates'][val].month.to_i-1 %>, 1),<%= oc2['y'][val].to_i %>]<%= "," if val != (oc2['dates'].count-1) %>
-		    	<% end %>
-		    	]
-		    },
-		    <% orig.each do |o| %>
+		  ,
+		  <% orig.each do |o| %>
 		    {
 				name: "<% o[0] %>",
 		    data: [
@@ -179,8 +171,15 @@
 		    	[,]
 		    	]
 		    },
-		    <% end %>
-		    {}
+		  <% end %>
+		  {
+				name: 'Monthly Product',
+		    data: [
+		    	<% (0..(oc2['dates'].count-1)).each do |val| %>
+		    		[Date.UTC(<%= oc2['dates'][val].year.to_i %>, <%= oc2['dates'][val].month.to_i-1 %>, 1),<%= oc2['y'][val].to_i %>]<%= "," if val != (oc2['dates'].count-1) %>
+		    	<% end %>
+		    	]
+		    }
 				<% end %>
 				]
     });
