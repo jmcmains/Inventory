@@ -3,11 +3,16 @@ Inventory::Application.routes.draw do
 	resources :users
 	resources :sessions, only: [:new, :create, :destroy]
 	
-	match '/signup', to: 'users#new'
-	match '/signin', to: 'sessions#new'
-	match '/signout', to: 'sessions#destroy', via: :delete
+	get '/signup', to: 'users#new'
+	get '/signin', to: 'sessions#new'
+	get '/signout', to: 'sessions#destroy', via: :delete
 	
-	resources :supplier_prices
+	resources :supplier_prices do
+		collection do
+			get :sort
+		end
+	end
+	
 	resources :suppliers do
 		collection do
 			get :autocomplete
@@ -32,7 +37,7 @@ Inventory::Application.routes.draw do
 		end
 	end
 	root to: 'static_pages#home'
-	match '/paypal', to: 'static_pages#paypal'
+	
 	resources :products do
 	member do
 			get :cogs
@@ -60,16 +65,20 @@ Inventory::Application.routes.draw do
 		end
 	end
 	resources :orders do
+		member do
+			patch :replace
+		end
 		collection do
 			get :new_phone
 			get :create_phone
 			post :create_single
 			get :combo
+			get :orphans
 		end
 	end
 	resources :offerings do
 	member do
-		put :replace
+		patch :replace
 	end
 	collection do
 			get :blank

@@ -13,7 +13,7 @@ class CustomersController < ApplicationController
   	render :new
   end
 	def create
-		@customer = Customer.new(params[:customer])
+		@customer = Customer.new(customer_params)
 		@customer.save
 		@customer.orders.each do |o|
 			o.update_attributes(date: convert_date(params[:date]),order_number: @customer.transaction_number, origin: "phone or email")
@@ -60,7 +60,7 @@ class CustomersController < ApplicationController
   
 	def update
   	@customer = Customer.find(params[:id])
-    @customer.update_attributes(params[:customer])
+    @customer.update_attributes(customer_params)
     @customer.orders.each do |o|
 			o.update_attributes(date: convert_date(params[:date]),order_number: @customer.transaction_number, origin: "phone or email")
 		end
@@ -76,4 +76,9 @@ class CustomersController < ApplicationController
 		def convert_date(hash)
 		  return Date.new(hash['year'].to_i, hash['month'].to_i, hash['day'].to_i)   
 		end
+		
+    def customer_params
+      params.require(:customer).permit(:first_name,:last_name,:address,:email,:total_cost,:payment_method,:transaction_number,:discount,:delivery_method,:note)
+    end
+    
 end

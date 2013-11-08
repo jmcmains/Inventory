@@ -1,11 +1,8 @@
 <% sql = ActiveRecord::Base.connection() %>
-<% if Rails.env.production? %>
+
 	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{1}) GROUP BY year, month ORDER BY year, month ") %>
 	<% months = d.map { |a| Date.new(a["year"].to_i,a["month"].to_i,1) } %>
-<% else %>
-	<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y', orders.date) AS year, strftime('%m', orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{1}) GROUP BY year, month") %>
-	<% months = d.map { |a| Date.new(a["year"].to_i,a["month"].to_i,1) } %>
-<% end %>
+
 <%  hash = Hash[months.map.with_index{|*ki| ki}] %>
 <table class="table">
 <tr>
@@ -18,16 +15,11 @@
 <td>Total</td>
 </tr>
 <% Product.all.sort_by(&:id).each do |product| %>
-	<% if Rails.env.production? %>
+
 		<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{product.id}) GROUP BY year, month ORDER BY year, month ") %>
 		<% orders=d.map { |a| a["sum"].to_i } %>
 		<% curmonths = d.map { |a| Date.new(a["year"].to_i,a["month"].to_i,1) } %>
-		
-	<% else %>
-		<% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y', orders.date) AS year, strftime('%m', orders.date) AS month FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{product.id}) GROUP BY year, month") %>
-		<% orders=d.map { |a| a[0].blank? ? 0 : a[0] } %>
-		<% curmonths = d.map { |a| Date.new(a["year"].to_i,a["month"].to_i,1) } %>
-	<% end %>
+	
 <% orders2=Array.new(months.count,0) %>
 <% curmonths.each_with_index do |c,i| %>
 	<% orders2[hash[c]]=orders[i] %>

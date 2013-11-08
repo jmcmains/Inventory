@@ -1,4 +1,4 @@
-<table class="table table-bordered table-condensed" style="text-align:center">
+<table class="table table-bordered table-condensed" style="text-align:center;width:auto">
 <tr>
 <th></th>
 <th style="text-align:center;vertical-align:middle">Product<br><%= render "suppliers/sort_buttons", name: "PN", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>

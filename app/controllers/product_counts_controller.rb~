@@ -7,4 +7,12 @@ class ProductCountsController < ApplicationController
 	def create
 	
 	end
+	
+private
+
+
+    def product_params
+      params.require(:event).permit(:date,:event_type,:invoice,:received_date,:received,:expected_date,:additional_cost,:supplier_id)
+    end
+    
 end

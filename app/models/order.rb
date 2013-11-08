@@ -4,13 +4,13 @@ class Order < ActiveRecord::Base
   has_many :offering_products, through: :offering
   has_many :products, through: :offering_products
   belongs_to :customer
-  default_scope order: 'orders.date DESC'
-  scope :amzus, where(origin: "Amazon US")
-  scope :amzca, where(origin: "Amazon Canada")
-  scope :website, where(origin: "Website")
-  scope :buy, where(origin: "Buy")
-  scope :phone, where(origin: "phone or email")
-  scope :ebay, where(origin: "EBay")
+  default_scope { order('orders.date DESC') }
+  scope :amzus, -> { where(origin: "Amazon US") }
+  scope :amzca, -> { where(origin: "Amazon Canada") }
+  scope :website, -> { where(origin: "Website") }
+  scope :buy, -> { where(origin: "Buy") }
+  scope :phone, -> { where(origin: "phone or email") }
+  scope :ebay, -> { where(origin: "EBay") }
     
   def month
   	self.date.month
@@ -35,7 +35,7 @@ class Order < ActiveRecord::Base
  	end
  	
  	def self.shipworks_csv(row)
-		offering=Offering.find_or_initialize_by_name(row[4])
+		offering=Offering.find_or_initialize_by(name: row[4])
     offering.save
     order = Order.find_by_order_number_and_offering_id(row[0],offering.id)
     if order
@@ -92,6 +92,6 @@ class Order < ActiveRecord::Base
   end
   
   def offering_name=(name)
-  	self.offering = Offering.find_or_create_by_name(name) if name.present?
+  	self.offering = Offering.find_or_create_by(name: name) if name.present?
   end
 end

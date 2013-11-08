@@ -5,7 +5,7 @@ class ShipTerm < ActiveRecord::Base
   def self.search(search)
   	if search
 			words = search.to_s.strip.split
-		  words.inject(scoped) do |combined_scope, word|
+		  words.inject(all) do |combined_scope, word|
 		    combined_scope.where('LOWER(term) LIKE ?',"%#{word.downcase}%")
 		  end
   	else

@@ -47,7 +47,7 @@ $(function() {
 <tbody>
 <% @events.each do |event| %>
 <tr>
-	<td><%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?", :title => "Delete #{event.event_type}" %> 
+	<td><%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, data: {confirm: "You sure?"}, :title => "Delete #{event.event_type}" %> 
 	<% if !event.received && @title != "Inventory" %>
  		| <%= link_to 'Receive Today', receive_po_today_event_path(event) %> 
  	<% end %>        

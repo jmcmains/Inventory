@@ -7,6 +7,6 @@ class OfferingProduct < ActiveRecord::Base
   end
   
   def product_name=(name)
-  	self.product = Product.find_or_create_by_name(name) if name.present?
+  	self.product = Product.find_or_create_by(name: name) if name.present?
   end
 end

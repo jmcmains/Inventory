@@ -3,6 +3,7 @@ Contact Name: <%= link_to @supplier.contact_name, "mailto:#{@supplier.email}" %>
 Phone Number: <%= @supplier.phone_number %><br>
 Payment Terms: <%= @supplier.payment_terms %>
 <br>
+Comments: <%= @supplier.comments %><br>
 Search: <%= form_tag(supplier_path(@supplier), method: :get) do %>
 <table class="table-condensed">
 	<tr>
@@ -26,7 +27,7 @@ $(function() {
 			source: $( ".autocomplete_ship_terms" ).data('autocomplete-source')
 	});
 });
-$(function() {
+$(function() {r
 	 $( ".autocomplete_products" ).autocomplete({
 			source: $( ".autocomplete_products" ).data('autocomplete-source')
 	});

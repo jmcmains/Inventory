@@ -27,7 +27,7 @@ class SuppliersController < ApplicationController
 	end
 	
 	def create
-		@supplier = Supplier.new(params[:supplier])
+		@supplier = Supplier.new(supplier_params)
     if @supplier.save
   		flash[:success] = "Supplier Created!"
   		redirect_to @supplier
@@ -46,7 +46,7 @@ class SuppliersController < ApplicationController
 	
 	def update
 		@supplier = Supplier.find(params[:id])
-  	if @supplier.update_attributes(params[:supplier])
+  	if @supplier.update_attributes(supplier_params)
   		flash[:success]= "Supplier Updated"
   		redirect_to @supplier
   	else
@@ -99,9 +99,9 @@ class SuppliersController < ApplicationController
   	elsif params[:sort_by] == "DS_DESC"
   		@supplier_prices=@supplier_prices.sort_by {|a| a.date }
   	elsif params[:sort_by] == "ST_ASC"
-  		@supplier_prices=@supplier_prices.sort_by {|a| a.ship_term_term }.reverse
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.ship_term_term.blank? ? "ZZZ" :a .ship_term_term }.reverse
   	elsif params[:sort_by] == "ST_DESC"
-  		@supplier_prices=@supplier_prices.sort_by {|a| a.ship_term_term }
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.ship_term_term.blank? ? "ZZZ" :a .ship_term_term }
   	elsif params[:sort_by] == "PN_ASC"
   		@supplier_prices=@supplier_prices.sort_by {|a| a.product_name }.reverse
   	elsif params[:sort_by] == "PN_DESC"
@@ -110,6 +110,18 @@ class SuppliersController < ApplicationController
   		@supplier_prices=@supplier_prices.sort_by {|a| a.quantity }.reverse
   	elsif params[:sort_by] == "QTY_DESC"
   		@supplier_prices=@supplier_prices.sort_by {|a| a.quantity }
+  	elsif params[:sort_by] == "SAD_ASC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.shore_a_durometer.blank? ? 0 : a.shore_a_durometer }.reverse
+  	elsif params[:sort_by] == "SAD_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.shore_a_durometer.blank? ? 0 : a.shore_a_durometer }
+  	elsif params[:sort_by] == "TS_ASC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.tensile_strength.blank? ? 0 : a.tensile_strength }.reverse
+  	elsif params[:sort_by] == "TS_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.tensile_strength.blank? ? 0 : a.tensile_strength }
+  	elsif params[:sort_by] == "UE_ASC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.ultimate_elongation.blank? ? 0 : a.ultimate_elongation }.reverse
+  	elsif params[:sort_by] == "UE_DESC"
+  		@supplier_prices=@supplier_prices.sort_by {|a| a.ultimate_elongation.blank? ? 0 : a.ultimate_elongation }
   	end
   	
   	respond_to do |format|
@@ -132,4 +144,13 @@ class SuppliersController < ApplicationController
 		@suppliers = Supplier.search(params[:term])
 		render json: @suppliers.map(&:name)
 	end
+	
+	
+private
+
+
+    def supplier_params
+      params.require(:supplier).permit(:name,:contact_name,:email,:payment_terms,:phone_number, :supplier_name,:comments,supplier_prices_attributes: [:id, :date,:supplier_id,:product_id,:product_name,:ship_term_id,:ship_term_term,:quantity,:price,:shore_a_durometer,:tensile_strength,:ultimate_elongation])
+    end
+
 end

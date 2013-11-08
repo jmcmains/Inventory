@@ -17,7 +17,7 @@ class ProductsController < ApplicationController
 	end
 	
 	def create
-		@product = Product.new(params[:product])
+		@product = Product.new(product_params)
     @product.save
     redirect_to products_path
 	end
@@ -66,7 +66,7 @@ class ProductsController < ApplicationController
 	
 	def update
 		@product = Product.find(params[:id])
-  	if @product.update_attributes(params[:product])
+  	if @product.update_attributes(product_params)
   		flash[:success]= "Product Updated"
   		redirect_to @product
   	else
@@ -124,4 +124,13 @@ class ProductsController < ApplicationController
     Product.find(params[:id]).destroy
     redirect_to products_path 
   end
+  
+  
+private
+
+
+    def product_params
+      params.require(:product).permit(:name,:description,:per_box,:imloc,:weight,:display, :product_name,supplier_prices_attributes: [:id,:date,:supplier_id,:product_id,:supplier_name,:product_name,:ship_term_term, :quantity, :price, '_destroy'],supplier_attributes: [:id, :supplier_name, :name, '_destroy'])
+    end
+    
 end

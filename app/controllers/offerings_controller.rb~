@@ -17,9 +17,9 @@ class OfferingsController < ApplicationController
   
 	def update
 		@offering = Offering.find(params[:id])
-	  @offering.update_attributes(params[:offering])
+	  @offering.update_attributes(offering_params)
 	  @title = "Current Offerings and their products"
-	  @offerings=Offering.all(:include => :products, :conditions => "products.id IS NULL").paginate(:page => params[:page], :per_page => 10)
+	  @offerings=Offering.includes(:products).where("products.id IS NULL").references(:products).paginate(:page => params[:page], :per_page => 10)
 	  @blank = true
 	  respond_to do |format|
 			format.html { render :index }
@@ -27,13 +27,15 @@ class OfferingsController < ApplicationController
 		end
 	end
 	
+
 	def replace
 		@offering = Offering.find(params[:id])
-		replace=Offering.find_or_create_by_name(params[:offering][:name])
+		replace=Offering.find_or_create_by(name: params[:offering][:name])
+		replace.save!
 		Order.where(offering_id: @offering.id).update_all({:offering_id => replace.id})
 		@offering.destroy
 		@title = "Current Offerings and their products"
-		@offerings=Offering.all(:include => :products, :conditions => "products.id IS NULL").paginate(:page => params[:page], :per_page => 10)
+		@offerings=Offering.includes(:products).where("products.id IS NULL").references(:products).paginate(:page => params[:page], :per_page => 10)
 	  @blank = true
 	  respond_to do |format|
 			format.html { render :index }
@@ -57,7 +59,7 @@ class OfferingsController < ApplicationController
 	
 	def show
 		@offering = Offering.find(params[:id])
-		package=Package.new(@offering.total_weight, [11,14], :units => :imperial)
+		package=Package.new(@offering.total_weight, [5,5], :units => :imperial)
 		origin = Location.new(:country => 'US',:zip => '27217')
 		destination_US = Location.new(:country => 'US',:zip => '90210')
 		destination_CA = Location.new( :country => 'CA')
@@ -83,42 +85,50 @@ class OfferingsController < ApplicationController
   	@blank=params[:blank]
   	if @blank.blank?
   	else
-  		@offerings=@offerings.all(:include => :products, :conditions => "products.id IS NULL")
+	  	@offerings=Offering.includes(:products).where("products.id IS NULL").references(:products)
   	end
   	if params[:sort_by] == "US_ASC"
-  		@offerings=@offerings.sort_by {|o| o.orders.amzus.count }
+  		@offerings=@offerings.sort_by {|o| o.amzus.count }
   	elsif params[:sort_by] == "US_DESC"
-  	  @offerings=@offerings.sort_by {|o| o.orders.amzus.count }.reverse
+  	  @offerings=@offerings.sort_by {|o| o.amzus.count }.reverse
   	elsif params[:sort_by] == "NAME_ASC"
   	  @offerings=@offerings.sort_by {|o| o.name }.reverse
   	elsif params[:sort_by] == "NAME_DESC"
   	  @offerings=@offerings.sort_by {|o| o.name }
   	elsif params[:sort_by] == "CA_ASC"
-  	  @offerings=@offerings.sort_by {|o| o.orders.amzca.count }
+  	  @offerings=@offerings.sort_by {|o| o.amzca.count }
   	elsif params[:sort_by] == "CA_DESC"
-  	  @offerings=@offerings.sort_by {|o| o.orders.amzca.count }.reverse
+  	  @offerings=@offerings.sort_by {|o| o.amzca.count }.reverse
   	elsif params[:sort_by] == "WS_ASC"
-  		@offerings=@offerings.sort_by {|o| o.orders.website.count }
+  		@offerings=@offerings.sort_by {|o| o.website.count }
   	elsif params[:sort_by] == "WS_DESC"
-  		@offerings=@offerings.sort_by {|o| o.orders.website.count }.reverse
+  		@offerings=@offerings.sort_by {|o| o.website.count }.reverse
   	elsif params[:sort_by] == "BC_ASC"
-  		@offerings=@offerings.sort_by {|o| o.orders.buy.count }
+  		@offerings=@offerings.sort_by {|o| o.buy.count }
   	elsif params[:sort_by] == "BC_DESC"
-  		@offerings=@offerings.sort_by {|o| o.orders.buy.count }.reverse
+  		@offerings=@offerings.sort_by {|o| o.buy.count }.reverse
   	elsif params[:sort_by] == "PE_ASC"
-  		@offerings=@offerings.sort_by {|o| o.orders.phone.count }
+  		@offerings=@offerings.sort_by {|o| o.phone.count }
   	elsif params[:sort_by] == "PE_DESC"
-  		@offerings=@offerings.sort_by {|o| o.orders.phone.count }.reverse
+  		@offerings=@offerings.sort_by {|o| o.phone.count }.reverse
   	elsif params[:sort_by] == "EB_ASC"
-  		@offerings=@offerings.sort_by {|o| o.orders.ebay.count }
+  		@offerings=@offerings.sort_by {|o| o.ebay.count }
   	elsif params[:sort_by] == "EB_DESC"
-  		@offerings=@offerings.sort_by {|o| o.orders.ebay.count }.reverse
+  		@offerings=@offerings.sort_by {|o| o.ebay.count }.reverse
   	elsif params[:sort_by] == "ALL_ASC"
-  		@offerings=@offerings.sort_by {|o| o.orders.count }
+  		@offerings=@offerings.sort_by {|o| o.count }
   	elsif params[:sort_by] == "ALL_DESC"
-  		@offerings=@offerings.sort_by {|o| o.orders.count }.reverse
+  		@offerings=@offerings.sort_by {|o| o.count }.reverse
   	end
   	@offerings=@offerings.paginate(:page => params[:page], :per_page => 10)
   	
   end
+  
+private
+
+
+    def offering_params
+      params.require(:offering).permit(:name,:price, offering_products_attributes: [:id, :offering_id, :product_id, :product_name, :quantity])
+    end
+    
 end

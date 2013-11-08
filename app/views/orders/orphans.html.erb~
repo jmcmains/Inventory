@@ -1,0 +1,46 @@
+<table class="table table-bordered table-condensed">
+<tr>
+<td></td>
+<td>id</td>
+<td>Order Number</td>
+<td>date</td>
+<td>offering id</td>
+<td>quantity</td>
+<td>origin</td>
+<td>order count</td>
+<td>currently in order</td>
+<td>Delete</td>
+</tr>
+<% i=0 %>
+<% @orphans.each do |o| %>
+<tr>
+<td><%= i=i+1 %></td>
+<td><%= o.id %></td>
+<td><%= o.order_number %></td>
+<td><%= o.date %></td>
+<td><%= form_tag(replace_order_path(o), class: "form-inline", :style => "display:inline") do |f| %>
+		<%= text_field_tag :offering_name, "",data: {autocomplete_source: autocomplete_no_price_offerings_path}, placeholder: "Replace with", class: "autocomplete offering", style: "margin:0;display:inline" %>
+<% end %>
+</td>
+<td><%=o.quantity %></td>
+<td><%= o.origin %></td>
+<td><%= Order.where('order_number = ?',o.order_number).count %></td>
+<td>
+<% if !o.order_number.blank? %>
+		<% Order.where('order_number = ?',"#{o.order_number}").each do |on| %>
+			<% if !on.offering.blank? %>
+				<%= on.offering.name %><br>
+			<% end %>
+		<% end %>
+<% end %>
+</td>
+<td><%= link_to "Delete", o, :method => :delete, :confirm => "You sure?",:title => "Delete #{o.id}" %></td>
+<% end %>
+
+<script>
+$(function() {
+	 $( ".offering" ).autocomplete({
+			source: $( "#order_offering_name" ).data('autocomplete-source')
+	});
+});
+</script>

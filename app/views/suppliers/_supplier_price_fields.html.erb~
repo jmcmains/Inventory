@@ -1,9 +1,13 @@
 <p class="fields form-inline">
 	<%= f.date_select :date, {order: [:month, :day, :year]}, {:class => "btn-mini input-mini"}  %>
-  <%= f.text_field :ship_term_term, data: {autocomplete_source: autocomplete_ship_terms_path}, placeholder: "Shipping Terms", class: "input-small" %>
+  <%= f.text_field :ship_term_term, data: {autocomplete_source: autocomplete_ship_terms_path}, placeholder: "Shipping Terms", class: "input-small autocomplete_terms" %>
   <%= f.text_field :product_name, data: {autocomplete_source: autocomplete_products_path}, placeholder: "Product", class: "input autocomplete_product" %>
   <%= f.text_field :quantity, placeholder: "Quantity", class: "input-mini" %>
   <%= f.text_field :price, placeholder: "Price", class: "input-mini" %>
+  <%= f.text_field :shore_a_durometer, placeholder: "Shore A Durometer", class: "input-mini" %>
+  <%= f.text_field :tensile_strength, placeholder: "Tensile Strength", class: "input-mini" %>
+  <%= f.text_field :ultimate_elongation, placeholder: "Ultimate Elongation", class: "input-mini" %>
+  <%= f.text_field :comments, placeholder: "Comments", class: "input-mini" %>
   <%= link_to_remove_fields "-", f %>
 </p>
 <script>

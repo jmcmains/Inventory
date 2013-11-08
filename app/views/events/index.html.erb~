@@ -47,7 +47,7 @@ $(function() {
 <tbody>
 <% @events.each do |event| %>
 <tr>
-	<td><%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, :confirm => "You sure?", :title => "Delete #{event.event_type}" %> 
+	<td><%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, data: {confirm: "You sure?"}, :title => "Delete #{event.event_type}" %> 
 	<% if !event.received && @title != "Inventory" %>
  		| <%= link_to 'Receive Today', receive_po_today_event_path(event) %> 
  	<% end %>        
@@ -64,7 +64,11 @@ $(function() {
 		<% event.product_counts.sort_by(&:product_name).each do |pc| %>
 			<li><%= link_to pc.product.name, product_path(pc.product) %>: 
 			<% if event.event_type = "Inventory" %>
-			<%= pc.box_count.round %> boxes, <%= pc.piece_count.round %> pieces
+				<% if pc.count > 0 %>
+					<%= "#{pc.box_count.round} boxes" if pc.box_count.round>0 %> <%= "#{pc.piece_count.round} pieces" if pc.piece_count.round>0 %>
+				<% else %>
+					0 boxes
+				<% end %>
 			<% else %>
 				<%= pc.count.round %> 
 				<% if pc.is_box %>

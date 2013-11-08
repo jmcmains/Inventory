@@ -105,7 +105,7 @@
     });
   });
 </script>
-<% if Rails.env.production? %>
+
 	<% sql= ActiveRecord::Base.connection() %>
 	<% oc=sql.execute("SELECT COUNT(DISTINCT(orders.order_number)), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month FROM orders GROUP BY year, month ORDER BY year, month ") %>
 	<% oc_origin=sql.execute("SELECT COUNT(DISTINCT(orders.order_number)), EXTRACT(YEAR FROM orders.date) AS year, EXTRACT(MONTH FROM orders.date) AS month, orders.origin AS origin FROM orders GROUP BY year, month, origin ORDER BY year, month, origin") %>
@@ -122,9 +122,6 @@
 		<% orig[oco["origin"]] << oco %>
 	<% end %>
 
-<% else %>
-	<% oc=Order.count(:all, group: "strftime('%m/%Y', date)") %>
-<% end %>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
@@ -144,34 +141,24 @@
 		  series: [{
 				name: 'Monthly Sales',
 		    data: [
-		    <% if Rails.env.production? %>
 		    	<% (0..(oc.count-1)).each do |val| %>
-		    	[Date.UTC(<%= oc[val]['year'].to_i %>, <%= oc[val]['month'].to_i-1 %>, 1),<%= oc[val]['count'].to_i %>]<%= "," if val != (oc.count-1) %>
+		    		[Date.UTC(<%= oc[val]['year'].to_i %>, <%= oc[val]['month'].to_i-1 %>, 1),<%= oc[val]['count'].to_i %>]<%= "," if val != (oc.count-1) %>
 		    	<% end %>
-		    <% else %>
-					<% (d2.first.year..d2.last.year).each do |year| %>
-						<% (1..12).each do |month| %>
-							<% date = "%02d" % month + "/#{year}" %>
-							<% if oc[date] %>
-								[Date.UTC(<%= year %>, <%= month-1 %>, 1),<%= oc[date] %>]<%= "," if date != "%02d" % (d2.last.month+1) + "/#{d2.last.year}" %>
-							<% end %>
-						<% end %>
-					<% end %>	
-				<% end %>	
+	
 		    ]
-		  }<% if Rails.env.production? %>
-		  ,
+		  },
+
 		  <% orig.each do |o| %>
 		    {
-				name: "<% o[0] %>",
+				name: "<%= o[0] %>",
 		    data: [
 		    	<% o[1].each_with_index do |a,i| %>
 		    		[Date.UTC(<%= a['year'].to_i %>, <%= a['month'].to_i-1 %>, 1),<%= a['count'].to_i %>],
 		    	<% end %>
-		    	[,]
+		    	[]
 		    	]
 		    },
-		  <% end %>
+<% end %>
 		  {
 				name: 'Monthly Product',
 		    data: [

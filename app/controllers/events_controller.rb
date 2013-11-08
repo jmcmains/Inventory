@@ -107,11 +107,15 @@ class EventsController < ApplicationController
   end
   
   def create
-  	@event = Event.new(params[:event])
+  	@event = Event.new(event_params)
     @event.save
 		if @event.event_type == "Inventory"
   	  redirect_to inventory_events_path
   	else
+  		@event.product_counts.each do |pc|
+  			sp=SupplierPrice.new(date: @event.date, supplier_id: @event.supplier_id, product_id: pc.product_id, quantity: pc.count, price: pc.price)
+  			sp.save
+  		end
   	  redirect_to po_events_path
   	end
   end
@@ -119,16 +123,24 @@ class EventsController < ApplicationController
   def edit
   	@event=Event.find(params[:id])
   	@title = "Edit Event"
-			render :edit_po
+		render :edit_po
   end
   
   def update
   	@event = Event.find(params[:id])
-    @event.update_attributes(params[:event])
+    @event.update_attributes(event_params)
     if @event.event_type == "Inventory"
   	  redirect_to inventory_events_path
   	else
   	  redirect_to po_events_path
   	end
   end
+  
+  
+private
+
+
+    def event_params
+      params.require(:event).permit( :id, :date, :event_type, :invoice, :received_date, :received, :expected_date, :additional_cost, :supplier_id, :product_name, :supplier_name,       product_counts_attributes: [:id, :event_id, :product_id, :count, :is_box, :price, :product_name, '_destroy', :box_count, :piece_count], supplier_attributes: [:id, :supplier_name, :name, '_destroy'] )
+    end
 end

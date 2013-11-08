@@ -1,16 +1,17 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.13'
+gem 'rails'
 gem 'linefit'
-gem 'bootstrap-sass'
+gem 'bootstrap-sass','2.3.1'
 gem 'will_paginate'
 gem 'active_shipping'
 gem 'bcrypt-ruby'
-gem 'rake','10.0.4'
-group :development, :test do
-  gem 'sqlite3'
-end
+gem 'rake'
+#group :development, :test do
+#  gem 'sqlite3'
+#end
 
+gem 'pg'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -21,7 +22,8 @@ end
 
 gem 'jquery-rails'
 
+gem 'jquery-ui-rails'
+
 group :production do
 	ruby '2.0.0'
-  gem 'pg'
 end

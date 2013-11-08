@@ -18,6 +18,10 @@
 	<%= f.label :payment_terms %>
 	<%= f.text_field :payment_terms %>
 </div>
+<div class="field">
+	<%= f.label :comments %>
+	<%= f.text_area :comments %>
+</div>
 <%= f.fields_for(:supplier_prices, :html => { :class => "form-inline"}) do |builder| %>
 	<%= render "supplier_price_fields", :f => builder %>
 <% end %>

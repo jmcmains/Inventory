@@ -26,7 +26,7 @@ $(function() {
 			source: $( ".autocomplete_ship_terms" ).data('autocomplete-source')
 	});
 });
-$(function() {
+$(function() {r
 	 $( ".autocomplete_products" ).autocomplete({
 			source: $( ".autocomplete_products" ).data('autocomplete-source')
 	});
@@ -38,21 +38,6 @@ $(function() {
   <%= f.submit "Load Supplier", class: "btn btn-primary" %>
 <% end %>
 <b>Pricing</b>
-<table class="table">
-<tr>
-<th>Date<%= render "sort_buttons", name: "DS", supplier: @supplier, shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
-<th>Shipping Terms<%= render "sort_buttons", supplier: @supplier, name: "ST", shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
-<th>Product<%= render "sort_buttons", name: "PN", supplier: @supplier, shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
-<th>Quantity<%= render "sort_buttons", name: "QTY", supplier: @supplier, shipterm: @shipterm, product_name: @product_name, quantity: @quantity %></th>
-<th>Price</th>
-</tr>
-<% @supplier_prices.each do |sp| %>
-<tr>
-<td><%= sp.date %></td>
-<td><%= sp.ship_term.blank? ? nil : sp.ship_term.term %></td>
-<td><%= sp.product.name %></td>
-<td><%= sp.quantity.round(0) %></td>
-<td><%= number_to_currency(sp.price) %></td>
-</tr>
-<% end %>
-</table>
+<div id="supplier_prices"%>
+<%= render 'supplier_prices', supplier_prices: @supplier_prices, supplier: @supplier, shipterm: @shipterm, product_name: @product_name, quantity: @quantity %>
+</blockquote>

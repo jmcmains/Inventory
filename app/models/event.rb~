@@ -4,10 +4,11 @@ class Event < ActiveRecord::Base
   accepts_nested_attributes_for :product_counts, :reject_if => proc { |attributes| attributes['count'].blank?}, :allow_destroy => true
   belongs_to :supplier, :class_name => "Supplier"
   accepts_nested_attributes_for :supplier, :allow_destroy => true
-  scope :inventory, where(event_type: "Inventory")
-  scope :unreceived, where(event_type: "Product Order", received: false)
-  scope :received, where(event_type: "Product Order", received: true)
-  scope :product_orders, where(event_type: "Product Order")
+  
+  scope :inventory, -> { where(event_type: "Inventory") }
+  scope :unreceived, -> { where(event_type: "Product Order", received: false) }
+  scope :received, -> { where(event_type: "Product Order", received: true) }
+  scope :product_orders, -> { where(event_type: "Product Order") }
 
 def per_unit_cost
 	count = 0

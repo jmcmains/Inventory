@@ -17,7 +17,6 @@ class Product < ActiveRecord::Base
 	def cogs(start_date,end_date)
 	 	output={}
 	 	sql = connection()
-	 	if Rails.env.production?
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity) as purchases FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{id}) AND orders.date <= '#{end_date}'::date AND orders.date >= '#{start_date}'::date")
 			purchases=d[0]["purchases"].to_i
 			d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{id}) AND events.received AND events.received_date <= '#{end_date}'::date ORDER BY events.received_date")
@@ -56,17 +55,25 @@ class Product < ActiveRecord::Base
 			end
 			output["value"]=value
 			output["purchases"]=purchases
-		else
-			output["value"]=rand*100
-			output["purchases"]=rand*1000
-		end
 		return output
 	end
 	
 	def inventory
-		self.events.inventory
+		events.where(event_type: "Inventory")
+	end
+		
+	def product_orders
+		events.where(event_type: "Product Order")
 	end
 	
+	def unreceived
+		events.where(event_type: "Product Order", received: false)
+	end
+	
+	def received
+		events.where(event_type: "Product Order", received: true)
+	end
+
 	def next
     Product.where("display = ? AND name > ?",'t',name).order("name ASC").first
   end
@@ -74,10 +81,7 @@ class Product < ActiveRecord::Base
   def previous
     Product.where("display = ? AND name < ?",'t', name).order("name DESC").first
   end
-	
-	def product_orders
-		self.events.product_orders
-	end
+
 	
 	def running_out?
 		limit = 14 #Days
@@ -92,7 +96,7 @@ class Product < ActiveRecord::Base
 	def self.search(search)
   	if search
 			words = search.to_s.strip.split
-		  words.inject(scoped) do |combined_scope, word|
+		  words.inject(all) do |combined_scope, word|
 		    combined_scope.where('LOWER(name) LIKE ?',"%#{word.downcase}%")
 		  end
   	else
@@ -137,27 +141,16 @@ class Product < ActiveRecord::Base
 	end
 	
 	def get_trend
-		sql = connection()
+		sql = ActiveRecord::Base.connection()
 		data= {}
 		data['y'] = []
 		data['dates'] = []
 		y=[]
 		dates=[]
-		if Rails.env.production?
+		
 			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year, week ORDER BY year, week ")
 			y=d.map { |a| a["sum"].to_i }
 			dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) if !a['year'].nil? && !a['week'].nil? }
-		else
-			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{self.id}) GROUP BY year") 
-			i=0
-			d.each do |a|
-				if a[2]
-					y[i] = a[0]
-					dates[i] = a[2].to_date.beginning_of_week
-					i=i+1
-				end
-			end
-		end
 		if y.count > 0
 			if dates.last >= Date.today.beginning_of_week-1
 				dates.pop
@@ -165,7 +158,7 @@ class Product < ActiveRecord::Base
 			end
 		end
 		if !dates.blank?
-			data["dates"]=(dates.first..(Date.today.beginning_of_week-7)).step(7)
+			data["dates"]=((dates.first..(Date.today.beginning_of_week-7)).step(7)).to_a
 			data["y"]=Array.new(data["dates"].length,0)
 			dates.each_with_index do |d,i|
 				data["y"][data["dates"].index(d)]=y[i]
@@ -181,28 +174,17 @@ class Product < ActiveRecord::Base
 		data['dates']=[]
 		y=[]
 		dates=[]
-		if Rails.env.production?
-			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year, week ORDER BY year, week ")
-			y=d.map { |a| a["sum"].to_i }
-			dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) }
-		else
-			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), strftime('%Y-%W', orders.date) AS year, orders.date AS bow FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year") 
-			i=0
-			d.each do |a|
-				if a[2]
-					y[i] = a[0]
-					dates[i] = a[2].to_date.beginning_of_week
-					i=i+1
-				end
-			end
-		end
+		d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year, week ORDER BY year, week ")
+		y=d.map { |a| a["sum"].to_i }
+		dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) }
+
 		if dates.last >= Date.today.beginning_of_week-1
 			dates.pop
 			y.pop	
 		end
 		
 		if !dates.blank?
-			data["dates"]=(dates.first..(Date.today.beginning_of_week-7)).step(7)
+			data["dates"]=((dates.first..(Date.today.beginning_of_week-7)).step(7)).to_a
 			data["y"]=Array.new(data["dates"].length,0)
 			dates.each_with_index do |d,i|
 				data["y"][data["dates"].index(d)]=y[i]
@@ -245,7 +227,7 @@ class Product < ActiveRecord::Base
 			while curdate < start+max_lead_time
 				levels << levels.last
 				levels[-1] -= (m*n+b)/7
-				events.unreceived.each do |po|
+				unreceived.each do |po|
 					if po.expected_date == curdate
 						cnt=po.product_counts.find_by_product_id(self)
 						if cnt.is_box

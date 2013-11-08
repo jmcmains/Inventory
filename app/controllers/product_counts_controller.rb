@@ -7,4 +7,12 @@ class ProductCountsController < ApplicationController
 	def create
 	
 	end
+	
+private
+
+
+    def product_count_params
+      params.require(:product_count).permit(:event_id,:product_id,:count,:is_box,:price)
+    end
+    
 end

@@ -45,6 +45,11 @@ Entries shown: <%= @offerings.total_entries %>
 		<td style="text-align:center">Phone<br><%= render "sort_buttons", name: "PE", search: @search, blank: @blank %></td>
 		<td style="text-align:center">All<br><%= render "sort_buttons", name: "ALL", search: @search, blank: @blank %></td>
 	</tr>
+	<style>
+	form {
+	margin:0;
+	}
+	</style>
 <% @offerings.each do |offer| %>
 	<tr>
 	<td><%= link_to 'Edit', edit_offering_path(offer) %> | <%= link_to "Delete", offer, :method => :delete, :confirm => "You sure?",
@@ -73,12 +78,12 @@ Entries shown: <%= @offerings.total_entries %>
 		<% end %>
 		</ul>
 	</td>
-	<td class="number"><%= offer.orders.amzus.count %></td>
-	<td class="number"><%= offer.orders.amzca.count %></td>
-	<td class="number"><%= offer.orders.website.count %></td>
-	<td class="number"><%= offer.orders.buy.count %></td>
-	<td class="number"><%= offer.orders.ebay.count %></td>
-	<td class="number"><%= offer.orders.phone.count %></td>
+	<td class="number"><%= offer.amzus.count %></td>
+	<td class="number"><%= offer.amzca.count %></td>
+	<td class="number"><%= offer.website.count %></td>
+	<td class="number"><%= offer.buy.count %></td>
+	<td class="number"><%= offer.ebay.count %></td>
+	<td class="number"><%= offer.phone.count %></td>
 	<td class="number"><%= offer.orders.count %></td>
 	</tr>
 <% end %>
