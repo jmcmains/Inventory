@@ -65,8 +65,8 @@ Inventory::Application.routes.draw do
 		end
 	end
 	resources :orders do
-			member do
-		patch :replace
+	member do
+		post :replace
 	end
 		collection do
 			get :new_phone
