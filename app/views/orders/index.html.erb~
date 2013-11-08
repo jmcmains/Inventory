@@ -16,3 +16,7 @@
 	<% end %>
 <% end %>
 </table>
+
+
+<% sql = ActiveRecord::Base.connection() %>
+<% d=sql.execute("SELECT COUNT(CONCAT(offering_id,order_number)) AS NumOccurrences FROM orders HAVING ( NumOccurrences > 1 )") %>

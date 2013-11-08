@@ -30,14 +30,14 @@ class OrdersController < ApplicationController
 	end
 
 	def replace
+		session[:return_to] ||= request.referer
 		order = Order.find(params[:id])
 		offering_id=order.offering_id
-		
 		replace=Offering.find_or_create_by(name: params[:offering_name])
 		replace.save!
 		Order.where(offering_id: offering_id).update_all({:offering_id => replace.id})
 		@orphans=Order.where(["offering_id NOT IN (?)",Offering.pluck("id")]).sort_by(&:order_number)
-		redirect_to orphans_orders_path
+	  redirect_to session.delete(:return_to)
 	end
 
 	def index

@@ -40,10 +40,6 @@ class OrdersController < ApplicationController
 	  redirect_to session.delete(:return_to)
 	end
 
-	def index
-
-	end
-
 	def destroy
 		session[:return_to] ||= request.referer
 		Order.find(params[:id]).destroy
