@@ -7,7 +7,6 @@
   <%= f.text_field :shore_a_durometer, placeholder: "Shore A Durometer", class: "input-mini" %>
   <%= f.text_field :tensile_strength, placeholder: "Tensile Strength", class: "input-mini" %>
   <%= f.text_field :ultimate_elongation, placeholder: "Ultimate Elongation", class: "input-mini" %>
-  <%= f.text_field :comments, placeholder: "Comments", class: "input-mini" %>
   <%= link_to_remove_fields "-", f %>
 </p>
 <script>

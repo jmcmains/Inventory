@@ -1,7 +1,10 @@
 <%= link_to 'Edit', edit_supplier_path(@supplier) %> | <%= link_to "Delete", @supplier, :method => :delete, :confirm => "You sure?", :title => "Delete #{@supplier.name}" %> <br>
 Contact Name: <%= link_to @supplier.contact_name, "mailto:#{@supplier.email}" %><br>
 Phone Number: <%= @supplier.phone_number %><br>
-Payment Terms: <%= @supplier.payment_terms %>
+Payment Terms: <%= @supplier.payment_terms %><br>
+Shore A Durometer: <%= @supplier.shore_a_durometer %><br>
+Tensile Strength: <%= @supplier.tensile_strength %><br>
+Ultimate Enlongation: <%= @supplier.ultimate_elongation %>
 <br>
 Comments: <%= @supplier.comments %><br>
 Search: <%= form_tag(supplier_path(@supplier), method: :get) do %>

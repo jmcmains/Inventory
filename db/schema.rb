@@ -160,11 +160,8 @@ ActiveRecord::Schema.define(version: 20131108162208) do
     t.integer  "ship_term_id"
     t.float    "quantity"
     t.float    "price"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.float    "shore_a_durometer"
-    t.float    "tensile_strength"
-    t.float    "ultimate_elongation"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "suppliers", force: true do |t|
@@ -172,9 +169,12 @@ ActiveRecord::Schema.define(version: 20131108162208) do
     t.string   "contact_name"
     t.string   "email"
     t.string   "payment_terms"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.string   "phone_number"
+    t.float    "shore_a_durometer"
+    t.float    "tensile_strength"
+    t.float    "ultimate_elongation"
     t.string   "comments"
   end
 

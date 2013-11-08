@@ -4,9 +4,6 @@
   <%= f.text_field :product_name, data: {autocomplete_source: autocomplete_products_path}, placeholder: "Product", class: "input autocomplete_product" %>
   <%= f.text_field :quantity, placeholder: "Quantity", class: "input-mini" %>
   <%= f.text_field :price, placeholder: "Price", class: "input-mini" %>
-  <%= f.text_field :shore_a_durometer, placeholder: "Shore A Durometer", class: "input-mini" %>
-  <%= f.text_field :tensile_strength, placeholder: "Tensile Strength", class: "input-mini" %>
-  <%= f.text_field :ultimate_elongation, placeholder: "Ultimate Elongation", class: "input-mini" %>
   <%= link_to_remove_fields "-", f %>
 </p>
 <script>

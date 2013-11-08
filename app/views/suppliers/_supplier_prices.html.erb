@@ -6,9 +6,7 @@
 <th style="text-align:center;vertical-align:middle">Terms<br><%= render "suppliers/sort_buttons", name: "ST", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
 <th style="text-align:center;vertical-align:middle">MOQ<br><%= render "suppliers/sort_buttons", name: "QTY", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
 <th style="text-align:center;vertical-align:middle">Price<br><%= render "suppliers/sort_buttons", name: "PRICE", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
-<th style="text-align:center;vertical-align:middle">Shore A Durometer<br><%= render "suppliers/sort_buttons", name: "SAD", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
-<th style="text-align:center;vertical-align:middle">Tensile Strength<br><%= render "suppliers/sort_buttons", name: "TS", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
-<th style="text-align:center;vertical-align:middle">Ultimate Elongation<br><%= render "suppliers/sort_buttons", name: "UE", supplier: supplier, shipterm: shipterm, product_name: product_name, quantity: quantity %></th>
+
 </tr>
 <% supplier_prices.each do |sp| %>
 <tr id="sp<%= sp.id %>">
@@ -18,9 +16,7 @@
 <td style="text-align:center;vertical-align:middle"><%= !sp.ship_term.blank? ? sp.ship_term.term : "" %></td>
 <td style="text-align:center;vertical-align:middle"><%= sp.quantity.round(0) %></td>
 <td style="text-align:center;vertical-align:middle"><%= number_to_currency(sp.price) %></td>
-<td style="text-align:center;vertical-align:middle"><%= sp.shore_a_durometer %></td>
-<td style="text-align:center;vertical-align:middle"><%= sp.tensile_strength %></td>
-<td style="text-align:center;vertical-align:middle"><%= sp.ultimate_elongation %></td>
+
 </tr>
 <% end %>
 </table>

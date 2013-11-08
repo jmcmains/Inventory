@@ -1,3 +1,6 @@
+<table class="table">
+<tr>
+<td style="vertical-align:top">
 <div class="field">
 	<%= f.label :name %>
 	<%= f.text_field :name %>
@@ -18,10 +21,27 @@
 	<%= f.label :payment_terms %>
 	<%= f.text_field :payment_terms %>
 </div>
+</td>
+<td style="vertical-align:top">
+<div class="field">
+	<%= f.label :shore_a_durometer %>
+	<%= f.text_field :shore_a_durometer %>
+</div>
+<div class="field">
+	<%= f.label :tensile_strength %>
+	<%= f.text_field :tensile_strength %>
+</div>
+<div class="field">
+	<%= f.label :ultimate_elongation %>
+	<%= f.text_field :ultimate_elongation %>
+</div>
 <div class="field">
 	<%= f.label :comments %>
 	<%= f.text_area :comments %>
 </div>
+</td>
+</tr>
+</table>
 <%= f.fields_for(:supplier_prices, :html => { :class => "form-inline"}) do |builder| %>
 	<%= render "supplier_price_fields", :f => builder %>
 <% end %>

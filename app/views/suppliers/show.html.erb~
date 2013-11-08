@@ -2,7 +2,11 @@
 Contact Name: <%= link_to @supplier.contact_name, "mailto:#{@supplier.email}" %><br>
 Phone Number: <%= @supplier.phone_number %><br>
 Payment Terms: <%= @supplier.payment_terms %>
+Shore A Durometer: <%= @supplier.shore_a_durometer %>
+Tensile Strength: <%= @supplier.tensile_strength %>
+Ultimate Enlongation: <%= @supplier.ultimate_elongation %>
 <br>
+Comments: <%= @supplier.comments %><br>
 Search: <%= form_tag(supplier_path(@supplier), method: :get) do %>
 <table class="table-condensed">
 	<tr>
