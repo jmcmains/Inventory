@@ -37,6 +37,7 @@ class SuppliersController < ApplicationController
 	end
 	
 	def edit
+		session[:return_to] ||= request.referer
 		@title = "Edit Supplier"
   	@supplier = Supplier.find(params[:id])
 		if @supplier.supplier_prices.count == 0
@@ -48,7 +49,7 @@ class SuppliersController < ApplicationController
 		@supplier = Supplier.find(params[:id])
   	if @supplier.update_attributes(supplier_params)
   		flash[:success]= "Supplier Updated"
-  		redirect_to @supplier
+  		redirect_to session.delete(:return_to)
   	else
   		render 'edit'
   	end
@@ -126,6 +127,7 @@ class SuppliersController < ApplicationController
 	def destroy
 		@supplier=Supplier.find(params[:id])
   	@supplier.destroy
+  	redirect_to suppliers_path
 	end
 
 	def autocomplete

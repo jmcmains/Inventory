@@ -14,7 +14,7 @@
 <% @suppliers.each do |s| %>
 <tr>
 <td>
-<a href="<%= supplier_path(s) %>"><i class="icon-eye-open"></i></a>|<a href="<%= edit_supplier_path(s) %>"><i class="icon-edit"></i></a>|<a title="Delete <%= s.name %>" data-confirm="You sure?" data-method="delete" href="<%= s %>" rel="nofollow"><i class="icon-remove"></i></a>
+<a href="<%= supplier_path(s) %>"><i class="icon-eye-open"></i></a>|<a href="<%= edit_supplier_path(s) %>"><i class="icon-edit"></i></a>|<a title="Delete <%= s.name %>" data-confirm="You sure?" data-method="delete" href="<%= supplier_path(s) %>" rel="nofollow"><i class="icon-remove"></i></a>
 </td>
 <td><%= s.name %></td>
 <td><%= s.email.blank? ? "" : link_to(s.contact_name, "mailto:#{s.email}") %></td>
