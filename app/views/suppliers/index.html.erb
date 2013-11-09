@@ -1,18 +1,28 @@
 
-<table class="table">
+<table class="table table-bordered">
 <tr>
-<th></th>
+<th style="width:50px">Modify</th>
 <th>Supplier</th>
-<th>Contact(email)</th>
+<th>Contact</th>
 <th>Payment Terms</th>
+<th>Comments</th>
+<th>Shore A Durometer</th>
+<th>Tensile Strength</th>
+<th>Ultimate Elongation</th>
 </tr>
 
 <% @suppliers.each do |s| %>
 <tr>
-<td><%= link_to 'Show', supplier_path(s) %> | <%= link_to 'Edit', edit_supplier_path(s) %> | <%= link_to "Delete", s, :method => :delete, :confirm => "You sure?", :title => "Delete #{s.name}" %></td>
+<td>
+<a href="<%= supplier_path(s) %>"><i class="icon-eye-open"></i></a>|<a href="<%= edit_supplier_path(s) %>"><i class="icon-edit"></i></a>|<a title="Delete <%= s.name %>" data-confirm="You sure?" data-method="delete" href="<%= s %>" rel="nofollow"><i class="icon-remove"></i></a>
+</td>
 <td><%= s.name %></td>
-<td><%= s.contact_name %>(<%= link_to s.email, "mailto:#{s.email}" %>)</td>
+<td><%= s.email.blank? ? "" : link_to(s.contact_name, "mailto:#{s.email}") %></td>
 <td><%= s.payment_terms %></td>
+<td><%= s.comments %></td>
+<td><%= s.shore_a_durometer.blank? ? "" : s.shore_a_durometer.round %></td>
+<td><%= s.tensile_strength.blank? ? "" : s.tensile_strength.round %></td>
+<td><%= s.ultimate_elongation.blank? ? "" : s.ultimate_elongation.round %></td>
 </tr>
 <% end %>
 </table>
