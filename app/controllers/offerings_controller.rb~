@@ -27,13 +27,29 @@ class OfferingsController < ApplicationController
 		end
 	end
 	
+	def price
+		session[:return_to] ||= request.referer
+		infile = params[:offering][:file].read
+		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
+			offering=Offering.find_or_initialize_by(name: row[0])
+  		offering.update_attributes(price: row[1])
+  		offering.save
+		end
+		flash[:success] = "Prices Loaded"
+		redirect_to new_order_path
+		redirect_to session.delete(:return_to)
+	end
+	
 
 	def replace
 		@offering = Offering.find(params[:id])
+		offering_id=@offering.id
 		replace=Offering.find_or_create_by(name: params[:offering][:name])
 		replace.save!
-		Order.where(offering_id: @offering.id).update_all({:offering_id => replace.id})
-		@offering.destroy
+		Order.where(offering_id: offering_id).update_all({:offering_id => replace.id})
+		if Order.where(offering_id: offering_id).blank?
+			@offering.destroy
+		end
 		@title = "Current Offerings and their products"
 		@offerings=Offering.includes(:products).where("products.id IS NULL").references(:products).paginate(:page => params[:page], :per_page => 10)
 	  @blank = true

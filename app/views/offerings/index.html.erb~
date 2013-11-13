@@ -1,30 +1,40 @@
-<%= form_tag offerings_path, method: :get, class: "form-search" do %>
-	<p>
+<table class="table" style="margin-bottom:0">
+<tr>
+<td><%= form_tag offerings_path, method: :get, class: "form-search form-inline" do %>
   	<%= text_field_tag :search, @search, placeholder: "Search Offerings", class: "search" %>
   	<%= submit_tag :submit, class: "btn" %>
-   </p>
-<% end %>
+<% end %></td>
+<td>
 <% if @blank.blank? %>
-	<%= form_tag offerings_path, method: :get, class: "form-search" do %>
-		<p>
+	<%= form_tag offerings_path, method: :get, class: "form-search form-inline" do %>
 			<%= hidden_field_tag :search, @search %>
 			<%= hidden_field_tag :blank, true %>
 			<%= submit_tag :submit, value: "Display Offerings with no products", class: "btn" %>
-		 </p>
 	<% end %>
 <% else %>
 	<%= form_tag offerings_path, method: :get, class: "form-search" do %>
-		<p>
 			<%= hidden_field_tag :search, @search %>
 			<%= hidden_field_tag :blank, nil %>
 			<%= submit_tag :submit, value: "Display All Offerings", class: "btn" %>
-		 </p>
 	<% end %>
 <% end %>
+</td>
+<td>
+<%= link_to "Orphaned Orders", orphans_orders_path, class: "btn" %></br>
+</td>
+<td>
+<%= form_for :order, url: {controller: "offerings", action: "price", class: "form-inline"} do |f| %>
+  <%= f.file_field :file %>  <%= f.submit "Load Prices", class: "btn btn-primary" %>
+<% end %>
+</td>
+</tr>
+</table>
+
 <div class="pagination">
      <%= will_paginate @offerings, :container => false %>
 </div>
-<br>
+</tr>
+</table>
 Entries shown: <%= @offerings.total_entries %>
 <table class="table table-bordered table-striped table-condensed info">
 	<tr>

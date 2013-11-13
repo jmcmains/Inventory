@@ -85,6 +85,7 @@ Inventory::Application.routes.draw do
 			get :autocomplete
 			get :autocomplete_no_price
 			get :all
+			get :price
 		end
 	end
 end

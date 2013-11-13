@@ -5,7 +5,8 @@ class Offering < ActiveRecord::Base
   has_many :products, through: :offering_products
   accepts_nested_attributes_for :offering_products, :reject_if => :all_blank, :allow_destroy => true
   validates :name, presence: true
-    
+  
+   
   def amzus
   	orders.where(origin: "Amazon US")
   end
@@ -29,7 +30,7 @@ class Offering < ActiveRecord::Base
   def ebay
  	 orders.where(origin: "EBay")
   end
-
+  
   def self.search(search,price)
   	if search
 			words = search.to_s.strip.split

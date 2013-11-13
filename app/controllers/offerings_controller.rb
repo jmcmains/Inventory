@@ -27,6 +27,18 @@ class OfferingsController < ApplicationController
 		end
 	end
 	
+	def price
+		session[:return_to] ||= request.referer
+		infile = params[:offering][:file].read
+		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
+			offering=Offering.find_or_initialize_by(name: row[0])
+  		offering.update_attributes(price: row[1])
+		end
+		flash[:success] = "Prices Loaded"
+		redirect_to new_order_path
+		redirect_to session.delete(:return_to)
+	end
+	
 
 	def replace
 		@offering = Offering.find(params[:id])

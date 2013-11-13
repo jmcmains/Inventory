@@ -108,11 +108,13 @@ class ProductsController < ApplicationController
   		@end_date = Date.new(params[:end_date][:year].to_i,params[:end_date][:month].to_i,params[:end_date][:day].to_i)
   	else
   		@start_date = Date.today.beginning_of_year
-  		@end_date = Date.today.end_of_year
+  		@end_date = Date.today
   	end
   	output = @product.cogs(@start_date,@end_date)
   	@value=output["value"]
 		@orders=output["purchases"]
+		@ido=@product.inventory_days_outstanding(@start_date,@end_date)
+		@it=@product.inventory_turns(@start_date,@end_date)
   end
 	
 	def index

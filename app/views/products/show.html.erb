@@ -17,7 +17,8 @@
 <blockquote>
 <% if @product.inventory.count>0 %>
 Done on: <%= @product.inventory.last.date %> <br>
-<%= glc.count %> <%= glc.is_box? ? "boxes" : "pieces" %>
+<%= glc.count %> <%= glc.is_box? ? "boxes" : "pieces" %><br>
+Value: <%=  number_to_currency(@product.get_value(@product.inventory.last)) %> <br>
 <% else %>
 Done on: <b>never</b><br>
 0 boxes
@@ -30,8 +31,12 @@ Time Span:
 <%= select_date @start_date, {:prefix => 'start_date'}, {:class => "btn-mini input-mini"} %> to <%= select_date @end_date, {:prefix => 'end_date'}, {:class => "btn-mini input-mini"} %><%= submit_tag "submit", :class => "btn btn-success" %>
 <% end %>
 Total Orders During Period: <span id="orders"><%= number_with_precision(@orders, :precision => 0, :delimiter => ',') %></span><br>
-Total Cost of Goods Sold During Period: <span id="cogs">$<%= number_with_precision(@value, :precision => 2, :delimiter => ',') %></span><br>
-Average Cost of Goods Sold During Period: <span id="averagecogs">$<%= number_with_precision((@orders > 0 ? @value/@orders : 0), :precision => 2, :delimiter => ',') %></span>
+Total Cost of Goods Sold During Period: <span id="cogs"><%= number_to_currency(@value) %></span><br>
+<% if @orders > 0 %>
+Average Cost of Goods Sold During Period: <span id="averagecogs"><%= number_to_currency(@value/@orders) %></span><br>
+Inventory Days Outstanding: <span id="ido"><%= (@ido*100).round/100.00 %></span><br>
+Inventory Turns: <span id="it"><%= (@it*100).round/100.00 %></span>
+<% end %>
 </blockquote>
 
 <h2><a href="#", style="color:#999">Supplier Prices</a></h2>

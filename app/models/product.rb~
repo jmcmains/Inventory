@@ -14,16 +14,82 @@ class Product < ActiveRecord::Base
 		self.events.find_all_by_event_type(event_name).sort_by(&:date).last
 	end
 	
+	def inventory_days_outstanding(start_date,end_date)
+		return average_inventory(start_date,end_date)*((end_date-start_date).to_f) / cogs(start_date,end_date)["purchases"]
+	end
+	
+	def inventory_turns(start_date,end_date)
+		return cogs(start_date,end_date)["purchases"]/average_inventory(start_date,end_date)
+	end
+	
+	def average_inventory(start_date,end_date)
+		cnt=inventory.where("date > ? and date < ?", start_date,end_date).map { |a| a.product_counts.find_by(product_id: id).count }
+		box=inventory.where("date > ? and date < ?", start_date,end_date).map { |a| a.product_counts.find_by(product_id: id).is_box }
+		cnt.each_with_index do |c,i| 
+			if box[i]
+				cnt[i] = per_box * c
+			end
+		end
+		return cnt.inject(0.0) { |sum, el| sum + el } / cnt.size
+	end
+	def self.total_inventory_value(event)
+		value=0;
+		where("display").each do |p|
+			value=value+p.get_value(event)
+		end
+		return value
+	end
+	
+	def get_value(event)
+		sql = ActiveRecord::Base.connection()
+		d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{id}) AND events.received AND events.received_date <= '#{event.date}'::date ORDER BY events.received_date")
+		cnt=d.map { |a| a["count"].to_i }.reverse
+		box=d.map { |a| a["box"]=="t" }.reverse
+		price = d.map { |a| a["price"].to_f }.reverse
+		event_id = d.map { |a| a["id"].to_i }.reverse
+		cnt.each_with_index do |c,i| 
+			if box[i]
+				cnt[i] = per_box * c
+			end
+			price[i] = price[i]/cnt[i] + Event.find(event_id[i]).per_unit_cost
+		end
+		i=0
+		inventory_count=event.product_counts.find_by(product_id: id).count
+		if event.product_counts.find_by(product_id: id).is_box
+			inventory_count = per_box * inventory_count
+		end
+		total = inventory_count
+		value = 0
+		if cnt.sum >= total
+			while total > 0
+				if total >= cnt[i]
+					total = total-cnt[i]
+					value = value + cnt[i]*price[i]
+				elsif total < cnt[i]
+					value = value + total*price[i]
+					total = 0
+				end
+				i=i+1
+			end
+		else
+			(0..(cnt.length-1)).each do |i|
+				value=value+cnt[i]*price[i]
+			end
+			value=value/cnt.sum*inventory_count
+		end
+		return value
+	end
+	
 	def cogs(start_date,end_date)
 	 	output={}
-	 	sql = connection()
-			d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity) as purchases FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{id}) AND orders.date <= '#{end_date}'::date AND orders.date >= '#{start_date}'::date")
-			purchases=d[0]["purchases"].to_i
-			d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{id}) AND events.received AND events.received_date <= '#{end_date}'::date ORDER BY events.received_date")
-			inv=d.map { |a| a["count"].to_i }.reverse
-			box=d.map { |a| a["box"]=="t" }.reverse
-			price = d.map { |a| a["price"].to_f }.reverse
-			event_id = d.map { |a| a["id"].to_i }.reverse
+	 	sql = ActiveRecord::Base.connection()
+		d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity) as purchases FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{id}) AND orders.date <= '#{end_date}'::date AND orders.date >= '#{start_date}'::date")
+		purchases=d[0]["purchases"].to_i
+		d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{id}) AND events.received AND events.received_date <= '#{end_date}'::date ORDER BY events.received_date")
+		inv=d.map { |a| a["count"].to_i }.reverse
+		box=d.map { |a| a["box"]=="t" }.reverse
+		price = d.map { |a| a["price"].to_f }.reverse
+		event_id = d.map { |a| a["id"].to_i }.reverse
 			inv.each_with_index do |c,i| 
 				if box[i]
 					inv[i] = per_box * c
@@ -96,7 +162,7 @@ class Product < ActiveRecord::Base
 	def self.search(search)
   	if search
 			words = search.to_s.strip.split
-		  words.inject(scoped) do |combined_scope, word|
+		  words.inject(all) do |combined_scope, word|
 		    combined_scope.where('LOWER(name) LIKE ?',"%#{word.downcase}%")
 		  end
   	else

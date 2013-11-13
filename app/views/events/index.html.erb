@@ -42,6 +42,7 @@ $(function() {
 	<th style="vertical-align:top;text-align:center">Actual Delivery<br><%= render "sort_buttons", name: "DA", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></th>
 <% end %>
 	<th style="vertical-align:top;text-align:center">Products</th>
+
 </tr>
 </thead>
 <tbody>
@@ -60,27 +61,39 @@ $(function() {
 	<td><%= event.received_date if event.received %></td>
 <% end %>
 	<td>
-		<ul>
+		<table class="table">
 		<% event.product_counts.sort_by(&:product_name).each do |pc| %>
-			<li><%= link_to pc.product.name, product_path(pc.product) %>: 
-			<% if event.event_type = "Inventory" %>
-				<% if pc.count > 0 %>
-					<%= "#{pc.box_count.round} boxes" if pc.box_count.round>0 %> <%= "#{pc.piece_count.round} pieces" if pc.piece_count.round>0 %>
+			<tr>
+			<% if pc.product.display? %>
+				<td><%= link_to pc.product.name, product_path(pc.product) %></td>
+				<td><% if event.event_type = "Inventory" %>
+					<%= pc.count.round %> peices
+					<% if pc.count > 0 %>
+						[<%= "#{pc.box_count.round} boxes" if pc.box_count.round>0 %><%= " #{pc.piece_count.round} pieces" if pc.piece_count.round>0 %>]
+					<% else %>
+						[0 boxes]
+					<% end %>
 				<% else %>
-					0 boxes
+					<%= pc.count.round %> 
+					<% if pc.is_box %>
+						boxes
+					<% else %>
+						pieces
+					<% end %>
+				<% end %></td>
+				<% if event.event_type = "Inventory" %>
+					<td><%= number_to_currency(pc.product.get_value(event)) %></td>
 				<% end %>
-			<% else %>
-				<%= pc.count.round %> 
-				<% if pc.is_box %>
-					boxes
-				<% else %>
-					pieces
-				<% end %>
-				
-			<% end %></li>
+			<% end %>
+			</tr>
 		<% end %>
-		</ul>
-	</td>
+		<% if event.event_type = "Inventory" %>
+					<tr>
+					<td></td><td>Total:</td>
+					<td><%= number_to_currency(Product.total_inventory_value(event)) %></td>
+		<% end %>
+		</table>
+		</td>
 </tr>
 <% end %>
 </tbody>
