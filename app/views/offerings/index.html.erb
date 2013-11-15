@@ -23,9 +23,13 @@
 <%= link_to "Orphaned Orders", orphans_orders_path, class: "btn" %></br>
 </td>
 <td>
-<%= form_for :offering, url: {controller: "offerings", action: "price", class: "form-inline"} do |f| %>
-  <%= f.file_field :file %>  <%= f.submit "Load Prices", class: "btn btn-primary" %>
+<%= form_for offerings_path, url: {controller: :offerings, action: :add_price, method: :patch} do |f| %>
+  <%= f.file_field :file %>
+  <%= f.submit "Load Data", class: "btn btn-primary" %>
 <% end %>
+
+
+
 </td>
 </tr>
 </table>

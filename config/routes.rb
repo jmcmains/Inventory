@@ -77,15 +77,15 @@ Inventory::Application.routes.draw do
 		end
 	end
 	resources :offerings do
-	member do
-		patch :replace
-	end
-	collection do
-			get :blank
-			get :autocomplete
-			get :autocomplete_no_price
-			get :all
-			get :price
+		member do
+			patch :replace
+		end
+		collection do
+				get :blank
+				get :autocomplete
+				get :autocomplete_no_price
+				get :all
+				post :add_price
 		end
 	end
 end

@@ -1,11 +1,13 @@
 class Offering < ActiveRecord::Base
 	include ActionView::Helpers::TextHelper
+	require 'csv'
   has_many :orders, :foreign_key => "offering_id", :dependent => :destroy
   has_many :offering_products, :foreign_key => "offering_id", :dependent => :destroy
   has_many :products, through: :offering_products
   accepts_nested_attributes_for :offering_products, :reject_if => :all_blank, :allow_destroy => true
   validates :name, presence: true
-    
+  
+   
   def amzus
   	orders.where(origin: "Amazon US")
   end
@@ -29,7 +31,7 @@ class Offering < ActiveRecord::Base
   def ebay
  	 orders.where(origin: "EBay")
   end
-
+  
   def self.search(search,price)
   	if search
 			words = search.to_s.strip.split
@@ -41,8 +43,21 @@ class Offering < ActiveRecord::Base
 		    end
 		  end
   	else
-  		return find(:all)
+  		return all
   	end
+  end
+  
+  def self.add_price(file)
+  	offs ={}
+  	prices={}
+  	csv_text = File.read(file)
+  	i=0
+		CSV.parse(csv_text, headers: true, col_sep: "\t") do |row|
+			offs[i]=row[0]
+  		prices[i]= row[1]
+  		i=i+1
+		end
+		return prices
   end
   
 	def total_weight

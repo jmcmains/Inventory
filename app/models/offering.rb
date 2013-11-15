@@ -1,5 +1,6 @@
 class Offering < ActiveRecord::Base
 	include ActionView::Helpers::TextHelper
+	require 'csv'
   has_many :orders, :foreign_key => "offering_id", :dependent => :destroy
   has_many :offering_products, :foreign_key => "offering_id", :dependent => :destroy
   has_many :products, through: :offering_products
@@ -42,17 +43,26 @@ class Offering < ActiveRecord::Base
 		    end
 		  end
   	else
-  		return find(:all)
+  		return all
   	end
+  end
+  
+  def self.add_price(file)
+  	offs ={}
+  	prices={}
+  	csv_text = File.read(file)
+  	i=0
+		CSV.parse(csv_text, headers: true, col_sep: "\t") do |row|
+			offs[i]=row[0]
+  		prices[i]= row[1]
+  		i=i+1
+		end
+		return prices
   end
   
 	def total_weight
 		sql = ActiveRecord::Base.connection()
 		d=sql.execute("SELECT SUM(products.weight * offering_products.quantity) FROM offerings INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (offerings.id = #{self.id})")
-		if Rails.env.production?
-			return d.map { |a| a["sum"].to_f }[0]
-		else
-			return d[0][0]
-		end
+		return d.map { |a| a["sum"].to_f }[0]
 	end
 end

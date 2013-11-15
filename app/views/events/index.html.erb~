@@ -81,11 +81,17 @@ $(function() {
 						pieces
 					<% end %>
 				<% end %></td>
-				<% if event.event_type = "Inventory" %>
-					<td><%= number_to_currency(pc.product.get_value(event)) %></td>
+				<% if @title != "Product Order" %>
+					<td><%= number_to_currency(pc.product.get_value(event)) %> <%= event.event_type %></td>
 				<% end %>
 			<% end %>
 			</tr>
+		<% end %>
+		<% if @title != "Product Order" %>
+					<tr>
+					<td></td><td>Total:</td>
+					<td><%= number_to_currency(Product.total_inventory_value(event)) %></td>
+					</tr>
 		<% end %>
 		</table>
 		</td>
