@@ -85,7 +85,7 @@ Inventory::Application.routes.draw do
 				get :autocomplete
 				get :autocomplete_no_price
 				get :all
-				patch :add_price
+				post :add_price
 		end
 	end
 end

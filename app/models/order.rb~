@@ -35,8 +35,13 @@ class Order < ActiveRecord::Base
  	end
  	
  	def self.shipworks_csv(row)
-		offering=Offering.find_or_initialize_by_name(row[4])
-    offering.save
+		offering=Offering.find_or_initialize_by(name: row[4])
+		price=row[5]
+		if (offering.price.blank? || offering.price < price) && (!price.blank?)
+			offering.update_attributes(price: price)
+		else
+    	offering.save
+    end
     order = Order.find_by_order_number_and_offering_id(row[0],offering.id)
     if order
     	if row[1] == "EBay"
@@ -92,6 +97,6 @@ class Order < ActiveRecord::Base
   end
   
   def offering_name=(name)
-  	self.offering = Offering.find_or_create_by_name(name) if name.present?
+  	self.offering = Offering.find_or_create_by(name: name) if name.present?
   end
 end

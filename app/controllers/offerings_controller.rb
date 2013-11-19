@@ -11,6 +11,7 @@ class OfferingsController < ApplicationController
   	@title = "Edit Offering"
   	@offering.offering_products.build
   end
+  
   def destroy
 		Offering.find(params[:id]).destroy
 	  redirect_to offerings_path
@@ -31,12 +32,26 @@ class OfferingsController < ApplicationController
 	def add_price
 		infile = params['/offerings'][:file].read
 		CSV.parse(infile, headers: true, col_sep: "\t") do |row|
-			Offering.find_or_initialize_by(name: row[0]).update_attributes(price: row[1])
+			off=Offering.find_by(name: row[0])
+			if !off.blank?
+				off.update_attributes(price: row[1])
+			end
 		end
 		flash[:success] = "Prices Loaded"
 		redirect_to offerings_path
 	end
-	
+		  
+  def create_csv
+		csv = CSV.generate(col_sep: "\t") do |csv|
+			csv << ["name", "price"]
+			Offering.all.sort_by(&:id).each do |offer|
+				csv << [offer.name, offer.price]
+			end
+		end
+		file ="offers.txt"
+		File.open(file, "w"){ |f| f << csv }
+		send_file( file, type: 'text/csv')
+	end
 
 	def replace
 		@offering = Offering.find(params[:id])
@@ -93,12 +108,14 @@ class OfferingsController < ApplicationController
   def index
     @title = "Current Offerings and their products"
     @search=params[:search]
-    
   	@offerings = Offering.search(@search,false)
-  	@blank=params[:blank]
-  	if @blank.blank?
-  	else
+  	@blank = params[:blank]
+  	@no_price = params[:no_price]
+  	if !@blank.blank?
 	  	@offerings=Offering.includes(:products).where("products.id IS NULL").references(:products)
+  	end
+  	if !@no_price.blank?
+	  	@offerings=Offering.where("price IS NULL").references(:products)
   	end
   	if params[:sort_by] == "US_ASC"
   		@offerings=@offerings.sort_by {|o| o.amzus.count }

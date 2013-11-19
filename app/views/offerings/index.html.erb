@@ -20,6 +20,21 @@
 <% end %>
 </td>
 <td>
+<% if @no_price.blank? %>
+	<%= form_tag offerings_path, method: :get, class: "form-search form-inline" do %>
+			<%= hidden_field_tag :search, @search %>
+			<%= hidden_field_tag :no_price, true %>
+			<%= submit_tag :submit, value: "Display Offerings with no price", class: "btn" %>
+	<% end %>
+<% else %>
+	<%= form_tag offerings_path, method: :get, class: "form-search" do %>
+			<%= hidden_field_tag :search, @search %>
+			<%= hidden_field_tag :no_price, nil %>
+			<%= submit_tag :submit, value: "Display All Offerings", class: "btn" %>
+	<% end %>
+<% end %>
+</td>
+<td>
 <%= link_to "Orphaned Orders", orphans_orders_path, class: "btn" %></br>
 </td>
 <td>
@@ -27,13 +42,10 @@
   <%= f.file_field :file %>
   <%= f.submit "Load Data", class: "btn btn-primary" %>
 <% end %>
-
-
-
 </td>
 </tr>
 </table>
-
+<%= link_to "Download to CSV", create_csv_offerings_path %><br>
 <div class="pagination">
      <%= will_paginate @offerings, :container => false %>
 </div>
