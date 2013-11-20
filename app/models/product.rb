@@ -81,14 +81,7 @@ class Product < ActiveRecord::Base
 		return value
 	end
 	
-	def ind_price
-		offerings.sort_by(&:price).each do |o|
-			if o.offering_products.count * o.offering_products.first.quantity == 1
-				return o.price
-			end
-		end
-		return 0
-	end
+
 	
 	def avg_price
 		tot_sales = offerings.sum { |a| a.offering_products.find_by(product_id: id).quantity*a.orders.count }
@@ -98,7 +91,7 @@ class Product < ActiveRecord::Base
 	
 	def margin(start_date,end_date)
 		output=cogs(start_date,end_date)
-		return avg_price - output["value"]/output["purchases"]
+		return output["purchases"] > 0 ? avg_price - output["value"]/output["purchases"] : avg_price
 	end
 	
 	def cogs(start_date,end_date)

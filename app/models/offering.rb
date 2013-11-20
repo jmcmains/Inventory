@@ -7,12 +7,6 @@ class Offering < ActiveRecord::Base
   accepts_nested_attributes_for :offering_products, :reject_if => :all_blank, :allow_destroy => true
   validates :name, presence: true
   scope :with_n_products, lambda {|n| {:joins => :offering_products, :group => "offering_products.offering_id", :having => ["count(offering_id) = ?", n]}}
-	scope :amzus, -> { where(origin: "Amazon US") }
-  scope :amzca, -> { where(origin: "Amazon Canada") }
-	scope :website, -> { where(origin: "Website") }
-	scope :buy, -> { where(origin: "Buy") }
-	scope :phone, -> { where(origin: "phone or email") }
-  scope :ebay, -> { where(origin: "EBay") }
 
   def value
   	return offering_products.sum { |a| a.product.ind_price*a.quantity }

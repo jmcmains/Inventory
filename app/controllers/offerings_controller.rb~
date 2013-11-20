@@ -118,33 +118,33 @@ class OfferingsController < ApplicationController
 	  	@offerings=Offering.where("price IS NULL").references(:products)
   	end
   	if params[:sort_by] == "US_ASC"
-  		@offerings=@offerings.sort_by {|o| o.amzus.count }
+  		@offerings=@offerings.sort_by {|o| o.orders.amzus.count }
   	elsif params[:sort_by] == "US_DESC"
-  	  @offerings=@offerings.sort_by {|o| o.amzus.count }.reverse
+  	  @offerings=@offerings.sort_by {|o| o.orders.amzus.count }.reverse
   	elsif params[:sort_by] == "NAME_ASC"
   	  @offerings=@offerings.sort_by {|o| o.name }.reverse
   	elsif params[:sort_by] == "NAME_DESC"
   	  @offerings=@offerings.sort_by {|o| o.name }
   	elsif params[:sort_by] == "CA_ASC"
-  	  @offerings=@offerings.sort_by {|o| o.amzca.count }
+  	  @offerings=@offerings.sort_by {|o| o.orders.amzca.count }
   	elsif params[:sort_by] == "CA_DESC"
-  	  @offerings=@offerings.sort_by {|o| o.amzca.count }.reverse
+  	  @offerings=@offerings.sort_by {|o| o.orders.amzca.count }.reverse
   	elsif params[:sort_by] == "WS_ASC"
-  		@offerings=@offerings.sort_by {|o| o.website.count }
+  		@offerings=@offerings.sort_by {|o| o.orders.website.count }
   	elsif params[:sort_by] == "WS_DESC"
-  		@offerings=@offerings.sort_by {|o| o.website.count }.reverse
+  		@offerings=@offerings.sort_by {|o| o.orders.website.count }.reverse
   	elsif params[:sort_by] == "BC_ASC"
-  		@offerings=@offerings.sort_by {|o| o.buy.count }
+  		@offerings=@offerings.sort_by {|o| o.orders.buy.count }
   	elsif params[:sort_by] == "BC_DESC"
-  		@offerings=@offerings.sort_by {|o| o.buy.count }.reverse
+  		@offerings=@offerings.sort_by {|o| o.orders.buy.count }.reverse
   	elsif params[:sort_by] == "PE_ASC"
-  		@offerings=@offerings.sort_by {|o| o.phone.count }
+  		@offerings=@offerings.sort_by {|o| o.orders.phone.count }
   	elsif params[:sort_by] == "PE_DESC"
-  		@offerings=@offerings.sort_by {|o| o.phone.count }.reverse
+  		@offerings=@offerings.sort_by {|o| o.orders.phone.count }.reverse
   	elsif params[:sort_by] == "EB_ASC"
-  		@offerings=@offerings.sort_by {|o| o.ebay.count }
+  		@offerings=@offerings.sort_by {|o| o.orders.ebay.count }
   	elsif params[:sort_by] == "EB_DESC"
-  		@offerings=@offerings.sort_by {|o| o.ebay.count }.reverse
+  		@offerings=@offerings.sort_by {|o| o.orders.ebay.count }.reverse
   	elsif params[:sort_by] == "ALL_ASC"
   		@offerings=@offerings.sort_by {|o| o.count }
   	elsif params[:sort_by] == "ALL_DESC"

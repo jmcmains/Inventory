@@ -45,7 +45,7 @@
 </td>
 </tr>
 </table>
-
+<%= link_to "Download to CSV", create_csv_offerings_path %><br>
 <div class="pagination">
      <%= will_paginate @offerings, :container => false %>
 </div>

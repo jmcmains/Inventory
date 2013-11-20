@@ -15,12 +15,7 @@ class Offering < ActiveRecord::Base
   scope :ebay, -> { where(origin: "EBay") }
 
   def value
-  	tot=0
-  	offering_products.each do |op|
-  		cog=op.product.ind_price
-  		tot=tot+(cog["value"]/cog["purchases"]*op.quantity)
-  	end
-  	return tot
+  	return offering_products.sum { |a| a.product.ind_price*a.quantity }
   end
   
   def self.search(search,price)
