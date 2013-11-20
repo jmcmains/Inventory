@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131108162208) do
+ActiveRecord::Schema.define(version: 20131120150740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,6 +145,7 @@ ActiveRecord::Schema.define(version: 20131108162208) do
     t.string   "imloc"
     t.float    "weight"
     t.boolean  "display",     default: true
+    t.float    "price"
   end
 
   create_table "ship_terms", force: true do |t|

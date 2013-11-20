@@ -158,7 +158,7 @@
 		    	[]
 		    	]
 		    },
-<% end %>
+			<% end %>
 		  {
 				name: 'Monthly Product',
 		    data: [
@@ -167,7 +167,7 @@
 		    	<% end %>
 		    	]
 		    }
-				<% end %>
+				
 				]
     });
   });
@@ -175,7 +175,7 @@
 <div class="pagination">
      <%= will_paginate @offerings, :container => false %>
 </div>
-<div style="float:left;width:100%;"><%= link_to "Download to CSV", create_csv_products_path %></div>
+<div style="float:left;width:100%;"><%= link_to "Download to CSV", create_csv_products_path %>,<%= link_to "Download Accounting Data to CSV", accounting_csv_products_path %></div>
 <table style="float:left;width:100%;" class="table table-bordered table-striped table-condensed info" id='main'>
 <tr'>
 	<td id='td1'>Modify</td>

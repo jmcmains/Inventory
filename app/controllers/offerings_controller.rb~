@@ -17,18 +17,6 @@ class OfferingsController < ApplicationController
 	  redirect_to offerings_path
   end
   
-  def create_csv
-		csv = CSV.generate(col_sep: "\t") do |csv|
-			csv << ["name", "price"]
-			Offering.all.sort_by(&:id).each do |offer|
-				csv << [offer.name, offer.price]
-			end
-		end
-		file ="offers.txt"
-		File.open(file, "w"){ |f| f << csv }
-		send_file( file, type: 'text/csv')
-	end
-  
 	def update
 		@offering = Offering.find(params[:id])
 	  @offering.update_attributes(offering_params)
@@ -52,7 +40,18 @@ class OfferingsController < ApplicationController
 		flash[:success] = "Prices Loaded"
 		redirect_to offerings_path
 	end
-	
+		  
+  def create_csv
+		csv = CSV.generate(col_sep: "\t") do |csv|
+			csv << ["name", "price","products"]
+			Offering.all.sort_by(&:id).each do |offer|
+				csv << [offer.name, offer.price, offer.offering_products.map{ |o| "#{o.quantity} - #{o.product.name}" }.join(', ')]
+			end
+		end
+		file ="offers.txt"
+		File.open(file, "w"){ |f| f << csv }
+		send_file( file, type: 'text/csv')
+	end
 
 	def replace
 		@offering = Offering.find(params[:id])

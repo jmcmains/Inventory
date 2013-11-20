@@ -8,7 +8,8 @@
                                 :title => "Delete #{@product.name}" %><br/>
 <p><%= @product.description %></p>
 <p><%= @product.per_box %> pieces/box</p>
-
+<p>Retail Price: <%= @product.price %></p>
+<p>Shipping Weight: <%= @product.weight %></p>
 <% y = @product.get_trend["y"] %>
 <% d2 = @product.get_trend["dates"] %>
 <% glc=@product.get_last_count("Inventory") %> 
@@ -35,7 +36,9 @@ Total Cost of Goods Sold During Period: <span id="cogs"><%= number_to_currency(@
 <% if @orders > 0 %>
 Average Cost of Goods Sold During Period: <span id="averagecogs"><%= number_to_currency(@value/@orders) %></span><br>
 Inventory Days Outstanding: <span id="ido"><%= (@ido*100).round/100.00 %></span><br>
-Inventory Turns: <span id="it"><%= (@it*100).round/100.00 %></span>
+Inventory Turns: <span id="it"><%= (@it*100).round/100.00 %></span><br>
+Average Price: <span id="averageprice"><%= number_to_currency(@avg_price) %></span><br>
+Average Margin: <span id="averageprice"><%= number_to_currency(@margin) %></span><br>
 <% end %>
 </blockquote>
 

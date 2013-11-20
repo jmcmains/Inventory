@@ -19,6 +19,10 @@
 	<%= f.text_field :weight %><br>
 </div>
 <div class="field">
+	<%= f.label :price, "Retail Price" %>
+	<%= f.text_field :price %><br>
+</div>
+<div class="field">
 	<%= f.check_box :display,{:checked => (f.object.new_record? ? true : f.object.display)} %> Show In Inventory
 </div>
 

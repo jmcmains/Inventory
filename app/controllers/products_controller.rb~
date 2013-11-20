@@ -51,6 +51,21 @@ class ProductsController < ApplicationController
 		send_file( file, type: 'text/csv')
 	end
 	
+	def accounting_csv
+		csv = CSV.generate(col_sep: "\t") do |csv|
+			csv << ["name", "total orders", "Total Cost of Goods Sold", "Inventory Days Outstanding", "Inventory Turns", "Average Price"]
+			Product.find_all_by_display(true).sort_by(&:id).each do |product|
+				start_date = Date.new(1990,1,1)
+				end_date = Date.today
+				output = product.cogs(start_date,end_date)
+				csv << [product.name, output["purchases"], output["value"], product.inventory_days_outstanding(start_date,end_date), product.inventory_turns(start_date,end_date), product.avg_price]
+			end
+		end
+		file ="inventory.txt"
+		File.open(file, "w"){ |f| f << csv }
+		send_file( file, type: 'text/csv')
+	end
+	
 	def edit
 		@title = "Edit Product"
 		@product = Product.find(params[:id])
@@ -115,6 +130,8 @@ class ProductsController < ApplicationController
 		@orders=output["purchases"]
 		@ido=@product.inventory_days_outstanding(@start_date,@end_date)
 		@it=@product.inventory_turns(@start_date,@end_date)
+		@avg_price=@product.avg_price
+		@margin=@product.margin(@start_date,@end_date)
   end
 	
 	def index
@@ -132,7 +149,7 @@ private
 
 
     def product_params
-      params.require(:product).permit(:name,:description,:per_box,:imloc,:weight,:display, :product_name,supplier_prices_attributes: [:id,:date,:supplier_id,:product_id,:supplier_name,:product_name,:ship_term_term, :quantity, :price, '_destroy'],supplier_attributes: [:id, :supplier_name, :name, '_destroy'])
+      params.require(:product).permit(:name,:description,:per_box,:imloc,:weight,:display, :product_name,:price, supplier_prices_attributes: [:id,:date,:supplier_id,:product_id,:supplier_name,:product_name,:ship_term_term, :quantity, :price, '_destroy'],supplier_attributes: [:id, :supplier_name, :name, '_destroy'])
     end
     
 end

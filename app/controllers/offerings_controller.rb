@@ -43,9 +43,9 @@ class OfferingsController < ApplicationController
 		  
   def create_csv
 		csv = CSV.generate(col_sep: "\t") do |csv|
-			csv << ["name", "price"]
+			csv << ["name", "price","products"]
 			Offering.all.sort_by(&:id).each do |offer|
-				csv << [offer.name, offer.price]
+				csv << [offer.name, offer.price, offer.offering_products.map{ |o| "#{o.quantity} - #{o.product.name}" }.join(', ')]
 			end
 		end
 		file ="offers.txt"

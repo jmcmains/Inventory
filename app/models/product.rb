@@ -81,6 +81,26 @@ class Product < ActiveRecord::Base
 		return value
 	end
 	
+	def ind_price
+		offerings.sort_by(&:price).each do |o|
+			if o.offering_products.count * o.offering_products.first.quantity == 1
+				return o.price
+			end
+		end
+		return 0
+	end
+	
+	def avg_price
+		tot_sales = offerings.sum { |a| a.offering_products.find_by(product_id: id).quantity*a.orders.count }
+		p = offerings.sum { |o| o.price * ( price/o.offering_products.sum { |a| a.product.price*a.quantity } )*o.offering_products.find_by(product_id: id).quantity*o.orders.count }
+		return tot_sales > 0 ? p/tot_sales : 0
+	end
+	
+	def margin(start_date,end_date)
+		output=cogs(start_date,end_date)
+		return avg_price - output["value"]/output["purchases"]
+	end
+	
 	def cogs(start_date,end_date)
 	 	output={}
 	 	sql = ActiveRecord::Base.connection()
@@ -184,7 +204,7 @@ class Product < ActiveRecord::Base
 	end
 	
 	def get_cust_orders
-		return Order.joins(:offering => {:offering_products => :product}).where(["products.id = ? AND offering_products.quantity > 0",self])
+		return Order.joins(:offering => {:offering_products => :product}).where(["products.id = ? AND offering_products.quantity > 0",id])
 	end
 	
 	require 'csv'
