@@ -23,14 +23,7 @@ class Product < ActiveRecord::Base
 	end
 	
 	def average_inventory(start_date,end_date)
-		cnt=inventory.where("date > ? and date < ?", start_date,end_date).map { |a| a.product_counts.find_by(product_id: id).count }
-		box=inventory.where("date > ? and date < ?", start_date,end_date).map { |a| a.product_counts.find_by(product_id: id).is_box }
-		cnt.each_with_index do |c,i| 
-			if box[i]
-				cnt[i] = per_box * c
-			end
-		end
-		return cnt.inject(0.0) { |sum, el| sum + el } / cnt.size
+		cnt=inventory.where("date > ? and date < ?",start_date,end_date).avg { |a| a.product_counts.find_by(product_id: id).count }
 	end
 	
 	def self.total_inventory_value(event)
@@ -80,19 +73,10 @@ class Product < ActiveRecord::Base
 		end
 		return value
 	end
-	
-	def ind_price
-		offerings.sort_by(&:price).each do |o|
-			if o.offering_products.count * o.offering_products.first.quantity == 1
-				return o.price
-			end
-		end
-		return 0
-	end
-	
+		
 	def avg_price
 		tot_sales = offerings.sum { |a| a.offering_products.find_by(product_id: id).quantity*a.orders.count }
-		p = offerings.sum { |o| o.price * ( price/o.offering_products.sum { |a| a.product.price*a.quantity } )*o.offering_products.find_by(product_id: id).quantity*o.orders.count }
+		p = offerings.to_a.sum { |o| o.price * ( price/ o.value )*o.offering_products.find_by(product_id: id).quantity*o.orders.count }
 		return tot_sales > 0 ? p/tot_sales : 0
 	end
 	

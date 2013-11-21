@@ -53,12 +53,12 @@ class ProductsController < ApplicationController
 	
 	def accounting_csv
 		csv = CSV.generate(col_sep: "\t") do |csv|
-			csv << ["name", "total orders", "Total Cost of Goods Sold", "Inventory Days Outstanding", "Inventory Turns", "Average Price"]
+			csv << ["Name", "Total Sales", "Total Cost of Goods Sold", "Average Inventory", "Average Price"]
 			Product.find_all_by_display(true).sort_by(&:id).each do |product|
 				start_date = Date.new(1990,1,1)
 				end_date = Date.today
 				output = product.cogs(start_date,end_date)
-				csv << [product.name, output["purchases"], output["value"], product.inventory_days_outstanding(start_date,end_date), product.inventory_turns(start_date,end_date), product.avg_price]
+				csv << [product.name, output["purchases"], output["value"], product.average_inventory(start_date,end_date), product.avg_price]
 			end
 		end
 		file ="accounting.txt"

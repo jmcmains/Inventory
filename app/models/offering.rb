@@ -9,7 +9,9 @@ class Offering < ActiveRecord::Base
   scope :with_n_products, lambda {|n| {:joins => :offering_products, :group => "offering_products.offering_id", :having => ["count(offering_id) = ?", n]}}
 
   def value
-  	return offering_products.sum { |a| a.product.ind_price*a.quantity }
+  	sql = ActiveRecord::Base.connection()
+  	d=sql.execute("SELECT SUM(products.price * offering_products.quantity) as purchases FROM offerings INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (offerings.id = #{id})")
+  	return d[0]["purchases"].to_f
   end
   
   def self.search(search,price)
