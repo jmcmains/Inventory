@@ -52,11 +52,11 @@ class ProductsController < ApplicationController
 	end
 	
 	def accounting_csv
+		start_date = Date.new(1990,1,1)
+		end_date = Date.today
 		csv = CSV.generate(col_sep: "\t") do |csv|
 			csv << ["Name", "Total Sales", "Total Cost of Goods Sold", "Average Inventory", "Average Price"]
-			Product.find_all_by_display(true).sort_by(&:id).each do |product|
-				start_date = Date.new(1990,1,1)
-				end_date = Date.today
+			Product.find_all_by_display(true).sort_by(&:name).each do |product|
 				output = product.cogs(start_date,end_date)
 				csv << [product.name, output["purchases"], output["value"], product.average_inventory(start_date,end_date), product.avg_price]
 			end
