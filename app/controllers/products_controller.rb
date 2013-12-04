@@ -7,6 +7,13 @@ class ProductsController < ApplicationController
 
 	def inventory_worksheet
 		@products = Product.all.sort_by { |a| a.name }
+		if params[:start_date_id]
+		@start_date = Event.find(params[:start_date_id])
+  	@end_date = Event.find(params[:end_date_id])
+		else
+ 		@start_date = Event.inventory.sort_by(&:date).last(2).first
+  	@end_date = Event.inventory.sort_by(&:date).last
+  	end
 		@title = "Inventory Worksheet"
 	end
 	

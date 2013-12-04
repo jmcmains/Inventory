@@ -7,6 +7,8 @@ class ProductsController < ApplicationController
 
 	def inventory_worksheet
 		@products = Product.all.sort_by { |a| a.name }
+ 		@start_date = Event.inventory.sort_by(&:date).last(2).first
+  	@end_date = Event.inventory.sort_by(&:date).last
 		@title = "Inventory Worksheet"
 	end
 	
@@ -56,7 +58,7 @@ class ProductsController < ApplicationController
 		end_date = Date.today
 		csv = CSV.generate(col_sep: "\t") do |csv|
 			csv << ["Name", "Total Sales", "Total Cost of Goods Sold", "Average Inventory", "Average Price"]
-			Product.find_all_by_display(true).sort_by(&:id).each do |product|
+			Product.find_all_by_display(true).sort_by(&:name).each do |product|
 				output = product.cogs(start_date,end_date)
 				csv << [product.name, output["purchases"], output["value"], product.average_inventory(start_date,end_date), product.avg_price]
 			end
