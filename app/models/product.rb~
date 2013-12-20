@@ -23,7 +23,7 @@ class Product < ActiveRecord::Base
 	end
 	
 	def average_inventory(start_date,end_date)
-		cnt=inventory.where("date > ? and date < ?",start_date,end_date).avg { |a| a.product_counts.find_by(product_id: id).count }
+		cnt=inventory.where("date > ? and date < ?",start_date,end_date).sum { |a| a.product_counts.find_by(product_id: id).count }/inventory.where("date > ? and date < ?",start_date,end_date).count
 	end
 	
 	def self.total_inventory_value(event)
@@ -48,9 +48,10 @@ class Product < ActiveRecord::Base
 			price[i] = price[i]/cnt[i] + Event.find(event_id[i]).per_unit_cost
 		end
 		i=0
-		inventory_count=event.product_counts.find_by(product_id: id).count
-		if event.product_counts.find_by(product_id: id).is_box
-			inventory_count = per_box * inventory_count
+		if event.product_counts.find_by(product_id: id)
+		  inventory_count=event.product_counts.find_by(product_id: id).count
+		else
+			inventory_count = 0
 		end
 		total = inventory_count
 		value = 0

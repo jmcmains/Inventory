@@ -48,9 +48,10 @@ class Product < ActiveRecord::Base
 			price[i] = price[i]/cnt[i] + Event.find(event_id[i]).per_unit_cost
 		end
 		i=0
-		inventory_count=event.product_counts.find_by(product_id: id).count
-		if event.product_counts.find_by(product_id: id).is_box
-			inventory_count = per_box * inventory_count
+		if event.product_counts.find_by(product_id: id)
+		  inventory_count=event.product_counts.find_by(product_id: id).count
+		else
+			inventory_count = 0
 		end
 		total = inventory_count
 		value = 0
@@ -69,7 +70,11 @@ class Product < ActiveRecord::Base
 			(0..(cnt.length-1)).each do |i|
 				value=value+cnt[i]*price[i]
 			end
-			value=value/cnt.sum*inventory_count
+			if cnt.sum >0
+			  value=value/cnt.sum*inventory_count
+			else
+			  value = 0
+			end
 		end
 		return value
 	end
