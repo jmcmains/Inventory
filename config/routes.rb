@@ -50,6 +50,7 @@ Inventory::Application.routes.draw do
 			get :create_csv
 			get :accounting_csv
 			get :all_cogs
+			get :canada_sales
 		end
 	end
 	resources :product_counts

@@ -1,0 +1,33 @@
+<% sql = ActiveRecord::Base.connection() %>
+<% date_range = (Order.amzca.sort_by(&:date).first.date.beginning_of_week..(Date.today.beginning_of_week-7)).step(7).to_a %>
+<table>
+<tr>
+<td>Product</td>
+<% date_range.each do |d| %>
+<td><%= d.strftime("%m/%d/%Y") %></td>
+<% end %>
+</tr>
+<% Product.all.each do |product| %>
+  <% d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (products.id = #{product.id}AND orders.origin = 'Amazon Canada') GROUP BY year, week ORDER BY year, week ") %>
+  <% y=d.map { |a| a["sum"].to_i } %>
+	<% dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) if !a['year'].nil? && !a['week'].nil? } %>
+	<% if y.count > 0 %>
+	  <% if dates.last >= Date.today.beginning_of_week-1 %>
+		  <% dates.pop %>
+		  <% y.pop %>
+		<% end %>
+	<% end %>
+	<% y2=Array.new(date_range.length,0) %>
+	<% if !dates.blank? %>
+			<% dates.each_with_index do |d,i| %>
+				<% y2[date_range.index(d)]=y[i] %>
+			<% end %>
+  <tr>
+  <td><%= product.name %></td>
+  <% y2.each do |sales| %>
+    <td><%= sales %></td>
+  <% end %>
+  </tr>
+  <% end %>
+<% end %>
+</table>
