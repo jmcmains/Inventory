@@ -23,7 +23,7 @@ class StaticPagesController < ApplicationController
  		@title ="RubberBanditz Inventory Launching Page"
  		@subtitle= "What would you like to do?"
  		if !txt.blank?
- 		  flash[:error] = txt
+ 		  flash.now[:error] = txt
  		end
   end
   

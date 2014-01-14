@@ -20,6 +20,10 @@ class StaticPagesController < ApplicationController
     if empty_offering > 0
       txt = txt + "Offerings with no products: #{empty_offering}"
     end
+    late_pos=Event.unreceived.where("expected_date < ?",Date.today).count
+    if late_pos > 0
+      txt = txt + "Late Purchase Orders: #{late_pos}"
+    end
  		@title ="RubberBanditz Inventory Launching Page"
  		@subtitle= "What would you like to do?"
  		if !txt.blank?
