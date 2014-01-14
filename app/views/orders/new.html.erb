@@ -4,3 +4,50 @@
 	last order: <%= Order.first.date %><br>
   <%= f.submit "Load Data", class: "btn btn-primary" %>
 <% end %>
+
+<% start_day = Date.today - 1.month %>
+<% end_day = Date.today %>
+<% sql = ActiveRecord::Base.connection() %>
+<% d=sql.execute("SELECT orders.count as count, orders.date as dates from orders WHERE orders.date >= '#{start_day}'::date AND orders.date <= '#{end_day}'::date GROUP BY orders.date ORDER BY orders.date") %>
+<% cnt=d.map { |a| a["count"].to_i } %>
+<% dates=d.map { |a| Date.parse(a["dates"]) } %>
+<% dates2=(start_day..end_day).to_a %>
+<% cnt2=Array.new(dates2.length,0) %>
+<% dates.each_with_index do |d,i| %>
+  <% cnt2[dates2.index(d)]=cnt[i] %>
+<% end %>
+
+
+<div id="orders_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    new Highcharts.Chart({
+     	chart: { renderTo: 'orders_chart' },
+		  title: { text: 'Daily Orders Loaded' },
+		  xAxis: { 
+		  	type: 'datetime',
+				maxZoom: 14 * 24 * 3600000,
+		  	text: "Month Number",
+		  	min: Date.UTC(<%= dates2.first.year %>,<%= dates2.first.month-1 %>,<%= dates2.first.day %>),
+		  	max: Date.UTC(<%= (dates2.last).year %>,<%= (dates2.last).month-1 %>,<%= (dates2.last).day %>)
+		  },
+		  yAxis: {
+		  	min: 0,
+		    title: { text: 'Orders'}
+		  },
+		  series: [{
+				name: 'Daily Orders',
+		    data: [
+		    	<% (0..(cnt2.count-1)).each do |val| %>
+		    		[Date.UTC(<%= dates2[val].year %>, <%= dates2[val].month-1 %>, <%= dates2[val].day %>),<%= cnt2[val] %>]<%= "," if val != (cnt2.count-1) %>
+		    	<% end %>
+	
+		    ]
+		  }
+		  
+				
+				]
+    });
+  });
+</script>

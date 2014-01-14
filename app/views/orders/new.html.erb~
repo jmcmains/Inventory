@@ -1,6 +1,53 @@
-<%= form_for :order, url: {class: "form-inline"} do |f| %>
+<%= form_for :order, url: {controller: "orders", action: "create", class: "form-inline"} do |f| %>
   <%= f.file_field :file %>
 	<%= f.hidden_field :origin, value: "Shipworks" %><br>
 	last order: <%= Order.first.date %><br>
   <%= f.submit "Load Data", class: "btn btn-primary" %>
 <% end %>
+
+<% start_day = Date.today - 1.month %>
+<% end_day = Date.today %>
+<% sql = ActiveRecord::Base.connection() %>
+<% d=sql.execute("SELECT orders.count as count, orders.date as dates from orders WHERE orders.date >= '#{start_day}'::date AND orders.date <= '#{end_day}'::date GROUP BY orders.date ORDER BY orders.date") %>
+<% cnt=d.map { |a| a["count"].to_i } %>
+<% dates=d.map { |a| Date.parse(a["dates"]) } %>
+dates2=(start_day..end_day).to_a
+			data["y"]=Array.new(data["dates"].length,0)
+			dates.each_with_index do |d,i|
+				data["y"][data["dates"].index(d)]=y[i]
+			end
+
+
+<div id="orders_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    new Highcharts.Chart({
+     	chart: { renderTo: 'orders_chart' },
+		  title: { text: 'Daily Orders Loaded' },
+		  xAxis: { 
+		  	type: 'datetime',
+				maxZoom: 14 * 24 * 3600000,
+		  	text: "Month Number",
+		  	min: Date.UTC(<%= dates.first.year %>,<%= dates.first.month-1 %>,<%= dates.first.day %>),
+		  	max: Date.UTC(<%= (dates.last).year %>,<%= (dates.last).month-1 %>,<%= (dates.last).day %>)
+		  },
+		  yAxis: {
+		  	min: 0,
+		    title: { text: 'Orders'}
+		  },
+		  series: [{
+				name: 'Daily Orders',
+		    data: [
+		    	<% (0..(cnt.count-1)).each do |val| %>
+		    		[Date.UTC(<%= dates[val].year %>, <%= dates[val].month-1 %>, <%= dates[val].day %>),<%= cnt[val] %>]<%= "," if val != (cnt.count-1) %>
+		    	<% end %>
+	
+		    ]
+		  }
+		  
+				
+				]
+    });
+  });
+</script>
