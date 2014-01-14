@@ -1,9 +1,29 @@
+
+<% start_day = Date.today - 1.month %>
+<% end_day = Date.today - 1.day %>
+<% sql = ActiveRecord::Base.connection() %>
+<% d=sql.execute("SELECT orders.count as count, orders.date as dates from orders WHERE orders.date >= '#{start_day}'::date AND orders.date <= '#{end_day}'::date GROUP BY orders.date ORDER BY orders.date") %>
+<% cnt=d.map { |a| a["count"].to_i } %>
+<% dates=d.map { |a| Date.parse(a["dates"]) } %>
+<% dates2=(start_day..end_day).to_a %>
+<% cnt2=Array.new(dates2.length,0) %>
+<% dates.each_with_index do |d,i| %>
+  <% cnt2[dates2.index(d)]=cnt[i] %>
+<% end %>
+<span style="color:red;font-weight:bold">
+<% if cnt2.sum{ |a| a < 1 ? 1 : 0 } > 0 %>
+  Days with no orders in last month: <%= cnt2.sum{ |a| a < 1 ? 1 : 0 } %><br/>
+<% end %>
+<% if Offering.includes(:products).where("products.id IS NULL").references(:products).count > 0 %>
+Offerings with no products: <%= Offering.includes(:products).where("products.id IS NULL").references(:products).count %>
+<% end %>
+</span>
 <ul class="home">
-<li class="top">
-<%= link_to "Count Inventory", new_inventory_events_path, class: "btn btn-large btn-primary" %></li>
+<li class="top"><%= link_to "Count Inventory", new_inventory_events_path, class: "btn btn-large btn-primary" %></li>
+<li class="top"><%= link_to "Inventory Worksheet", inventory_worksheet_products_path, class: "btn btn-large btn-primary" %></li>
 <li class="top"><%= link_to "Place an order from suppliers", new_po_events_path, class: "btn btn-large btn-primary"  %></li>
 <li class="top"><%= link_to "View All Shipments", po_events_path, class: "btn btn-large btn-primary"  %></li>
 <li class="top"><%= link_to "Upload Shipworks CSV", new_order_path, class: "btn btn-large btn-primary"  %></li>
-</ul>
 
+</ul>
 
