@@ -24,12 +24,17 @@ $(function() {
 
 </script>
 	<%= link_to "New Product Order", new_po_events_path %>
-<% elsif @title == "Inventory" %>
-	<%= link_to "New Inventory Count", new_inventory_events_path %>
-<% end %>
-<div class="pagination">
+	<div class="pagination">
      <%= will_paginate @events, :container => false %>
 </div>
+<% elsif @title == "Inventory" %>
+	<%= link_to "New Inventory Count", new_inventory_events_path %>
+	<%= form_tag inventory_events_path, method: :get, class: "form-search form-inline" do  %>
+	<%= select_tag :date_id, options_for_select(Event.inventory.sort_by(&:date).collect {|a| [a.date, a.id]}, @date.id), class: "input-medium" %>
+	<%= submit_tag %>
+	<% end %>
+<% end %>
+
 <table class="table table-bordered table-striped table-condensed">
 <thead>
 <tr>
@@ -46,6 +51,7 @@ $(function() {
 </tr>
 </thead>
 <tbody>
+
 <% @events.each do |event| %>
 <tr>
 	<td><%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, data: {confirm: "You sure?"}, :title => "Delete #{event.event_type}" %> 
@@ -99,6 +105,8 @@ $(function() {
 <% end %>
 </tbody>
 </table>
+<% if @title == "Product Order" %>
 <div class="pagination">
      <%= will_paginate @events, :container => false %>
 </div>
+<% end %>

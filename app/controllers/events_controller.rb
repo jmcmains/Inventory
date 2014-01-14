@@ -39,7 +39,12 @@ class EventsController < ApplicationController
   end
   
   def inventory
-  	@events=Event.inventory.sort_by { |i| i.date }.reverse.paginate(:page => params[:page], :per_page => 1)
+  	if params[:date_id]
+		@date = Event.find(params[:date_id])
+		else
+  	@date = Event.inventory.sort_by(&:date).last
+  	end
+  	@events=Event.inventory.find_all_by_date(@date.date).paginate(:page => params[:page], :per_page => 1)
   	@title= @events.first.event_type
   	render :index
   end
