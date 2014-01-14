@@ -19,11 +19,11 @@ class Product < ActiveRecord::Base
 	end
 	
 	def inventory_turns(start_date,end_date)
-		return cogs(start_date,end_date)["purchases"]/average_inventory(start_date,end_date)
+		return average_inventory(start_date,end_date) > 0 ? cogs(start_date,end_date)["purchases"]/average_inventory(start_date,end_date) : 0
 	end
 	
 	def average_inventory(start_date,end_date)
-		cnt=inventory.where("date >= ? and date <= ?",start_date,end_date).sum { |a| a.product_counts.find_by(product_id: id).count }/inventory.where("date >= ? and date <= ?",start_date,end_date).count
+		cnt=inventory.where("date >= ? and date <= ?",start_date,end_date).to_a.sum { |a| a.product_counts.find_by(product_id: id).count }/inventory.where("date >= ? and date <= ?",start_date,end_date).count
 	end
 	
 	def self.total_inventory_value(event)
