@@ -1,5 +1,7 @@
 class Order < ActiveRecord::Base
-
+require 'csv'
+	require 'net/ftp'
+	require 'open-uri'
   belongs_to :offering, :class_name => "Offering"
   has_many :offering_products, through: :offering
   has_many :products, through: :offering_products
@@ -36,7 +38,7 @@ class Order < ActiveRecord::Base
  	
  	def self.shipworks_csv(row)
 		offering=Offering.find_or_initialize_by(name: row[4])
-		price=row[5]
+		price=row[5].to_f
 		if (offering.price.blank? || offering.price < price) && (!price.blank?)
 			offering.update_attributes(price: price)
 		else
@@ -53,44 +55,14 @@ class Order < ActiveRecord::Base
     return order
  	end
  	
-  def self.build_from_csv(row,type)
-    # find existing customer from email or create new
-    if type == "Amazon US"
-		  order_number = row[0]
-		  date = row[2]
-			offering_id=row[10]
-			quantity = row[14]
-    elsif type == "Amazon Canada"
-    	order_number = row[0]
-    	date = row[2]
-			offering_id=row[8]
-			quantity = row[9]
-		elsif type == "Buy"
-			order_number = row[3]
-    	date = Date.strptime(row[1], '%m/%d/%Y')
-			offering_id=row[7]
-			quantity = row[9]
-    elsif type == "Website"
-    	order_number = row[1]
-    	if row[2].blank?
-    		old_order=Order.find_by_order_number(order_number)
-    		date = old_order.date
-    	else
-    		date = row[2]
-    	end
-			offering_id=row[31]
-			quantity = row[32]
-		elsif type == "EBay"
-			order_number = row[29]
-			date = Date.strptime(row[25],"%b-%d-%Y")+2000.years
-			offering_id = row[12]
-			quantity = row[14]
-    end
-    offering=Offering.find_or_initialize_by_name(offering_id)
-    offering.save
-    order= Order.create(order_number: order_number, date: date,offering_id: offering.id,quantity: quantity, origin: type)
-    return order
-  end
+ 	def self.load_from_feed
+		CSV.parse(open('http://rubberbanditz.com/DailyOrders.txt'), headers: true, quote_char: '"', col_sep: "\t") do |row|
+			order = Order.shipworks_csv(row)
+			if order.valid?
+				order.save
+			end
+		end
+ 	end
   
   def offering_name
   	offering.try(:name)
