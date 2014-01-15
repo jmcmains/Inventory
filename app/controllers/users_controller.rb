@@ -1,18 +1,22 @@
 class UsersController < ApplicationController
 	before_filter :signed_in_user, only: [:edit, :update]
 	before_filter :correct_user, only: [:edit, :update]
+	before_action :admin_user,     only: [:new, :destroy]
 	
   def new
   	@user = User.new
   	@title = "New User"
+  	session[:last_page] = request.env['HTTP_REFERER'] || user_url
   end
   
   def create
   	@user = User.new(user_params)
   	if @user.save
-  		sign_in @user
+  	  if !current_user.admin?
+  	    sign_in @user
+  		end
   		flash[:success] = "User Created!"
-  		redirect_to root_path
+  		redirect_to session[:last_page]
   	else
   		render 'new'
   	end
@@ -26,6 +30,7 @@ class UsersController < ApplicationController
   def edit
   	@title = "Edit User"
   	@user = User.find(params[:id])
+  	session[:last_page] = request.env['HTTP_REFERER'] || user_url
   end
   
   def update
@@ -33,10 +38,16 @@ class UsersController < ApplicationController
   	if @user.update_attributes(user_params)
   		flash[:success]= "Profile Updated"
   		sign_in @user
-  		redirect_to @user
+  		redirect_to session[:last_page]
   	else
   		render 'edit'
   	end
+  end
+  
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "User deleted."
+    redirect_to :back
   end
   
   private
@@ -51,6 +62,10 @@ class UsersController < ApplicationController
   		@user = User.find(params[:id])
   		redirect_to(root_path) unless current_user?(@user)
   	end
+  	
+  	def admin_user
+      redirect_to(root_url) unless current_user.admin?
+    end
   	
 private
 
