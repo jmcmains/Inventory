@@ -12,7 +12,7 @@
 <tr>
 <td><%=link_to user.name, user_path(user)%></td>
 <td><%= link_to user.email, "mailto:#{user.email}" %></td>
-<td><%= user.last_login ? user.last_login.utc.in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%Y %l:%M %p") : "" %></td>
+<td><%= user.last_login ? user.last_login.strftime("%m/%d/%Y %l:%M %p") : "" %></td>
 <td><%= link_to "Delete", user, :method => :delete, data: {confirm: "You sure?"}, :title => "Delete #{user.name}" %></td>
 </tr>
 <% end %>
