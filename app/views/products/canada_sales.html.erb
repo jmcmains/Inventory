@@ -1,10 +1,17 @@
 <% sql = ActiveRecord::Base.connection() %>
-<% date_range = (Order.amzca.sort_by(&:date).first.date.beginning_of_week..(Date.today.beginning_of_week-7)).step(7).to_a %>
-<table>
+<% date_range = (Order.amzca.sort_by(&:date).first.date.beginning_of_week..(Date.today.beginning_of_week)).step(7).to_a %>
+<table class="table table-bordered">
+<tr>
+<td>
+</td>
+<% date_range.map(&:year).uniq.each do |y| %>
+  <td colspan="<%= date_range.map(&:year).count(y) %>" style="text-align:center"><%= y %></td>
+<% end %>
+</tr>
 <tr>
 <td>Product</td>
 <% date_range.each do |d| %>
-<td><%= d.strftime("%m/%d/%Y") %></td>
+<td><%= d.strftime("%m/%d") %></td>
 <% end %>
 </tr>
 <% Product.all.each do |product| %>
