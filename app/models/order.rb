@@ -44,15 +44,8 @@ require 'csv'
 		else
     	offering.save
     end
-    order = Order.find_by_order_number_and_offering_id(row[0],offering.id)
-    if order
-    	if row[1] == "EBay"
-    		order.update_attributes(origin: "EBay")
-    	end
-    else
-    	order= Order.create(order_number: row[0], date: Date.strptime(row[2], '%m/%d/%Y'),offering_id: offering.id,quantity: row[3], origin: row[1])
-    end
-    return order
+    return Order.create(order_number: row[0], date: Date.strptime(row[2], '%m/%d/%Y'),offering_id: offering.id,quantity: row[3], origin: row[1])
+
  	end
  	
  	def self.load_from_feed

@@ -11,20 +11,21 @@ class StaticPagesController < ApplicationController
     dates.each_with_index do |d,i|
       cnt2[dates2.index(d)]=cnt[i]
     end
-    txt=""
     no_orders=cnt2.sum{ |a| a < 1 ? 1 : 0 }
+
     if no_orders > 0
-      txt = txt + "Days with no orders in last month: #{no_orders}\n"
+      flash.now[:error1]="Days with no orders in last month: #{no_orders} <a href='#{new_orders_url}'>fix here</a>"
     end
     empty_offering= Offering.includes(:products).where("products.id IS NULL").references(:products).count
     if empty_offering > 0
-      txt = txt + "Offerings with no products: #{empty_offering}"
+      flash.now[:error2]="Offerings with no products: #{empty_offering} <a href='#{offerings_url}'>fix here</a>"
+    end
+    late_pos=Event.unreceived.where("expected_date < ?",Date.today).count
+    if late_pos > 0
+      flash.now[:error3]="Late Purchase Orders: #{late_pos} <a href='po_events_url'>fix here</a>"
     end
  		@title ="RubberBanditz Inventory Launching Page"
  		@subtitle= "What would you like to do?"
- 		if !txt.blank?
- 		  flash.now[:error] = txt
- 		end
   end
   
   def paypal

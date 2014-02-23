@@ -14,7 +14,7 @@ class OrdersController < ApplicationController
 	
 	def create
 		infile = params[:order][:file].read
-		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
+		CSV.parse(infile, headers: true, col_sep: "\t") do |row|
 			order = Order.shipworks_csv(row)
 			if order.valid?
 				order.save
@@ -38,10 +38,6 @@ class OrdersController < ApplicationController
 		Order.where(offering_id: offering_id).update_all({:offering_id => replace.id})
 		@orphans=Order.where(["offering_id NOT IN (?)",Offering.pluck("id")]).sort_by(&:order_number)
 	  redirect_to session.delete(:return_to)
-	end
-
-	def index
-
 	end
 
 	def destroy

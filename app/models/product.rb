@@ -270,8 +270,9 @@ class Product < ActiveRecord::Base
 	end
 	
 	def forcast_demand
-		start=Date.today.beginning_of_week
+		
 		inv=get_last_count("Inventory")
+		start=inv.event.date
 		if inv.instance_of?(ProductCount) && inv.count
 			if inv.is_box
 				inventory = inv.count*self.per_box

@@ -13,3 +13,11 @@ module ApplicationHelper
 
 end
 
+def flash_class(level)
+    case level
+        when :error1 then "alert alert-error"
+        when :error2 then "alert alert-error"
+        when :error3 then "alert alert-error"
+        else "alert alert-#{level}"
+    end
+end

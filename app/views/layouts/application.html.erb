@@ -10,9 +10,11 @@
 <body>
 	<%= render 'layouts/header' %>
 <div class="container">
-<% flash.each do |key, value| %>
-	<%= content_tag(:div, value, class: "alert alert-#{key}") %>
-<% end %>
+ <% flash.each do |key, value| %>
+        <div class="<%= flash_class(key) %>">
+              <%= value.html_safe %>
+        </div>
+  <% end %>
 <% if signed_in? %>
 <% current_user.touch(:last_login) %>
 <div style="float:left;background-color: #eee;padding:10px;width:200px">

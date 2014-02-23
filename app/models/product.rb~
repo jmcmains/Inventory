@@ -19,7 +19,7 @@ class Product < ActiveRecord::Base
 	end
 	
 	def inventory_turns(start_date,end_date)
-		return cogs(start_date,end_date)["purchases"]/average_inventory(start_date,end_date)
+		return average_inventory(start_date,end_date) > 0 ? cogs(start_date,end_date)["purchases"]/average_inventory(start_date,end_date) : 0
 	end
 	
 	def average_inventory(start_date,end_date)
