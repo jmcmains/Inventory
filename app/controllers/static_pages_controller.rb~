@@ -12,9 +12,9 @@ class StaticPagesController < ApplicationController
       cnt2[dates2.index(d)]=cnt[i]
     end
     no_orders=cnt2.sum{ |a| a < 1 ? 1 : 0 }
-
+flash.now[:error]=""
     if no_orders > 0
-      flash.now[:error]="Days with no orders in last month: #{no_orders} <a href='#{new_orders_url}'>fix here</a> <br>"
+      flash.now[:error]<<"Days with no orders in last month: #{no_orders} <a href='#{new_orders_url}'>fix here</a> <br>"
     end
     empty_offering= Offering.includes(:products).where("products.id IS NULL").references(:products).count
     if empty_offering > 0
