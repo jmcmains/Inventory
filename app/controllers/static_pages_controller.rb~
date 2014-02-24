@@ -14,15 +14,15 @@ class StaticPagesController < ApplicationController
     no_orders=cnt2.sum{ |a| a < 1 ? 1 : 0 }
 
     if no_orders > 0
-      flash.now[:error1]="Days with no orders in last month: #{no_orders} <a href='#{new_orders_url}'>fix here</a>"
+      flash.now[:error]="Days with no orders in last month: #{no_orders} <a href='#{new_orders_url}'>fix here</a> <br>"
     end
     empty_offering= Offering.includes(:products).where("products.id IS NULL").references(:products).count
     if empty_offering > 0
-      flash.now[:error2]="Offerings with no products: #{empty_offering} <a href='#{offerings_url}'>fix here</a>"
+      flash.now[:error] << "Offerings with no products: #{empty_offering} <a href='#{offerings_url}'>fix here</a> <br>"
     end
     late_pos=Event.unreceived.where("expected_date < ?",Date.today).count
     if late_pos > 0
-      flash.now[:error3]="Late Purchase Orders: #{late_pos} <a href='po_events_url'>fix here</a>"
+      flash.now[:error] << "Late Purchase Orders: #{late_pos} <a href='#{po_events_url}'>fix here</a>"
     end
  		@title ="RubberBanditz Inventory Launching Page"
  		@subtitle= "What would you like to do?"
