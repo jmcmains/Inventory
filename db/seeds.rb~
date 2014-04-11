@@ -61,6 +61,7 @@ CSV.foreach(Rails.root.join('db/2012-05-26.txt'), headers: true, col_sep: "\t") 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	p.origin = "Amazon US"
   end
 end
 
@@ -72,6 +73,7 @@ CSV.foreach(Rails.root.join('db/2011-06.txt'), headers: true, col_sep: "\t") do 
    	p.quantity = row[14]
    	
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	p.origin = "Amazon US"
   end
 end
 
@@ -82,6 +84,7 @@ CSV.foreach(Rails.root.join('db/2011-07.txt'), headers: true, col_sep: "\t") do 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	p.origin = "Amazon US"
   end
 end
 
@@ -92,6 +95,7 @@ CSV.foreach(Rails.root.join('db/2011-08.txt'), headers: true, col_sep: "\t") do 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	p.origin = "Amazon US"
   end
 end
 
@@ -102,6 +106,7 @@ CSV.foreach(Rails.root.join('db/2011-09.txt'), headers: true, col_sep: "\t") do 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	   	p.origin = "Amazon US"
   end
 end
 
@@ -112,6 +117,7 @@ CSV.foreach(Rails.root.join('db/2011-10.txt'), headers: true, col_sep: "\t") do 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	   	p.origin = "Amazon US"
   end
 end
 
@@ -122,6 +128,7 @@ CSV.foreach(Rails.root.join('db/2011-11.txt'), headers: true, col_sep: "\t") do 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	   	p.origin = "Amazon US"
   end
 end
 
@@ -132,6 +139,7 @@ CSV.foreach(Rails.root.join('db/2011-12.txt'), headers: true, col_sep: "\t") do 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	   	p.origin = "Amazon US"
   end
 end
 
@@ -142,6 +150,7 @@ CSV.foreach(Rails.root.join('db/2012-01.txt'), headers: true, col_sep: "\t") do 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	   	p.origin = "Amazon US"
   end
 end
 
@@ -152,6 +161,7 @@ CSV.foreach(Rails.root.join('db/2012-02.txt'), headers: true, col_sep: "\t") do 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	   	p.origin = "Amazon US"
   end
 end
 
@@ -162,6 +172,7 @@ CSV.foreach(Rails.root.join('db/2012-03.txt'), headers: true, col_sep: "\t") do 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	   	p.origin = "Amazon US"
   end
 end
 
@@ -172,6 +183,7 @@ CSV.foreach(Rails.root.join('db/2012-04.txt'), headers: true, col_sep: "\t") do 
     p.date = row[2]
    	p.quantity = row[14]
    	p.offering_id = Offering.find_or_initialize_by_name(row[10]).id
+   	   	p.origin = "Amazon US"
   end
 end
 
@@ -183,6 +195,7 @@ CSV.foreach(Rails.root.join('db/2012-04-canada.txt'), headers: true, col_sep: "\
     p.date = row[2]
    	p.quantity = row[9]
    	p.offering_id = Offering.find_or_initialize_by_name(row[8]).id
+   	   	p.origin = "Amazon Canada"
   end
 end
 
@@ -198,6 +211,7 @@ CSV.foreach(Rails.root.join('db/Cart66Report.csv'), headers: true) do |row|
   	end
    	p.quantity = row[32]
    	p.offering_id = Offering.find_or_initialize_by_name(row[31]).id
+   	   	p.origin = "Website"
   end
 end
 

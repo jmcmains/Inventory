@@ -214,6 +214,7 @@ Orders current until the week of: <%= d2.last %>
 <% lead60=Date.today+60 %>
 <% lead90=Date.today+90 %>
 <% lead120=Date.today+120 %>
+<% start_prediction=Product.find(1).inventory.sort_by(&:date).last.date %>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
@@ -268,7 +269,7 @@ Orders current until the week of: <%= d2.last %>
 		  	type: 'line',
 		  	name: 'Predicted Inventory Line',
 		  	pointInterval: 24 * 3600 * 1000,
-		  	pointStart: Date.UTC(<%= Date.today.beginning_of_week.year %>,<%= Date.today.beginning_of_week.month-1 %>,<%= Date.today.beginning_of_week.day+1 %>),
+		  	pointStart: Date.UTC(<%= start_prediction.year %>,<%= start_prediction.month-1 %>,<%= start_prediction.day+1 %>),
 		  	data: <%= @product.forcast_demand.map { |a| a.round(2) } %>,
 		  	marker: {
 					enabled: false

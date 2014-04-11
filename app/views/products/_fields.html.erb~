@@ -19,7 +19,7 @@
 	<%= f.text_field :weight %><br>
 </div>
 <div class="field">
-	<%= f.label :price, "Individual Price" %>
+	<%= f.label :price, "Retail Price" %>
 	<%= f.text_field :price %><br>
 </div>
 <div class="field">

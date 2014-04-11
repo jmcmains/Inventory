@@ -6,8 +6,10 @@
 <%= image_tag @product.imloc, class: "product-image" %><br>
 <%= link_to 'Edit', edit_product_path(@product) %> | <%= link_to "Delete", @product, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{@product.name}" %><br/>
+<p><%= @product.sku %></p>
 <p><%= @product.description %></p>
 <p><%= @product.per_box %> pieces/box</p>
+
 <p>Retail Price: <%= @product.price %></p>
 <p>Shipping Weight: <%= @product.weight %></p>
 <% y = @product.get_trend["y"] %>

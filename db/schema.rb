@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140115201504) do
+ActiveRecord::Schema.define(version: 20140411195123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,6 +146,7 @@ ActiveRecord::Schema.define(version: 20140115201504) do
     t.float    "weight"
     t.boolean  "display",     default: true
     t.float    "price"
+    t.string   "sku"
   end
 
   create_table "ship_terms", force: true do |t|
