@@ -8,6 +8,8 @@ gem 'active_shipping'
 gem 'bcrypt-ruby'
 gem 'rake'
 gem 'roo'
+gem 'iconv'
+
 #group :development, :test do
 #  gem 'sqlite3'
 #end

@@ -7,6 +7,7 @@ gem 'will_paginate'
 gem 'active_shipping'
 gem 'bcrypt-ruby'
 gem 'rake'
+gem 'roo'
 #group :development, :test do
 #  gem 'sqlite3'
 #end

@@ -51,7 +51,7 @@ class EventsController < ApplicationController
 		else
   	  @date = Event.inventory.sort_by(&:date).last
   	end
-  	@events=Event.inventory.find_all_by(date: @date.date).paginate(:page => params[:page], :per_page => 1)
+  	@events=Event.inventory.where(date: @date.date).paginate(:page => params[:page], :per_page => 1)
   	@title= @events.first.event_type
   	render :index
   end
