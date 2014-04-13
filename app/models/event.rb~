@@ -10,6 +10,10 @@ class Event < ActiveRecord::Base
   scope :received, -> { where(event_type: "Product Order", received: true) }
   scope :product_orders, -> { where(event_type: "Product Order") }
 
+def self.import(file)
+
+end
+
 def per_unit_cost
 	count = 0
 	product_counts.each do |pc|
@@ -27,7 +31,7 @@ def supplier_name
   end
   
   def supplier_name=(name)
-  	self.supplier = Supplier.find_or_create_by_name(name) if name.present?
+  	self.supplier = Supplier.find_or_create_by(name: name) if name.present?
   end
 
 protected

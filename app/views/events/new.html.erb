@@ -1,3 +1,9 @@
+<% if @event.event_type == "Inventory" %>
+<%= form_tag load_events_path, multipart: true do %>
+<%= file_field_tag :file %>
+<%= submit_tag "Import" %>
+<% end %>
+<% end %>
 <center><%= form_for @event do |f| %>
 	<p><%= f.hidden_field :event_type, value: @event.event_type %>
 		<%= f.label :date %>

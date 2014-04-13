@@ -23,7 +23,11 @@ class Product < ActiveRecord::Base
 	end
 	
 	def average_inventory(start_date,end_date)
+		if inventory.where("date >= ? and date <= ?",start_date,end_date).count > 0
 		cnt=inventory.where("date >= ? and date <= ?",start_date,end_date).to_a.sum { |a| a.product_counts.find_by(product_id: id).count }/inventory.where("date >= ? and date <= ?",start_date,end_date).count
+		else
+		  cnt = 0
+		  end
 	end
 	
 	def self.total_inventory_value(event)
@@ -80,7 +84,7 @@ class Product < ActiveRecord::Base
 	end
 		
 	def avg_price
-		tot_sales = offerings.sum { |a| a.offering_products.find_by(product_id: id).quantity*a.orders.count }
+		tot_sales = offerings.to_a.sum { |a| a.offering_products.find_by(product_id: id).quantity*a.orders.count }
 		p = offerings.to_a.sum { |o| o.price * ( price/ o.value )*o.offering_products.find_by(product_id: id).quantity*o.orders.count }
 		return tot_sales > 0 ? p/tot_sales : 0
 	end
@@ -189,7 +193,7 @@ class Product < ActiveRecord::Base
 	end
 	
 	def get_current_shipments
-		self.events.find_all_by_event_type_and_received("Product Order",false)
+		self.events.where(event_type: "Product Order", received: false)
 	end
 	
 	def get_cust_orders
@@ -270,8 +274,9 @@ class Product < ActiveRecord::Base
 	end
 	
 	def forcast_demand
-		start=Date.today.beginning_of_week
+		
 		inv=get_last_count("Inventory")
+		start=inv.event.date
 		if inv.instance_of?(ProductCount) && inv.count
 			if inv.is_box
 				inventory = inv.count*self.per_box

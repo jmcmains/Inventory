@@ -12,6 +12,14 @@ class SupplierPrice < ActiveRecord::Base
   	self.product=Product.find_or_create_by_name(name) if name.present?
   end
   
+  def supplier_name
+  	supplier.try(:name)
+  end
+  
+  def supplier_name=(name)
+  	self.supplier=Supplier.find_or_create_by_name(name) if name.present?
+  end
+  
   def ship_term_term
   	ship_term.try(:term)
   end

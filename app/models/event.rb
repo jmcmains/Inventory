@@ -10,6 +10,7 @@ class Event < ActiveRecord::Base
   scope :received, -> { where(event_type: "Product Order", received: true) }
   scope :product_orders, -> { where(event_type: "Product Order") }
 
+
 def per_unit_cost
 	count = 0
 	product_counts.each do |pc|

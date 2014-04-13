@@ -1,8 +1,7 @@
 <%= form_for :order, url: {controller: "orders", action: "create", class: "form-inline"} do |f| %>
   <%= f.file_field :file %>
-	<%= f.hidden_field :origin, value: "Shipworks" %><br>
-	last order: <%= Order.first.date %><br>
-  <%= f.submit "Load Data", class: "btn btn-primary" %>
+	<%= f.hidden_field :origin, value: "Shipworks" %>
+	last order: <%= Order.first.date %>  <%= f.submit "Load Data", class: "btn btn-primary" %>
 <% end %>
 <% "#{Order.load_from_feed}" %>
 <% start_day = Date.today - 1.month %>

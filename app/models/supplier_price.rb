@@ -9,7 +9,7 @@ class SupplierPrice < ActiveRecord::Base
   end
   
   def product_name=(name)
-  	self.product=Product.find_or_create_by_name(name) if name.present?
+  	self.product=Product.where(name: name).first_or_create if name.present?
   end
   
   def supplier_name
@@ -17,7 +17,7 @@ class SupplierPrice < ActiveRecord::Base
   end
   
   def supplier_name=(name)
-  	self.supplier=Supplier.find_or_create_by_name(name) if name.present?
+  	self.supplier=Supplier.where(name: name).first_or_create if name.present?
   end
   
   def ship_term_term
@@ -25,6 +25,6 @@ class SupplierPrice < ActiveRecord::Base
   end
   
   def ship_term_term=(term)
-  	self.ship_term=ShipTerm.find_or_create_by_term(term) if term.present?
+  	self.ship_term=ShipTerm.where(term: term).first_or_create if term.present?
   end
 end

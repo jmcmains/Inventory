@@ -5,7 +5,7 @@ Inventory::Application.routes.draw do
 	
 	get '/signup', to: 'users#new'
 	get '/signin', to: 'sessions#new'
-	get '/signout', to: 'sessions#destroy', via: :delete
+	delete '/signout', to: 'sessions#destroy', via: :delete
 	
 	resources :supplier_prices do
 		collection do

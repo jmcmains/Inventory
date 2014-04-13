@@ -2,12 +2,33 @@ class ProductCount < ActiveRecord::Base
   belongs_to :event, :class_name => "Event"
 	belongs_to :product, :class_name => "Product"
 
+  def self.import(file)
+    spreadsheet = open_spreadsheet(file)
+    inv = Event.create!(event_type: "Inventory",date: Date.today)
+    spreadsheet.each_with_index do |row,index|
+      if index != 0
+        product=Product.where(sku: row[1]).first
+        create!(event_id: inv.id, product_id: product.id, is_box:false, count: row[4])
+      end
+    end
+  end
+  
+  def self.open_spreadsheet(file)
+  
+    case File.extname(file.original_filename)
+    when ".csv" then Roo::Csv.new(file.path, nil, :ignore)
+    when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
+    when ".xlsx" then Roo::Excelx.new(file.path, nil, :ignore)
+    else raise "Unknown file type: #{file.original_filename}"
+    end
+  end
+
 	def product_name
   	product.try(:name)
   end
   
   def product_name=(name)
-  	self.product = Product.find_or_create_by_name(name) if name.present?
+  	self.product = Product.where(name: name).first_or_create if name.present?
   end
   
   def box_count=(bcount)
@@ -47,7 +68,7 @@ class ProductCount < ActiveRecord::Base
   end
   
   def product_image=(imloc)
-  	self.product = Product.find_or_create_by_imloc(imloc) if imloc.present?
+  	self.product = Product.where(imloc: imloc).first_or_create if imloc.present?
   end
   
   def product_description
@@ -55,14 +76,11 @@ class ProductCount < ActiveRecord::Base
   end
   
   def product_description=(description)
-  	self.product = Product.find_or_create_by_description(description) if description.present?
+  	self.product = Product.where(description: description).first_or_create if description.present?
   end
   
   def product_description
   	product.try(:description)
   end
   
-  def product_description=(description)
-  	self.product = Product.find_or_create_by_description(description) if description.present?
-  end
 end

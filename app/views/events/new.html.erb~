@@ -1,3 +1,8 @@
+<% if @event.event_type == "Inventory" %>
+<%= form_for :event, url: {controller: "events", action: "load", class: "form-inline"} do |f| %>
+  <%= f.file_field :file %><%= f.submit "Load Data", class: "btn btn-primary" %>Last Inventory: <%= Event.inventory.last.date %> 
+<% end %>
+<% end %>
 <center><%= form_for @event do |f| %>
 	<p><%= f.hidden_field :event_type, value: @event.event_type %>
 		<%= f.label :date %>
@@ -15,7 +20,7 @@
 	<% end %>
 	</p>
 	<% n=0 %>
-	<h2>Products</h2>
+	<h2 style="text-align:center">Products</h2>
 	<div class="products" style="background-color:#aaa;margin-left:auto;margin-right:auto">
 	<%= f.fields_for :product_counts do |builder| %> 
 		<%= render "product_fields", f: builder, product: @products[n].product, event: @event %>

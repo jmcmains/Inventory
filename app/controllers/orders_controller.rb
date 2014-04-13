@@ -33,7 +33,7 @@ class OrdersController < ApplicationController
 		session[:return_to] ||= request.referer
 		order = Order.find(params[:id])
 		offering_id=order.offering_id
-		replace=Offering.find_or_create_by(name: params[:offering_name])
+		replace=Offering.where(name: params[:offering_name]).first_or_create
 		replace.save!
 		Order.where(offering_id: offering_id).update_all({:offering_id => replace.id})
 		@orphans=Order.where(["offering_id NOT IN (?)",Offering.pluck("id")]).sort_by(&:order_number)
