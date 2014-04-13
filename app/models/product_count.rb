@@ -14,7 +14,7 @@ class ProductCount < ActiveRecord::Base
   end
   
   def self.open_spreadsheet(file)
-  
+    require 'roo'
     case File.extname(file.original_filename)
     when ".csv" then Roo::Csv.new(file.path, nil, :ignore)
     when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
