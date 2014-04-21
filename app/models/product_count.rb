@@ -2,9 +2,9 @@ class ProductCount < ActiveRecord::Base
   belongs_to :event, :class_name => "Event"
 	belongs_to :product, :class_name => "Product"
 
-  def self.import(file)
+  def self.import(file,date)
     spreadsheet = open_spreadsheet(file)
-    inv = Event.create!(event_type: "Inventory",date: Date.today)
+    inv = Event.create!(event_type: "Inventory",date: date)
     spreadsheet.each_with_index do |row,index|
       if index != 0
         product=Product.where(sku: row[1]).first

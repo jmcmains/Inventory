@@ -8,7 +8,8 @@ class EventsController < ApplicationController
   
   def load
     require 'roo'
-		ProductCount.import(params[:file])
+    date = Date.new(params[:date]["day(1i)"].to_i,params[:date]["day(2i)"].to_i,params[:date]["day(3i)"].to_i)
+		ProductCount.import(params[:file],date)
     redirect_to inventory_events_path, notice: "Inventory Loaded."
 	end
 

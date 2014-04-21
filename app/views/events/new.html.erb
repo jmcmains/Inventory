@@ -1,9 +1,18 @@
 <% if @event.event_type == "Inventory" %>
+<h2>Load from File</h2>
 <%= form_tag load_events_path, multipart: true do %>
-<%= file_field_tag :file %>
-<%= submit_tag "Import" %>
+<p>Inventory Date: <%= date_select :date, :day, {order: [:month, :day, :year]}, {class:"input-small"} %></p>
+<p><%= file_field_tag :file %></p>
+<p><%= submit_tag "Import", class: "btn btn-large btn-primary" %></p>
 <% end %>
 <% end %>
+<h2 id="toggle" style="cursor:pointer">Load Manually</h2>
+<script>
+$( "#toggle" ).click(function() {
+ $("#manual").toggle();
+});
+</script>
+<div id="manual" style="display: none">
 <center><%= form_for @event do |f| %>
 	<p><%= f.hidden_field :event_type, value: @event.event_type %>
 		<%= f.label :date %>
@@ -32,6 +41,7 @@
 	<div style="width:100%;text-align:center;display:block;margin-left:auto;margin-right:auto;float:left"><%= f.submit "Submit", class: "btn btn-large btn-primary" %></div>
 <% end %>
 </center>
+</div>
 <script>
 $(window).resize(function() {contresize();});
 $(function() {
