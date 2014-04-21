@@ -143,7 +143,7 @@ class ProductsController < ApplicationController
 	
 	def index
 		@title = "All Products"
-    @products = Product.find_all_by_display(true).sort_by { |a| a.name }.paginate(:page => params[:page], :per_page => 10)
+    @products = Product.where(display: true).sort_by { |a| a.name }.paginate(:page => params[:page], :per_page => 10)
 	end
 	
 	def destroy

@@ -156,7 +156,7 @@ private
 
 
     def product_params
-      params.require(:product).permit(:name,:description,:per_box,:imloc,:weight,:display, :product_name,:price, supplier_prices_attributes: [:id,:date,:supplier_id,:product_id,:supplier_name,:product_name,:ship_term_term, :quantity, :price, '_destroy'],supplier_attributes: [:id, :supplier_name, :name, '_destroy'])
+      params.require(:product).permit(:name,:description,:per_box,:imloc,:weight,:display, :product_name,:price,:sku, supplier_prices_attributes: [:id,:date,:supplier_id,:product_id,:supplier_name,:product_name,:ship_term_term, :quantity, :price, '_destroy'],supplier_attributes: [:id, :supplier_name, :name, '_destroy'])
     end
     
 end
