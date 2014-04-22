@@ -61,6 +61,7 @@ Inventory::Application.routes.draw do
 			get :po_received
 			get :new_inventory
 			get :new_po
+			post :load
 		end
 		member do
 			get :receive_po_today

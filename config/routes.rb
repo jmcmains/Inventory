@@ -51,6 +51,7 @@ Inventory::Application.routes.draw do
 			get :accounting_csv
 			get :all_cogs
 			get :canada_sales
+			get :margin
 		end
 	end
 	resources :product_counts
