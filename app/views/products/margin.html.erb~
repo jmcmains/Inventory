@@ -1,12 +1,12 @@
 <% provide(:title, 'Cost Table') %>
-<% start_date = Date.today - 6.months %>
-<% end_date = Date.today %>
-<h1>Cost Table</h1>
 <h3>Notes</h3>
 <ul>
 <li>Cost is the average cost of goods sold based on FIFO including material and freight in costs</li>
 <li>Retail price is an average when you factor in all combo, wholesale, and dropship prices, weighted by sales</li>
 </ul>
+<div class="pagination">
+     <%= will_paginate @products, :container => false %>
+</div>
 <table class="table">
 <tr>
 <td>Product Name</td>
@@ -15,8 +15,8 @@
 <td>Margin</td>
 <td>Total Sales(6 months)</td>
 </tr>
-<% Product.where(display: true).sort_by(&:name).each do |product| %>
-<% output = product.cogs(start_date,end_date) %>
+<% @products.each do |product| %>
+<% output = product.cogs(@start_date,@end_date) %>
 <% if output["purchases"] > 0 %>
 <tr>
 <td><%= product.name %></td>

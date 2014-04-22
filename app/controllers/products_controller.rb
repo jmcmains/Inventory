@@ -73,6 +73,23 @@ class ProductsController < ApplicationController
 		send_file( file, type: 'text/csv')
 	end
 	
+	def margin_csv
+	  start_date = Date.today - 6.months
+		end_date = Date.today
+		csv = CSV.generate(col_sep: "\t") do |csv|
+			csv << ["Product Name", "Product Cost", "Average Retail Price", "Margin", "Total Sales"]
+			Product.where(display: true).sort_by(&:name).each do |product|
+				output = product.cogs(start_date,end_date)
+        if output["purchases"] > 0
+				  csv << [product.name, output["value"]/output["purchases"], product.avg_price, product.avg_price-output["value"]/output["purchases"], output["purchases"]]
+				end
+			end
+		end
+		file ="margins.txt"
+		File.open(file, "w"){ |f| f << csv }
+		send_file( file, type: 'text/csv')
+	end
+	
 	def edit
 		@title = "Edit Product"
 		@product = Product.find(params[:id])
@@ -119,6 +136,12 @@ class ProductsController < ApplicationController
 			@value_total=@value[i]+@value_total
 			@orders_total=@orders[i]+@orders_total
   	end
+	end
+	def margin
+	  @start_date = Date.today - 6.months
+    @end_date = Date.today
+    @title = "Product Margins"
+	  @products=Product.where(display: true).sort_by(&:name).paginate(:page => params[:page], :per_page => 10)
 	end
 	
 	def show
