@@ -49,7 +49,7 @@ class ProductsController < ApplicationController
 	def create_csv
 		csv = CSV.generate(col_sep: "\t") do |csv|
 			csv << ["name", "quantity per box", "60 day need", "90 day need", "120 day need"]
-			Product.find_all_by_display(true).sort_by(&:id).each do |product|
+			Product.where(display:true).sort_by(&:id).each do |product|
 				csv << [product.name, product.per_box, product.need(60).round, product.need(90).round, product.need(120).round]
 			end
 		end
@@ -63,7 +63,7 @@ class ProductsController < ApplicationController
 		end_date = Date.today
 		csv = CSV.generate(col_sep: "\t") do |csv|
 			csv << ["Name", "Total Sales", "Total Cost of Goods Sold", "Average Inventory", "Average Price"]
-			Product.find_all_by_display(true).sort_by(&:name).each do |product|
+			Product.where(display:true).sort_by(&:name).each do |product|
 				output = product.cogs(start_date,end_date)
 				csv << [product.name, output["purchases"], output["value"], product.average_inventory(start_date,end_date), product.avg_price]
 			end
