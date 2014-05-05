@@ -1,19 +1,19 @@
 
 <% if @no_orders > 0 %>
   <div class="alert alert-error">
-      Days with no orders in last month: <%= @no_orders %><!-- <%=link_to "fix here", new_orders_path %> -->
+      Days with no orders in last month: <%= @no_orders %> <%= link_to "load missing days", new_order_path %>
 </div>
 <% end %>
 
 <% if @empty_offering > 0 %>
   <div class="alert alert-error">
-      Offerings with no products: <%= @empty_offering %><!-- <%=link_to "fix here", offerings_path %> -->
+      Offerings with no products: <%= @empty_offering %> <%= link_to "enter offering data", offerings_path(blank: true) %>
 </div>
 <% end %>
 
 <% if @late_pos > 0 %>
   <div class="alert alert-error">
-      Late Purchase Orders: <%= @late_pos %><!-- <%= link_to "fix here", po_events_path %> -->
+      Late Purchase Orders: <%= @late_pos %> <%= link_to "view late orders", po_orders_path(event_type: "Late") %>
 </div>
 <% end %>
 
