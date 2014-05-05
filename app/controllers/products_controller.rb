@@ -48,9 +48,9 @@ class ProductsController < ApplicationController
 	
 	def create_csv
 		csv = CSV.generate(col_sep: "\t") do |csv|
-			csv << ["name", "quantity per box", "60 day need", "90 day need", "120 day need"]
+			csv << ["name", "Current Inventory","Reorder Point","Average Lead Time","quantity per box", "60 day need", "90 day need", "120 day need"]
 			Product.where(display:true).sort_by(&:id).each do |product|
-				csv << [product.name, product.per_box, product.need(60).round, product.need(90).round, product.need(120).round]
+				csv << [product.name, product.get_last_count("Inventory").count, product.reorder_point.round, product.averageLeadTime.round, product.per_box, product.need(60).round, product.need(90).round, product.need(120).round]
 			end
 		end
 		file ="inventory.txt"

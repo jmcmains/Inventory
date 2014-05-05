@@ -75,16 +75,27 @@ class EventsController < ApplicationController
 			received="received = true AND "
   	elsif @event_type == "In Transit"
   		received="received = false AND"
+    elsif @event_type == "Late"
+  		received="received = false AND expected_date> ? AND"
   	else
   		received=""
   	end
   	@inv_num= params[:Invoice]? params[:Invoice] : ""
   	@sup_name= params[:Supplier]? params[:Supplier] : ""
-  	if @sup_name.length > 0
-  		@supplier = Supplier.where("LOWER(name) LIKE ?","%#{@sup_name.downcase}%").first
-			@events=Event.where("#{received} LOWER(invoice) LIKE ? AND supplier_id = ?","%#{@inv_num.downcase}%","#{@supplier.id}")
+  	if @event_type == "Late"
+    	if @sup_name.length > 0
+    		@supplier = Supplier.where("LOWER(name) LIKE ?",@sup_name.downcase).first
+			  @events=Event.where("#{received} LOWER(invoice) LIKE ? AND supplier_id = ?",Date.today,@inv_num.downcase,@supplier.id)
+		  else
+			  @events=Event.where("#{received} LOWER(invoice) LIKE ?",Date.today,@inv_num.downcase)
+		  end
 		else
-			@events=Event.where("#{received} LOWER(invoice) LIKE ?","%#{@inv_num.downcase}%")
+		  if @sup_name.length > 0
+    		@supplier = Supplier.where("LOWER(name) LIKE ?","%#{@sup_name.downcase}%").first
+			  @events=Event.where("#{received} LOWER(invoice) LIKE ? AND supplier_id = ?","%#{@inv_num.downcase}%","#{@supplier.id}")
+		  else
+			  @events=Event.where("#{received} LOWER(invoice) LIKE ?","%#{@inv_num.downcase}%")
+		  end
 		end
 		if @inv_num == ""
 			@inv_num=[]

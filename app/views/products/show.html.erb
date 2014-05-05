@@ -110,6 +110,7 @@ Average Margin: <span id="averageprice"><%= number_to_currency(@margin) %></span
 
 <h2><a href="#", style="color:#999">Amount Needed to Order</a></h2>
 <blockquote>
+Reorder Point: <%= @product.reorder_point.round %> units
 <div id="accordion1">
 	<%= render "need_calc", product: @product, leadTime: 60, m: m, b: b, lineFit: lineFit, y: y %>
 	<%= render "need_calc", product: @product, leadTime: 90, m: m, b: b, lineFit: lineFit, y: y %>
@@ -284,7 +285,7 @@ Orders current until the week of: <%= d2.last %>
 <% end %>
 <script>
 $(function() {
-	$("#accordion").accordion({ active: false, collapsible: true, autoHeight: false, icons: { "header": "ui-icon-plus", "headerSelected": "ui-icon-minus" } });
-	$("#accordion1").accordion({ active: false, collapsible: true, autoHeight: false, icons: { "header": "ui-icon-plus", "headerSelected": "ui-icon-minus" } });
+	$("#accordion").accordion({ active: false, collapsible: true, heightStyle: "content"});
+	$("#accordion1").accordion({ active: false, collapsible: true, heightStyle: "content"});
 });
 </script>
