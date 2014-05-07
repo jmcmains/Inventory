@@ -250,7 +250,11 @@ class Product < ActiveRecord::Base
 	end
 	
 	def averageLeadTime
-	  received.to_a.sum { |a| a.received_date - a.date }.to_f / received.count
+	  if received.count > 0
+	    received.to_a.sum { |a| a.received_date - a.date }.to_f / received.count
+	  else
+	    0
+	  end
 	end
 	
 	def get_trend

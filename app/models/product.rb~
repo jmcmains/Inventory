@@ -222,7 +222,6 @@ class Product < ActiveRecord::Base
 	
 	def reorder_point
 	  if received.count > 0
-	    averageLeadTime=received.to_a.sum { |a| a.received_date - a.date }.to_f / received.count
       standardDeviationOfLeadTime=(received.to_a.sum { |a| ((a.received_date - a.date) - averageLeadTime)**2 }.to_f / received.count)**0.5
 
       sql = ActiveRecord::Base.connection()
@@ -248,6 +247,10 @@ class Product < ActiveRecord::Base
     else
       return 0
     end
+	end
+	
+	def averageLeadTime
+	  received.to_a.sum { |a| a.received_date - a.date }.to_f / received.count
 	end
 	
 	def get_trend
