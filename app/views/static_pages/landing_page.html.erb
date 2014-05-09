@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>[Title From Ad]</title>
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+ <script src="/assets/purl.js"></script>
+  <style>
+  body {
+    background-image: url(<%= image_path("landing_page_bg.png") %>);
+    background-position: center top;
+    background-size: 100% auto;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  #logo {
+	  max-width:400px;
+	  width:100%;
+	  height:auto;
+
+	}
+	#title {
+	  margin:10px;
+	  padding:0;
+	}
+	#subtitle {
+	  margin:5px;
+	  padding:0;
+	  margin-left:10px;
+	}
+	.proImg {
+	  width:100px;
+	  height:auto;
+	  border:1px solid black;
+  }
+  .atc {
+	  background-color:#9edd56;
+	  padding:3px;
+	  font-weight:bold;
+	  border:1px solid black
+  }
+  #proTable {
+    width:400px;
+  }
+  
+  #proTable td {
+    width:50%;
+    text-align:center;
+    padding:10px;
+    
+  }
+  .proTitle {
+    padding:0;
+    margin:0;
+  }
+  .proText {
+    padding:0;
+    margin:0;
+  }
+  .proPrice {
+    font-weight:bold;
+  }
+  #testimonial {
+	  position:absolute;
+	  bottom:0;
+	  right:0;
+	  width:200px;
+	  background-color:white;
+	  padding:10px;
+	  background: rgba(230,230,230,.8);
+  }
+  #author {
+	  text-align: right;
+	  display: block;
+	  font-size: 14px;
+	  font-weight:bold;
+	}
+	#band_in_action {
+	  display:none
+	}
+	#coupon {
+	  background-color: yellow;
+	  border:5px dashed #000000;
+	  border-radius:15px;
+	  width:200px;
+	  position:absolute;
+	  top:0;
+	  right:0;
+	  margin:10px;
+	  text-align:center;
+-webkit-box-shadow: 10px 10px 10px 0px rgba(0,0,0,0.71);
+-moz-box-shadow: 10px 10px 10px 0px rgba(0,0,0,0.71);
+box-shadow: 10px 10px 10px 0px rgba(0,0,0,0.71);
+	}
+	#coupon_code {
+	  font-weight:bold;
+	  font-size:30px;
+	  display:block;
+	}
+	@media only screen and (max-width: 640px){
+	  #coupon {
+	  position:relative;
+    width:90%;
+    margin-left:auto;
+    margin-right:auto;
+	}
+	}
+	@media only screen and (max-width: 640px){
+	  #band_in_action {
+	    display: block;
+	    width:90%;
+	    margin-left:auto;
+	    margin-right:auto;
+	  }
+	}
+	@media only screen and (max-width: 640px){
+	  body {
+	    background-image: none;
+	  }
+	}
+	@media only screen and (max-width: 640px){
+	  #proTable td {
+	    display:block;
+	    width:100%;
+	  }
+	}
+	@media only screen and (max-width: 640px){
+	  #proTable {
+	    width:100%;
+	  }
+	}
+	@media only screen and (max-width: 640px){
+	  #testimonial {
+	    display:block;
+	    position:relative;
+	    width:90%;
+	    margin-left:auto;
+	    margin-right:auto;
+	  }
+	}
+  </style>
+</head>
+<body>
+<%= image_tag("black_logo.png", id: "logo") %>
+<h1 id="title">[Title From Ad]</h1>
+<h2 id="subtitle">[if there is a subtitle description]</h2>
+<%= image_tag("landing_page_bg.png", id: "band_in_action") %>
+<div id="coupon">
+<p>Use the code:
+<span id="coupon_code">CODE</span>
+When checking out to <span id="coupon_description">description</span></p>
+</div>
+<table id="proTable">
+<tr>
+<td colspan='2' style="text-align:left">
+The most common question we get at Rubberbanditz is “which band is right for me?” <b>All you need to know is your weight.</b> Once you find your band combo, click on it to see the item in our store.
+</td>
+</tr>
+<tr>
+<td>
+<h3 class="proTitle"> Athletes weighing <br>&lt; 140 lbs</h3>
+<%= image_tag("Medium-Heavy-Resistance-Band-Combo.jpg", class: "proImg") %>
+<p class="proText">Medium, Heavy Combo</p>
+<p class="proPrice">$29.99 <span class="atc">Add to Cart</span></p>
+</td>
+<td>
+<h3 class="proTitle">Athletes weighing <br>140 - 250 lbs</h3>
+<%= image_tag("Heavy-Robust-Resistance-Band-Combo.jpg", class: "proImg") %>
+<p class="proText">Heavy, Robust Combo</p>
+<p class="proPrice">$37.99 <span class="atc">Add to Cart</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<h3 class="proTitle">Athletes weighing <br>250 - 300 lbs</h3>
+<%= image_tag("Heavy-Power-Resistance-Band-Combo.jpg", class: "proImg") %>
+<p class="proText">Heavy, Power Combo</p>
+<p class="proPrice">$48.99 <span class="atc">Add to Cart</span></p></td>
+<td>
+<h3 class="proTitle">Athletes weighing <br>300 lbs +</h3>
+<%= image_tag("Robust-Power-Resistance-Band-Combo.jpg", class: "proImg") %>
+<p class="proText">Robust, Power Combo</p>
+<p class="proPrice">$52.99 <span class="atc">Add to Cart</span></p></td>
+</tr>
+<tr>
+<td colspan="2" style="padding:0;text-align:left;">
+<p>For more information on pull up bands, read our <a href="#">Pull up exercise page</a>, or visit our <a href="#">full store</a>.</p>
+</td>
+</tr>
+</table>
+
+<div id="testimonial">
+&quot;I recently received my bands, and was astounded to find out I 
+could actually do pull-ups with them! Of course, eventually I 
+hope to be able to pull up without the bands, but for now I am 
+absolutely thrilled.&quot;
+<div id="author">- Kathy</div>
+</div>
+
+
+
+		<script>
+$(function() {
+  var url = $.url();
+  $('#title').text(url.param('utm_title'));
+  document.title = url.param('utm_title');
+    $('#subtitle').text(url.param('utm_description'));
+    $('#coupon_code').text(url.param('utm_coupon'));
+    $('#coupon_description').text(url.param('utm_coupon_description'));
+});
+
+</script>
+</body>
+
+
+</html>

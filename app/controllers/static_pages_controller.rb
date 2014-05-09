@@ -21,6 +21,10 @@ class StaticPagesController < ApplicationController
   def paypal
   	redirect_to "https://www.paypal.com/us/vst/id=#{params[:Order_ID]}"
   end
+  
+  def landing_page
+    render layout: false
+  end
 end
 
 
