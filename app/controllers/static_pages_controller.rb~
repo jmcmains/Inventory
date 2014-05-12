@@ -23,7 +23,7 @@ class StaticPagesController < ApplicationController
   end
   
   def landing_page
-    layout: false
+    render layout: false
   end
 end
 

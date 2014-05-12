@@ -6,10 +6,8 @@ class ProductCount < ActiveRecord::Base
     spreadsheet = open_spreadsheet(file)
     inv = Event.create!(event_type: "Inventory",date: date)
     spreadsheet.each_with_index do |row,index|
-      if index != 0
-        product=Product.where(sku: row[1]).first
-        create!(event_id: inv.id, product_id: product.id, is_box:false, count: row[4])
-      end
+      product=Product.where(sku: row[0]).first
+      create!(event_id: inv.id, product_id: product.id, is_box:false, count: row[2])
     end
   end
   
