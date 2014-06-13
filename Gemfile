@@ -28,5 +28,5 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 
 group :production do
-	ruby '2.0.0'
+	ruby '2.1.2'
 end

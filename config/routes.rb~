@@ -3,6 +3,7 @@ Inventory::Application.routes.draw do
 	resources :users
 	resources :sessions, only: [:new, :create, :destroy]
 	
+	get '/landing_page', to: 'static_pages#landing_page'
 	get '/signup', to: 'users#new'
 	get '/signin', to: 'sessions#new'
 	delete '/signout', to: 'sessions#destroy', via: :delete
@@ -77,6 +78,7 @@ Inventory::Application.routes.draw do
 			get :new_phone
 			get :create_phone
 			post :create_single
+		  destroy :destroy_range
 			get :combo
 			get :orphans
 		end

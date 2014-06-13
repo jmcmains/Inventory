@@ -12,6 +12,14 @@ class OrdersController < ApplicationController
 		redirect_to new_order_path
 	end
 	
+	def destroy_range
+	  start_date = Date.new(params[:start_date]["day(1i)"].to_i,params[:start_date]["day(2i)"].to_i,params[:start_date]["day(3i)"].to_i)
+	  end_date = Date.new(params[:end_date]["day(1i)"].to_i,params[:end_date]["day(2i)"].to_i,params[:end_date]["day(3i)"].to_i)
+    Order.where('date >= ? AND date <= ?',start_date,end_date).destroy_all
+    flash[:success] = "Orders Deleted"
+    redirect_to new_order_path
+	end
+	
 	def create
 		infile = params[:order][:file].read
 		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|

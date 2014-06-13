@@ -78,6 +78,7 @@ Inventory::Application.routes.draw do
 			get :new_phone
 			get :create_phone
 			post :create_single
+		  post :destroy_range
 			get :combo
 			get :orphans
 		end

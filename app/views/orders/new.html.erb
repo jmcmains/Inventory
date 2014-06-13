@@ -4,7 +4,6 @@
 	last order: <%= Order.first.date %><br>
   <%= f.submit "Load Data", class: "btn btn-primary" %>
 <% end %>
-<% "#{Order.load_from_feed}" %>
 <% start_day = Date.today - 1.month %>
 <% end_day = Date.today %>
 <% sql = ActiveRecord::Base.connection() %>
@@ -16,7 +15,12 @@
 <% dates.each_with_index do |d,i| %>
   <% cnt2[dates2.index(d)]=cnt[i] %>
 <% end %>
-
+<h2>Remove Bad Data</h2>
+<%= form_tag destroy_range_orders_path do %>
+		Start Range: <%= date_select :start_date, "day", order: [:month, :day, :year], html: {class: "input-small"} %><br>
+		End Range: <%= date_select :end_date, "day", order: [:month, :day, :year], html: {class: "input-small"} %>
+  <%= submit_tag "destroy" %>
+<% end %>
 
 <div id="orders_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 

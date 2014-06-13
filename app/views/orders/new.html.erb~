@@ -1,9 +1,9 @@
 <%= form_for :order, url: {controller: "orders", action: "create", class: "form-inline"} do |f| %>
   <%= f.file_field :file %>
-	<%= f.hidden_field :origin, value: "Shipworks" %>
-	last order: <%= Order.first.date %>  <%= f.submit "Load Data", class: "btn btn-primary" %>
+	<%= f.hidden_field :origin, value: "Shipworks" %><br>
+	last order: <%= Order.first.date %><br>
+  <%= f.submit "Load Data", class: "btn btn-primary" %>
 <% end %>
-<% "#{Order.load_from_feed}" %>
 <% start_day = Date.today - 1.month %>
 <% end_day = Date.today %>
 <% sql = ActiveRecord::Base.connection() %>
@@ -16,6 +16,11 @@
   <% cnt2[dates2.index(d)]=cnt[i] %>
 <% end %>
 
+<%= form_tag destroy_range_orders_path do %>
+		Start Range: <%= date_select :start_date, "day", order: [:month, :day, :year], html: {class: "input-small"} %><br>
+		End Range: <%= date_select :end_date, "day", order: [:month, :day, :year], html: {class: "input-small"} %>
+  <%= submit_tag "destroy" %>
+<% end %>
 
 <div id="orders_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
