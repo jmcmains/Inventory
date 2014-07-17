@@ -20,6 +20,10 @@ $(function() {
 		<%= f.label :price %>
 		<%= f.text_field :price %>
 	</div>
+		<div class="field">
+		<%= f.label :sku %>
+		<%= f.text_field :sku %>
+	</div>
 	<% n=1 %>
 <h2>Products</h2>
 	<%= f.fields_for(:offering_products, :html => { :class => "form-inline"}) do |builder| %>

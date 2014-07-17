@@ -6,7 +6,7 @@
 <script>
 $(function() {
 	 $( ".offering" ).autocomplete({
-			source: $( ".offering" ).data('autocomplete-source')
+			source: $( "#offering_name" ).data('autocomplete-source')
 	});
 });
 </script>

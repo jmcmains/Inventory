@@ -60,6 +60,7 @@ Inventory::Application.routes.draw do
 	resources :events do
 		collection do
 			get :inventory
+			get :amz_inventory
 			get :po
 			get :po_received
 			get :new_inventory

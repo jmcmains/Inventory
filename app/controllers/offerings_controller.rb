@@ -32,9 +32,9 @@ class OfferingsController < ApplicationController
 	def add_price
 		infile = params['/offerings'][:file].read
 		CSV.parse(infile, headers: true, col_sep: "\t") do |row|
-			off=Offering.find_by(name: row[0])
+			off=Offering.find_by(name: row["name"])
 			if !off.blank?
-				off.update_attributes(price: row[1])
+				off.update_attributes(price: row["price"],sku: row["sku")
 			end
 		end
 		flash[:success] = "Prices Loaded"
@@ -43,9 +43,9 @@ class OfferingsController < ApplicationController
 		  
   def create_csv
 		csv = CSV.generate(col_sep: "\t") do |csv|
-			csv << ["name", "price","products"]
+			csv << ["name", "sku","price","products"]
 			Offering.all.sort_by(&:id).each do |offer|
-				csv << [offer.name, offer.price, offer.offering_products.map{ |o| "#{o.quantity} - #{o.product.name}" }.join(', ')]
+				csv << [offer.name, offer.sku,	offer.price, offer.offering_products.map{ |o| "#{o.quantity} - #{o.product.name}" }.join(', ')]
 			end
 		end
 		file ="offers.txt"
@@ -158,7 +158,7 @@ private
 
 
     def offering_params
-      params.require(:offering).permit(:name,:price, offering_products_attributes: [:id, :offering_id, :product_id, :product_name, :quantity])
+      params.require(:offering).permit(:name,:price, offering_products_attributes: [:id, :offering_id, :product_id, :product_name, :quantity, :sku])
     end
     
 end

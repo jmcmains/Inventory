@@ -26,6 +26,7 @@ end
 gem 'jquery-rails'
 
 gem 'jquery-ui-rails'
+gem 'peddler'
 
 group :production do
 	ruby '2.1.2'

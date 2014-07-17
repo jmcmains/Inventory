@@ -1,0 +1,22 @@
+<% require 'peddler' %>
+<% require 'active_support' %>
+<% client_us = MWS.reports(marketplace_id: 'ATVPDKIKX0DER', merchant_id: 'A272UC6GQ1EK7B', aws_access_key_id: 'AKIAIQHK2FY7EEQKBENA', aws_secret_access_key: '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') %>
+<h1>US Numbers</h1>
+<% client_us.request_report("_GET_AFN_INVENTORY_DATA_") %>
+<% reports=Hash.from_xml(client_us.get_report_list.body) %>
+<% report_id=reports["GetReportListResponse"]["GetReportListResult"]["ReportInfo"][1]["ReportId"] %>
+<% inventory_report=client_us.get_report(report_id).body %>
+<% CSV.parse(inventory_report, headers: true, col_sep: "\t") do |row| %>
+<%= row["seller-sku"] %> - <%= row["Quantity Available"] %><br>
+<% end %>
+
+<% client_ca = MWS.reports(marketplace_id: 'A2EUQ1WTGCTBG2', merchant_id: 'A15J4ZSOBGZ08', aws_access_key_id: 'AKIAIZHQAZCXWAFW7FQA', aws_secret_access_key: '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') %>
+<h1>Canada Numbers</h1>
+<% client_ca.request_report("_GET_AFN_INVENTORY_DATA_") %>
+<% reports=Hash.from_xml(client_ca.get_report_list.body) %>
+<% report_id=reports["GetReportListResponse"]["GetReportListResult"]["ReportInfo"][0]["ReportId"] %>
+<% inventory_report=client_ca.get_report(report_id).body %>
+<% CSV.parse(inventory_report, headers: true, col_sep: "\t") do |row| %>
+<%= row["seller-sku"] %> - <%= row["Quantity Available"] %><br>
+<% end %>
+

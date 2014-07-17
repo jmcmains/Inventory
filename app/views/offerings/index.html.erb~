@@ -60,8 +60,8 @@ Entries shown: <%= @offerings.total_entries %>
 	<tr>
 		<td style="width:91px">Modify</span></td>
 		<td style="text-align:center;width:250px">Offering Name<%= render "sort_buttons", name: "NAME", search: @search, blank: @blank %></td>
-		<td style="text-align:center;width:90px">Price</td>
-		<td style="text-align:center;width:75px">Weight (Lbs)</td>
+		<td style="text-align:center;width:60px">Price</td>
+		<td style="text-align:center;width:60px">Weight (Lbs)</td>
 		<td  style="text-align:center;width:150px">Included</td>
 		<td style="text-align:center">AMZ US<br><%= render "sort_buttons", name: "US", search: @search, blank: @blank %></td>
 		<td style="text-align:center">AMZ CAD<br><%= render "sort_buttons", name: "CA", search: @search, blank: @blank %></td>
@@ -104,12 +104,12 @@ Entries shown: <%= @offerings.total_entries %>
 		<% end %>
 		</ul>
 	</td>
-	<td class="number"><%= offer.amzus.count %></td>
-	<td class="number"><%= offer.amzca.count %></td>
-	<td class="number"><%= offer.website.count %></td>
-	<td class="number"><%= offer.buy.count %></td>
-	<td class="number"><%= offer.ebay.count %></td>
-	<td class="number"><%= offer.phone.count %></td>
+	<td class="number"><%= offer.orders.amzus.count %></td>
+	<td class="number"><%= offer.orders.amzca.count %></td>
+	<td class="number"><%= offer.orders.website.count %></td>
+	<td class="number"><%= offer.orders.buy.count %></td>
+	<td class="number"><%= offer.orders.ebay.count %></td>
+	<td class="number"><%= offer.orders.phone.count %></td>
 	<td class="number"><%= offer.orders.count %></td>
 	</tr>
 <% end %>

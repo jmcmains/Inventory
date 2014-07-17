@@ -43,9 +43,9 @@ class OfferingsController < ApplicationController
 		  
   def create_csv
 		csv = CSV.generate(col_sep: "\t") do |csv|
-			csv << ["name", "price","products"]
+			csv << ["name", "sku","price","products"]
 			Offering.all.sort_by(&:id).each do |offer|
-				csv << [offer.name, offer.price, offer.offering_products.map{ |o| "#{o.quantity} - #{o.product.name}" }.join(', ')]
+				csv << [offer.name, offer.sku,offer.price, offer.offering_products.map{ |o| "#{o.quantity} - #{o.product.name}" }.join(', ')]
 			end
 		end
 		file ="offers.txt"
@@ -115,7 +115,7 @@ class OfferingsController < ApplicationController
 	  	@offerings=Offering.includes(:products).where("products.id IS NULL").references(:products)
   	end
   	if !@no_price.blank?
-	  	@offerings=Offering.where("price IS NULL").references(:products)
+	  	@offerings=Offering.where("price IS NULL")
   	end
   	if params[:sort_by] == "US_ASC"
   		@offerings=@offerings.sort_by {|o| o.orders.amzus.count }
@@ -158,7 +158,7 @@ private
 
 
     def offering_params
-      params.require(:offering).permit(:name,:price, offering_products_attributes: [:id, :offering_id, :product_id, :product_name, :quantity])
+      params.require(:offering).permit(:name,:price, offering_products_attributes: [:id, :offering_id, :product_id, :product_name, :quantity, :sku])
     end
     
 end
