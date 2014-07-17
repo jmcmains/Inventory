@@ -34,7 +34,7 @@ class OfferingsController < ApplicationController
 		CSV.parse(infile, headers: true, col_sep: "\t") do |row|
 			off=Offering.find_by(name: row["name"])
 			if !off.blank?
-				off.update_attributes(price: row["price"],sku: row["sku")
+				off.update_attributes(price: row["price"],sku: row["sku"])
 			end
 		end
 		flash[:success] = "Prices Loaded"
