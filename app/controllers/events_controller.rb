@@ -12,6 +12,9 @@ class EventsController < ApplicationController
     redirect_to inventory_events_path, notice: "Inventory Loaded."
 	end
 
+	def amz_inventory
+		@title="Amazon Inventory"
+	end
   
   def new_inventory
   	@event=Event.new
