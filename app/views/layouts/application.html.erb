@@ -40,7 +40,7 @@
 			<li><%= link_to "All Products", products_path %></li>
 			<li><%= link_to "Amz Canada Sales", canada_sales_products_path %></li>
 			<li class="divider"></li>
-			<% Product.sort_by { |p| p.name }.each do |p| %>
+			<% Product.all.sort_by { |p| p.name }.each do |p| %>
 				<li><%= link_to p.name, product_path(p) %></li>
 			<% end %>
 		</ul>
