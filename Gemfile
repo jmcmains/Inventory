@@ -28,6 +28,7 @@ gem 'rails_12factor'
 
 gem 'jquery-ui-rails'
 gem 'peddler'
+gem 'highcharts-rails'
 
 group :production do
 	ruby '2.1.2'
