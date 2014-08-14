@@ -19,7 +19,8 @@
 	<% end %>
 <% end %>
 </td>
-<td>
+<%
+=begin %><td>
 <% if @no_price.blank? %>
 	<%= form_tag offerings_path, method: :get, class: "form-search form-inline" do %>
 			<%= hidden_field_tag :search, @search %>
@@ -37,10 +38,18 @@
 <td>
 <%= link_to "Orphaned Orders", orphans_orders_path, class: "btn" %></br>
 </td>
+<%
+=end %>
 <td>
-<%= form_for offerings_path, url: {controller: :offerings, action: :add_price, method: :patch} do |f| %>
+<%= form_for offerings_path, url: {controller: :offerings, action: :add_price_csv, method: :patch} do |f| %>
   <%= f.file_field :file %>
-  <%= f.submit "Load Data", class: "btn btn-primary" %>
+  <%= f.submit "Load Price Data", class: "btn btn-primary" %>
+<% end %>
+</td>
+<td>
+<%= form_for offerings_path, url: {controller: :offerings, action: :add_sku_csv, method: :patch} do |f| %>
+  <%= f.file_field :file %>
+  <%= f.submit "Load SKU Data", class: "btn btn-primary" %>
 <% end %>
 </td>
 </tr>

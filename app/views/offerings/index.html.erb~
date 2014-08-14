@@ -19,7 +19,8 @@
 	<% end %>
 <% end %>
 </td>
-<td>
+<%
+=begin %><td>
 <% if @no_price.blank? %>
 	<%= form_tag offerings_path, method: :get, class: "form-search form-inline" do %>
 			<%= hidden_field_tag :search, @search %>
@@ -37,10 +38,12 @@
 <td>
 <%= link_to "Orphaned Orders", orphans_orders_path, class: "btn" %></br>
 </td>
+<%
+=end %>
 <td>
-<%= form_for offerings_path, url: {controller: :offerings, action: :add_price, method: :patch} do |f| %>
+<%= form_for offerings_path, url: {controller: :offerings, action: :add_price_csv, method: :patch} do |f| %>
   <%= f.file_field :file %>
-  <%= f.submit "Load Data", class: "btn btn-primary" %>
+  <%= f.submit "Load Price Data", class: "btn btn-primary" %>
 <% end %>
 </td>
 </tr>
@@ -58,7 +61,8 @@ Entries shown: <%= @offerings.total_entries %>
 	<td colspan="7" style="text-align:center">Sales</td>
 	</tr>
 	<tr>
-		<td style="width:91px">Modify</span></td>
+		<td style="width:80px">Modify</span></td>
+		<td style="width:80px">SKU</span></td>
 		<td style="text-align:center;width:250px">Offering Name<%= render "sort_buttons", name: "NAME", search: @search, blank: @blank %></td>
 		<td style="text-align:center;width:60px">Price</td>
 		<td style="text-align:center;width:60px">Weight (Lbs)</td>
@@ -80,6 +84,7 @@ Entries shown: <%= @offerings.total_entries %>
 	<tr>
 	<td><%= link_to 'Edit', edit_offering_path(offer) %> | <%= link_to "Delete", offer, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{offer.name}" %></td>
+  <td><%= offer.sku %></td>
   <td><%= link_to offer.name, offering_path(offer) %></td>
   <td>
   <div id="price_<%= offer.id %>">

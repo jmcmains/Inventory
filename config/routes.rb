@@ -93,7 +93,8 @@ Inventory::Application.routes.draw do
 				get :autocomplete
 				get :autocomplete_no_price
 				get :all
-				post :add_price
+				post :add_price_csv
+				post :add_sku_csv
 				get :create_csv
 		end
 	end

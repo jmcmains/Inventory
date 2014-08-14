@@ -2,16 +2,18 @@
 <% data=Offering.amazon("US") %>
 <table class="table">
 <tr>
+<th>SKU</th>
 <th>Offer</th>
 <th>FBA Inventory</th>
 <th>Need (4 week lead time)</th>
 </tr>
-<% data["offer"].each_with_index do |o,i| %>
+<% data.sort_by { |a| a["offering"].sku).each do |kit| %>
 <% if !o.blank? %>
-	<% need=data["offer"][i].amazon_need(data["inventory"][i],"Amazon US").round(1) %>
+	<% need=kit["offering"].amazon_need(kit["inventory"],"Amazon US").round(1) %>
 	<tr class="<%= need > 0 ? 'error' : '' %>">
-		<td><%= data["offer"][i].name %></td>
-		<td><%= data["inventory"][i] %></td>
+		<td><%= kit["offering"].sku %></td>
+		<td><%= kit["offering"].name %></td>
+		<td><%= kit["inventory"] %></td>
 		<td><%= need %></td>
 		</tr>
 	<% end %>
@@ -28,7 +30,7 @@
 </tr>
 <% data["offer"].each_with_index do |o,i| %>
 <% if !o.blank? %>
-	<% need=data["offer"][i].amazon_need(data["inventory"][i],"Amazon CA").round(1) %>
+	<% need=data["offer"][i].amazon_need(data["inventory"][i],"Amazon Canada").round(1) %>
 	<tr class="<%= need > 0 ? 'error' : '' %>">
 		<td><%= data["offer"][i].name %></td>
 		<td><%= data["inventory"][i] %></td>

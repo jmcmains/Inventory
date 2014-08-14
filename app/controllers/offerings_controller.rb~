@@ -29,15 +29,23 @@ class OfferingsController < ApplicationController
 		end
 	end
 	
-	def add_price
+	def add_price_csv
 		infile = params['/offerings'][:file].read
 		CSV.parse(infile, headers: true, col_sep: "\t") do |row|
 			off=Offering.find_by(name: row["name"])
 			if !off.blank?
-				off.update_attributes(price: row["price"],sku: row["sku")
+				off.update_attributes(price: row["price"])
 			end
 		end
 		flash[:success] = "Prices Loaded"
+		redirect_to offerings_path
+	end
+	
+	def add_sku_csv
+		infile = params['/offerings'][:file].read
+		CSV.parse(infile, headers: true, col_sep: "\t") do |row| 
+			Offering.find_by(name: row["name"]).update_attributes(sku: row["sku"]) if !Offering.find_by(name: row["name"]).blank?
+		flash[:success] = "Skus Loaded"
 		redirect_to offerings_path
 	end
 		  
@@ -158,7 +166,7 @@ private
 
 
     def offering_params
-      params.require(:offering).permit(:name,:price, offering_products_attributes: [:id, :offering_id, :product_id, :product_name, :quantity, :sku])
+      params.require(:offering).permit(:name,:price, :sku, offering_products_attributes: [:id, :offering_id, :product_id, :product_name, :quantity])
     end
     
 end

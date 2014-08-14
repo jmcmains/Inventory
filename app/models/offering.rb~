@@ -107,38 +107,21 @@ require 'active_support'
 		products = MWS.products(marketplace_id: marketplace_id, merchant_id: merchant_id, aws_access_key_id: aws_access_key_id, aws_secret_access_key: aws_secret_access_key)
 		reports.request_report("_GET_AFN_INVENTORY_DATA_")
 		report_list=Hash.from_xml(reports.get_report_list.body)
-		report_id = []
-		report_type = []
-		report_list["GetReportListResponse"]["GetReportListResult"]["ReportInfo"].each_with_index do |r,i|
-			report_id[i] = r["ReportId"]
-			report_type[i] = r["ReportType"]
-
+		inventory_report=""
+		report_list["GetReportListResponse"]["GetReportListResult"]["ReportInfo"].each do |r|
+			inventory_report=reports.get_report(r["ReportId"]).body if r["ReportType"] == "_GET_AFN_INVENTORY_DATA_"
 		end
-		r_id=report_id[report_type.index("_GET_AFN_INVENTORY_DATA_")]
-		inventory_report=reports.get_report(r_id).body
 		i=0
-		a=0
 		offer=[]
-		inventory=[]
-		sku=[]
 		CSV.parse(inventory_report, headers: true, col_sep: "\t") do |row|
 			if row["Warehouse-Condition-code"] == "SELLABLE"
-				product= Hash.from_xml(products.get_matching_product(row["asin"]).body)
-				if product["GetMatchingProductResponse"]["GetMatchingProductResult"]["status"] == "Success"
-					title=product["GetMatchingProductResponse"]["GetMatchingProductResult"]["Product"]["AttributeSets"]["ItemAttributes"]["Title"]
-					offer[a]=where(name: title).first
-					inventory[a]=row["Quantity Available"].to_f
-					sku[a]=row["seller-sku"]
-					a=a+1
-				end
+				offer[i]=Hash.new
+				offer[i]["offering"]=Offering.where(sku: row["seller-sku"]).first
+				offer[i]["inventory"]=row["Quantity Available"].to_f
+				i=i+1
 			end
-			i=i+1
 		end
-		output=Hash.new
-		output["offer"]=offer
-		output["inventory"]=inventory
-		output["sku"]=sku
-		return output
+		return offer
   end
   
   def self.add_price(file)

@@ -1,0 +1,12 @@
+<% data=Offering.amazon(country) %>
+<% data.sort_by { |a| a["offering"].sku }.each do |kit| %>
+<% if !o.blank? %>
+	<% need=kit["offering"].amazon_need(kit["inventory"],origin).round(1) %>
+	<tr class="<%= need > 0 ? 'error' : '' %>">
+		<td><%= kit["offering"].sku %></td>
+		<td><%= kit["offering"].name %></td>
+		<td><%= kit["inventory"] %></td>
+		<td><%= need %></td>
+		</tr>
+	<% end %>
+<% end %>
