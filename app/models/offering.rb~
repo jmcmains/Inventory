@@ -89,6 +89,31 @@ class Offering < ActiveRecord::Base
   		return all
   	end
   end
+  
+  def self.inventory(skus,location)
+  	if location == "US"
+merchant_id = "A272UC6GQ1EK7B"
+marketplace_id = "ATVPDKIKX0DER"
+aws_access_key_id = "AKIAIQHK2FY7EEQKBENA"
+aws_secret_access_key = "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"
+  	elsif location == "CA"
+			merchant_id = "A15J4ZSOBGZ08"
+			marketplace_id = "A2EUQ1WTGCTBG2"
+			aws_access_key_id = "AKIAIZHQAZCXWAFW7FQA"
+			aws_secret_access_key = "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"
+  	end
+  	inventory_client = MWS.fulfillment_inventory(marketplace_id: marketplace_id, merchant_id: merchant_id, aws_access_key_id: aws_access_key_id, aws_secret_access_key: aws_secret_access_key)
+    resp = inventory_client.list_inventory_supply seller_skus: skus
+    items = resp.xml['ListInventorySupplyResponse']['ListInventorySupplyResult']['InventorySupplyList']['member']
+    if skus.count == 1
+    	{items['SellerSKU'] => items['InStockSupplyQuantity'].to_i}
+    else
+		  items.inject Hash.new(0) do |inventory,item|
+		    inventory.merge(item['SellerSKU'] => item['InStockSupplyQuantity'].to_i)
+		  end
+		end
+  end
+  
 require 'peddler'
 require 'active_support'
   def self.amazon(location)
@@ -104,7 +129,6 @@ require 'active_support'
 			aws_secret_access_key = "0vwAW099H8wAlNVAHvGib5xwRZCsJM7NNB5Btbc5"
   	end
 		reports = MWS.reports(marketplace_id: marketplace_id, merchant_id: merchant_id, aws_access_key_id: aws_access_key_id, aws_secret_access_key: aws_secret_access_key)
-		products = MWS.products(marketplace_id: marketplace_id, merchant_id: merchant_id, aws_access_key_id: aws_access_key_id, aws_secret_access_key: aws_secret_access_key)
 		reports.request_report("_GET_AFN_INVENTORY_DATA_")
 		report_list=Hash.from_xml(reports.get_report_list.body)
 		inventory_report=""

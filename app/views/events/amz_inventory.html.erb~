@@ -1,5 +1,16 @@
 <h1>US Numbers</h1>
-<% data=Offering.amazon("US") %>
+<table class="table">
+<tr>
+<th>SKU</th>
+<th>Offer</th>
+<th>FBA Inventory</th>
+<th>Need (4 week lead time)</th>
+<th>Need (90 day lead time)</th>
+</tr>
+<%= render "amz_table", country: "US", origin: "Amazon US" %>
+</table>
+
+<h1>Canada Numbers</h1>
 <table class="table">
 <tr>
 <th>SKU</th>
@@ -7,35 +18,5 @@
 <th>FBA Inventory</th>
 <th>Need (4 week lead time)</th>
 </tr>
-<% data.sort_by { |a| a["offering"].sku).each do |kit| %>
-<% if !o.blank? %>
-	<% need=kit["offering"].amazon_need(kit["inventory"],"Amazon US").round(1) %>
-	<tr class="<%= need > 0 ? 'error' : '' %>">
-		<td><%= kit["offering"].sku %></td>
-		<td><%= kit["offering"].name %></td>
-		<td><%= kit["inventory"] %></td>
-		<td><%= need %></td>
-		</tr>
-	<% end %>
-<% end %>
-</table>
-
-<h1>Canada Numbers</h1>
-<% data=Offering.amazon("CA") %>
-<table class="table">
-<tr>
-<th>Offer</th>
-<th>FBA Inventory</th>
-<th>Need (4 week lead time)</th>
-</tr>
-<% data["offer"].each_with_index do |o,i| %>
-<% if !o.blank? %>
-	<% need=data["offer"][i].amazon_need(data["inventory"][i],"Amazon Canada").round(1) %>
-	<tr class="<%= need > 0 ? 'error' : '' %>">
-		<td><%= data["offer"][i].name %></td>
-		<td><%= data["inventory"][i] %></td>
-		<td><%= need %></td>
-		</tr>
-	<% end %>
-<% end %>
+<%= render "amz_table", country: "CA", origin: "Amazon Canada" %>
 </table>
