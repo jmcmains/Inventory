@@ -139,7 +139,7 @@ class EventsController < ApplicationController
   	  redirect_to inventory_events_path
   	else
   		@event.product_counts.each do |pc|
-  			sp=SupplierPrice.new(date: @event.date, supplier_id: @event.supplier_id, product_id: pc.product_id, quantity: pc.count, price: pc.price)
+  			sp=SupplierPrice.new(date: @event.date, supplier_id: @event.supplier_id, product_id: pc.product_id, quantity: pc.count, price: pc.price/pc.count)
   			sp.save
   		end
   	  redirect_to po_events_path
