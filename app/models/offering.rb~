@@ -136,7 +136,7 @@ require 'active_support'
     if items.class == Array
     	items=items.reject { |a| a["ASIN"].blank? }
     	if items.length == 1
-    		{items['SellerSKU'] => items['TotalSupplyQuantity'].to_i}
+    		{items[0]['SellerSKU'] => items[0]['TotalSupplyQuantity'].to_i}
 		  else
 				items.inject Hash.new(0) do |inv,item|
 				  	inv.merge(item['SellerSKU'] => item['TotalSupplyQuantity'].to_i)

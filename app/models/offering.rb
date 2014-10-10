@@ -63,7 +63,7 @@ require 'active_support'
   
   def self.amazon_sales_count(sku,origin)
   	sql = ActiveRecord::Base.connection()
-  	d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (offerings.sku = '#{sku}') AND (orders.origin = '#{origin}') GROUP BY year, week ORDER BY year, week ")
+  	d=sql.execute("SELECT SUM(orders.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (offerings.sku = '#{sku}') AND (orders.origin = '#{origin}') GROUP BY year, week ORDER BY year, week ")
   	data=Hash.new()
   	y=d.map { |a| a["sum"].to_i }
 		dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) if !a['year'].nil? && !a['week'].nil? }
