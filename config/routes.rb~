@@ -60,6 +60,7 @@ Inventory::Application.routes.draw do
 	resources :events do
 		collection do
 			get :inventory
+			get :send_inventory
 			get :amz_inventory
 			get :po
 			get :po_received
@@ -91,9 +92,11 @@ Inventory::Application.routes.draw do
 		collection do
 				get :blank
 				get :autocomplete
+				get :autocomplete_sku
 				get :autocomplete_no_price
 				get :all
-				post :add_price
+				post :add_price_csv
+				post :add_sku_csv
 				get :create_csv
 		end
 	end

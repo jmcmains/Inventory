@@ -1,7 +1,7 @@
 <h1><%= @offering.name %></h1>
 Total Weight: <%= @offering.total_weight %> lbs<br>
-Current FBA Inventory: <%= amz_inventory=Offering.inventory([@offering.sku],"US")[@offering.sku] %><br>
-<% y = @offering.amazon_sales_count("Amazon US")["y"] %><% d2 = @offering.amazon_sales_count("Amazon US")["date"] %>
+Current FBA Inventory: <%= amz_inventory=Offering.inventory([@offering.sku],"Amazon US")[@offering.sku] %><br>
+<% y = Offering.amazon_sales_count(@offering.sku,"Amazon US")["y"] %><% d2 = Offering.amazon_sales_count(@offering.sku,"Amazon US")["dates"] %>
 <% x = [] %>
 <% d2.each_with_index do |d,i| %>
 	<% x[i]=((d-d2[0])/7).to_f %>
@@ -110,12 +110,11 @@ Current FBA Inventory: <%= amz_inventory=Offering.inventory([@offering.sku],"US"
     });
   });
 </script>
-<% leadTime = 90 %>
-
+<% [28,90].each do |leadTime| %>
 <h3><a href="#", style="color:#999">Assuming a <%= leadTime %> day lead time</a></h3>
 <blockquote>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
-Current Inventory: <% ci = amz_inventory %><%= ci.round %><br>
+Current Inventory: <%= ci = amz_inventory %><br>
 Sum of Orders Currently in the Pipeline: <% pl = 0 %><%= pl. round %><br>
 Slope of the Demand Line: <%= m.round %><br>
 Intercept of the Demand Line: <%= b.round %><br>
@@ -129,3 +128,4 @@ Predicted Demand:
 <%= pd.round %><br>
 Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %>peices <br>
 </blockquote>
+<% end %>

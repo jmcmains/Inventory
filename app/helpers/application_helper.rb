@@ -3,10 +3,10 @@ module ApplicationHelper
     f.hidden_field(:_destroy) + link_to(name, "#", html_options= { onclick: "remove_fields(this)", class: "btn btn-danger" })
   end
   
-  def link_to_add_fields(name, f, association)
+  def link_to_add_fields(name, f, association, show_offer)
     new_object = f.object.class.reflect_on_association(association).klass.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render(association.to_s.singularize + "_fields", :f => builder)
+      render(association.to_s.singularize + "_fields", :f => builder, :show_offer => show_offer)
     end
     link_to(name, "#", html_options= { onclick: "add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")", class: "btn btn-success"})
   end

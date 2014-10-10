@@ -45,6 +45,7 @@ class OfferingsController < ApplicationController
 		infile = params['/offerings'][:file].read
 		CSV.parse(infile, headers: true, col_sep: "\t") do |row| 
 			Offering.find_by(name: row["name"]).update_attributes(sku: row["sku"]) if !Offering.find_by(name: row["name"]).blank?
+		end
 		flash[:success] = "Skus Loaded"
 		redirect_to offerings_path
 	end
@@ -81,6 +82,11 @@ class OfferingsController < ApplicationController
 	def autocomplete
 		@offerings = Offering.search(params[:term],true)
 		render json: @offerings.map(&:name)
+	end
+	
+	def autocomplete_sku
+		@offerings = Offering.search_sku(params[:term])
+		render json: @offerings.map(&:sku)
 	end
 	
 	def autocomplete_no_price

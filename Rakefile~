@@ -1,0 +1,46 @@
+#!/usr/bin/env rake
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+
+#require File.expand_path('../config/application', __FILE__)
+
+#Inventory::Application.load_tasks
+
+require 'rake'
+
+require 'rake/clean'
+
+#ChannelAdvisor Web Services module name
+ROOT_MODULE="CAWS"
+
+# where the wsdl's are
+WSDL_ROOT="https://api.channeladvisor.com/ChannelAdvisorAPI/v1/"
+
+# subdir to store generated code
+GENERATED_SOURCE_DIR="soap"
+
+task :default => :wsdl
+
+desc "Build all wsdls"
+task :wsdl do
+  wsdl2ruby("Cart", "#{WSDL_ROOT}/CartService.asmx?WSDL")
+  wsdl2ruby("Inventory", "#{WSDL_ROOT}/inventoryService.asmx?WSDL")
+  wsdl2ruby("Orders", "#{WSDL_ROOT}/OrderService.asmx?WSDL")
+  wsdl2ruby("Shipping", "#{WSDL_ROOT}/ShippingService.asmx?WSDL")
+  wsdl2ruby("Tax", "#{WSDL_ROOT}/TaxService.asmx?WSDL")
+end
+
+desc "build ZIP distribution"
+task :zip do
+  FileUtils.rm_f('ruby_soap4.zip')
+  %x(zip -r ruby_soap4.zip . -x "*/.svn/*" -x ".svn/*")
+end
+
+# run wsdl2ruby and generate the code
+def wsdl2ruby(service, wsdl)
+  l = service.downcase
+  FileUtils.mkdir_p(GENERATED_SOURCE_DIR)
+  cmd = %Q(wsdl2ruby.rb --force --type client --module_path '#{ROOT_MODULE}')
+  %x(cd #{GENERATED_SOURCE_DIR} ; #{cmd} --wsdl #{wsdl} --classdef #{service} )
+end
+

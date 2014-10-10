@@ -8,15 +8,18 @@ class Offering < ActiveRecord::Base
   validates :name, presence: true
   scope :with_n_products, lambda {|n| {:joins => :offering_products, :group => "offering_products.offering_id", :having => ["count(offering_id) = ?", n]}}
 
+require 'peddler'
+require 'active_support'
+
   def value
   	sql = ActiveRecord::Base.connection()
   	d=sql.execute("SELECT SUM(products.price * offering_products.quantity) as purchases FROM offerings INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (offerings.id = #{id})")
   	return d[0]["purchases"].to_f
   end
   
-  def amazon_trend(origin)
-  	y = amazon_sales_count(origin)["y"]
-		d2 = amazon_sales_count(origin)["date"]
+  def amazon_trend(sku,origin)
+  	y = amazon_sales_count(sku,origin)["y"]
+		d2 = amazon_sales_count(sku,origin)["date"]
 		output=Hash.new
   	output["m"]=[]
   	output["b"]=[]
@@ -35,9 +38,8 @@ class Offering < ActiveRecord::Base
 		return output
   end
   
-  def amazon_need(currentInventory,origin)
-  	leadTime=28
-		y = amazon_sales_count(origin)["y"]
+  def self.amazon_need(sku,currentInventory,origin,leadTime)
+		y = self.amazon_sales_count(sku,origin)["y"]
 		(0..y.length-1).each do |n|
 			y[n] = 0 if !y[n]
 		end
@@ -59,20 +61,39 @@ class Offering < ActiveRecord::Base
 		return needed
 	end
   
-  def amazon_sales_count(origin)
-  	offers=Order.where(offering_id: id,origin: origin).sort_by(&:date).group_by { |o| o.date.beginning_of_week }
-  	output=Hash.new
-  	output["y"]=[]
-  	output["date"]=[]
-  	(offers.first[0]..Date.today.beginning_of_week).step(7).to_a.each_with_index do |date,i|
-  		if !offers[date].blank?
-  			output["y"][i]=offers[date].sum(&:quantity)
-  		else
-				output["y"][i]=0
+  def self.amazon_sales_count(sku,origin)
+  	sql = ActiveRecord::Base.connection()
+  	d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id WHERE (offerings.sku = '#{sku}') AND (orders.origin = '#{origin}') GROUP BY year, week ORDER BY year, week ")
+  	data=Hash.new()
+  	y=d.map { |a| a["sum"].to_i }
+		dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) if !a['year'].nil? && !a['week'].nil? }
+		if y.count > 0
+			if dates.last >= Date.today.beginning_of_week-1
+				dates.pop
+				y.pop	
 			end
-			output["date"][i]=date
+		end
+		data["dates"]=Hash.new()
+		data["y"]=Hash.new()
+		if !dates.blank?
+			data["dates"]=((dates.first..(Date.today.beginning_of_week-7)).step(7)).to_a
+			data["y"]=Array.new(data["dates"].length,0)
+			dates.each_with_index do |d,i|
+				data["y"][data["dates"].index(d)]=y[i]
+			end
+		end
+		return data
+  end
+  
+  def self.search_sku(search)
+  	if search
+			words = search.to_s.strip.split
+		  words.inject(all) do |combined_scope, word|
+					combined_scope.where('LOWER(sku) LIKE ?',"%#{word.downcase}%")
+		  end
+  	else
+  		return all
   	end
-  	return output
   end
   
   def self.search(search,price)
@@ -89,62 +110,50 @@ class Offering < ActiveRecord::Base
   		return all
   	end
   end
+  def self.amazon_id(location)
+		if location == "Amazon US"
+			output = {merchant_id: "A272UC6GQ1EK7B",marketplace_id: "ATVPDKIKX0DER", aws_access_key_id: "AKIAIQHK2FY7EEQKBENA", aws_secret_access_key: "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"}
+		elsif location == "Amazon Canada"
+			output = {merchant_id: "A15J4ZSOBGZ08", marketplace_id: "A2EUQ1WTGCTBG2", aws_access_key_id: "AKIAIZHQAZCXWAFW7FQA", aws_secret_access_key: "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"}
+		end
+		return output
+  end
+  
+  def self.inventory_client(location)
+  	data=amazon_id(location)
+  	return MWS.fulfillment_inventory(data)
+  end
+  
+  def self.report(location)
+  	data=amazon_id(location)
+  	return MWS.fulfillment_inventory(data)
+  end
   
   def self.inventory(skus,location)
-  	if location == "US"
-merchant_id = "A272UC6GQ1EK7B"
-marketplace_id = "ATVPDKIKX0DER"
-aws_access_key_id = "AKIAIQHK2FY7EEQKBENA"
-aws_secret_access_key = "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"
-  	elsif location == "CA"
-			merchant_id = "A15J4ZSOBGZ08"
-			marketplace_id = "A2EUQ1WTGCTBG2"
-			aws_access_key_id = "AKIAIZHQAZCXWAFW7FQA"
-			aws_secret_access_key = "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"
-  	end
-  	inventory_client = MWS.fulfillment_inventory(marketplace_id: marketplace_id, merchant_id: merchant_id, aws_access_key_id: aws_access_key_id, aws_secret_access_key: aws_secret_access_key)
-    resp = inventory_client.list_inventory_supply seller_skus: skus
+  	ic=inventory_client(location)
+    resp = ic.list_inventory_supply seller_skus: skus
     items = resp.xml['ListInventorySupplyResponse']['ListInventorySupplyResult']['InventorySupplyList']['member']
-    if skus.count == 1
-    	{items['SellerSKU'] => items['InStockSupplyQuantity'].to_i}
+    items=items.reject { |a| a["ASIN"].blank? }
+    if items.length == 1
+    		{items['SellerSKU'] => items['TotalSupplyQuantity'].to_i}
     else
-		  items.inject Hash.new(0) do |inventory,item|
-		    inventory.merge(item['SellerSKU'] => item['InStockSupplyQuantity'].to_i)
+		  items.inject Hash.new(0) do |inv,item|
+		    	inv.merge(item['SellerSKU'] => item['TotalSupplyQuantity'].to_i)
 		  end
 		end
   end
   
-require 'peddler'
-require 'active_support'
   def self.amazon(location)
-  	if location == "US"
-  		merchant_id = "A272UC6GQ1EK7B"
-			marketplace_id = "ATVPDKIKX0DER"
-			aws_access_key_id = "AKIAIQHK2FY7EEQKBENA"
-			aws_secret_access_key = "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"
-  	elsif location == "CA"
-			merchant_id = "A15J4ZSOBGZ08"
-			marketplace_id = "A2EUQ1WTGCTBG2"
-			aws_access_key_id = "AKIAIZHQAZCXWAFW7FQA"
-			aws_secret_access_key = "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"
+  	skus=Offering.all.map(&:sku).uniq.compact.reject { |c| c.empty? }
+  	offer = Hash.new()
+  	if skus.length > 50
+  		count=(skus.length/50.0).ceil
+  		(1..count).to_a.each do |i|
+  			offer=offer.merge(inventory(skus[((i-1)*50)..[((i*50)-1),skus.length].min],location))
+  		end
+  	else
+  		offer=inventory(skus,location)
   	end
-		reports = MWS.reports(marketplace_id: marketplace_id, merchant_id: merchant_id, aws_access_key_id: aws_access_key_id, aws_secret_access_key: aws_secret_access_key)
-		reports.request_report("_GET_AFN_INVENTORY_DATA_")
-		report_list=Hash.from_xml(reports.get_report_list.body)
-		inventory_report=""
-		report_list["GetReportListResponse"]["GetReportListResult"]["ReportInfo"].each do |r|
-			inventory_report=reports.get_report(r["ReportId"]).body if r["ReportType"] == "_GET_AFN_INVENTORY_DATA_"
-		end
-		i=0
-		offer=[]
-		CSV.parse(inventory_report, headers: true, col_sep: "\t") do |row|
-			if row["Warehouse-Condition-code"] == "SELLABLE"
-				offer[i]=Hash.new
-				offer[i]["offering"]=Offering.where(sku: row["seller-sku"]).first
-				offer[i]["inventory"]=row["Quantity Available"].to_f
-				i=i+1
-			end
-		end
 		return offer
   end
   

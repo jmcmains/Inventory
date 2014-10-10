@@ -36,6 +36,9 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    akami (1.2.2)
+      gyoku (>= 0.4.0)
+      nokogiri
     arel (5.0.1.20140414130214)
     bcrypt (3.1.7)
     bcrypt-ruby (3.1.5)
@@ -43,6 +46,8 @@ GEM
     bootstrap-sass (2.3.1.0)
       sass (~> 3.2)
     builder (3.2.2)
+    channeladvisor (0.1.1)
+      savon (~> 1.0.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -53,9 +58,14 @@ GEM
     erubis (2.7.0)
     excon (0.39.3)
     execjs (2.2.1)
+    gyoku (1.2.2)
+      builder (>= 2.1.2)
     highcharts-rails (4.0.1)
       railties (>= 3.1)
     hike (1.2.3)
+    httpclient (2.4.0)
+    httpi (1.1.1)
+      rack
     i18n (0.6.11)
     iconv (1.0.4)
     jeff (1.0.1)
@@ -78,6 +88,7 @@ GEM
     newrelic_rpm (3.9.1.236)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
+    nori (1.1.5)
     peddler (0.7.11)
       jeff (~> 1.0)
       multi_xml (~> 0.5.0)
@@ -119,6 +130,16 @@ GEM
       sass (~> 3.2.0)
       sprockets (~> 2.8, <= 2.11.0)
       sprockets-rails (~> 2.0)
+    savon (1.0.0)
+      akami (~> 1.1)
+      builder (>= 2.1.2)
+      gyoku (>= 0.4.0)
+      httpi (~> 1.0)
+      nokogiri (>= 1.4.0)
+      nori (~> 1.1)
+      wasabi (~> 2.2)
+    soap4r (1.5.8)
+      httpclient (>= 2.1.1)
     spreadsheet (0.9.7)
       ruby-ole (>= 1.0)
     sprockets (2.11.0)
@@ -141,6 +162,9 @@ GEM
     uglifier (2.5.3)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    wasabi (2.5.1)
+      httpi (~> 1.0)
+      nokogiri (>= 1.4.0)
     will_paginate (3.0.7)
 
 PLATFORMS
@@ -150,6 +174,7 @@ DEPENDENCIES
   active_shipping
   bcrypt-ruby
   bootstrap-sass (= 2.3.1)
+  channeladvisor
   coffee-rails
   highcharts-rails
   iconv
@@ -164,5 +189,6 @@ DEPENDENCIES
   rake
   roo
   sass-rails
+  soap4r
   uglifier
   will_paginate

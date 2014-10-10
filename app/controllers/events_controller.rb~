@@ -35,6 +35,15 @@ class EventsController < ApplicationController
   	@event.event_type="Product Order"
   	@title="New Product Order"
   	@subtitle=""
+  	@show_offer = false
+   	question = @event.product_counts.build
+  end
+  
+  def send_inventory
+  	@event=Event.new(expected_date: Date.today+30,received_date: Date.today+30)
+  	@title="New Inventory Transfer"
+  	@subtitle=""
+  	@show_offer = true
    	question = @event.product_counts.build
   end
   
@@ -68,6 +77,13 @@ class EventsController < ApplicationController
   	else
   	  redirect_to po_events_path
   	end
+  end
+  
+  def fba
+  	title="FBA Shipments"
+  	@events=Event.where("event_type LIKE ? OR event_type LIKE ?","Amazon Canada", "Amazon US")
+  	@events=@events.paginate(:page => params[:page], :per_page => 10)
+  	render :index
   end
   
   def po
@@ -137,17 +153,20 @@ class EventsController < ApplicationController
     @event.save
 		if @event.event_type == "Inventory"
   	  redirect_to inventory_events_path
-  	else
+  	elsif @event.event_type == "Product Order"
   		@event.product_counts.each do |pc|
   			sp=SupplierPrice.new(date: @event.date, supplier_id: @event.supplier_id, product_id: pc.product_id, quantity: pc.count, price: pc.price/pc.count)
   			sp.save
   		end
   	  redirect_to po_events_path
+  	else
+  		redirect_to fba_events_path
   	end
   end
   
   def edit
   	@event=Event.find(params[:id])
+  	@show_offer = false
   	@title = "Edit Event"
 		render :edit_po
   end

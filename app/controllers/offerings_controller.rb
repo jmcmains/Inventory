@@ -84,6 +84,11 @@ class OfferingsController < ApplicationController
 		render json: @offerings.map(&:name)
 	end
 	
+	def autocomplete_sku
+		@offerings = Offering.search_sku(params[:term])
+		render json: @offerings.map(&:sku)
+	end
+	
 	def autocomplete_no_price
 		@offerings = Offering.search(params[:term],false)
 		render json: @offerings.map(&:name)
@@ -96,6 +101,7 @@ class OfferingsController < ApplicationController
 	
 	def show
 		@offering = Offering.find(params[:id])
+		@title = @offering.sku
 		package=Package.new(@offering.total_weight, [5,5], :units => :imperial)
 		origin = Location.new(:country => 'US',:zip => '27217')
 		destination_US = Location.new(:country => 'US',:zip => '90210')

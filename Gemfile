@@ -28,7 +28,9 @@ gem 'rails_12factor'
 
 gem 'jquery-ui-rails'
 gem 'peddler'
+gem 'channeladvisor'
 gem 'highcharts-rails'
+gem 'soap4r'
 
 group :production do
 	ruby '2.1.2'

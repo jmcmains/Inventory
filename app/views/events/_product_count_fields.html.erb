@@ -1,13 +1,31 @@
 <p class="fields form-inline">
+<% if show_offer %>
+	<%= f.text_field :sku_name, data: {autocomplete_source: autocomplete_sku_offerings_path}, placeholder: "Kit SKU", class: "autocomplete" %>
+<% else %>
   <%= f.text_field :product_name, data: {autocomplete_source: autocomplete_products_path}, placeholder: "Product", class: "autocomplete" %>
+<% end %>
   <%= f.text_field :count, class: "input-small", placeholder: "Quantity" %>
+  <% if show_offer %>
+  <%= f.hidden_field :is_box, value: false %>
+  <% else %>
   <%= f.radio_button :is_box, "true", checked: true %> boxes	<%= f.radio_button :is_box, "false" %> pieces
-  <% if @event.event_type != "Inventory" %>
+  <% end %>
+  <% if @event.event_type == "Product Order" %>
   <%= f.text_field :price, placeholder: "Price" %>
   <% end %>
   <%= link_to_remove_fields "-", f %>
 
 </p>
+<% if show_offer %>
+<script>
+$(function() {
+	$( ".autocomplete" ).autocomplete({
+			source: $( "#event_product_counts_attributes_0_sku_name" ).data('autocomplete-source')
+	});
+});
+
+</script>
+<% else %>
 <script>
 $(function() {
 	 $( ".autocomplete" ).autocomplete({
@@ -16,3 +34,4 @@ $(function() {
 });
 
 </script>
+<% end %>

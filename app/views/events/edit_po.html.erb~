@@ -6,7 +6,7 @@
 		<%= f.label :invoice, "Invoice # (PO#)" %>
 		<%= f.text_field :invoice %>
 		<%= f.label :supplier %>
-		<%= f.text_field :supplier %>
+		<%= f.text_field :supplier_name, data: {autocomplete_source: autocomplete_suppliers_path}, placeholder: "Supplier", class: "autocomplete_sup" %>
 		<%= f.label :expected_date %>
 		<%= f.date_select :expected_date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
 		<%= f.label :received_date %>
@@ -19,10 +19,20 @@
 	</p>
 	<h2>Products</h2>
 	<%= f.fields_for(:product_counts, :html => { :class => "form-inline"}) do |builder| %>
-	<%= render "product_count_fields", f: builder, event: @event %>
+		<%= render "product_count_fields", :f => builder, :event => @event, :show_offer => @show_offer %>
 	<% end %>
 <p><%= link_to_add_fields "Add Product", f, :product_counts %></p>
 <div class="actions">
 	<%= f.submit "Save" %>
 </div>
 	<% end %>
+	
+		
+	<script>
+$(function() {
+	 $( ".autocomplete_sup" ).autocomplete({
+			source: $( ".autocomplete_sup" ).data('autocomplete-source')
+	});
+});
+
+</script>

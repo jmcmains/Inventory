@@ -1,28 +1,24 @@
 <%= form_for @event do |f| %>
-	<p><%= f.hidden_field :event_type, value: @event.event_type %>
+		<p>
+		<%= f.label :event_type, "Inventory Location"
+		<%= f.select :event_type, options_for_select(["Amazon Canada", "Amazon US"]) %>
 		<%= f.label :date %>
 		<%= f.date_select :date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
-	<% if @event.event_type == "Product Order" %>
-		<%= f.label :invoice, "Invoice # (PO#)" %>
-		<%= f.text_field :invoice %>
-		<%= f.label :supplier_name %>
-		<%= f.text_field :supplier_name, data: {autocomplete_source: autocomplete_suppliers_path}, placeholder: "Supplier", class: "autocomplete_sup" %>
 		<%= f.label :expected_date %>
 		<%= f.date_select :expected_date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
 		<%= f.label :received_date %>
 		<%= f.date_select :received_date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
 		<%= f.label :received %>
 		<%= f.radio_button :received, "true" %> yes	<%= f.radio_button :received, "false", checked: true %> no
-		<%= f.label :additional_cost %>
+		<%= f.label :additional_cost, "Shipping and Handling Cost" %>
 		<%= f.text_field :additional_cost %>
-	<% end %>
 	</p>
 	<% n=1 %>
-	<h2>Products</h2>
+	<h2>Kits to Send</h2>
 	<%= f.fields_for(:product_counts, :html => { :class => "form-inline"}) do |builder| %>
-		<%= render "product_count_fields", :f => builder, :show_offer => @show_offer %>
+	<%= render "product_count_fields", f: builder, show_offer: @show_offer %>
 	<% end %>
-<p><%= link_to_add_fields "Add Product", f, :product_counts %></p>
+<p><%= link_to_add_fields "Add Product", f, :product_counts, @show_offer %></p>
 <div class="actions">
 	<%= f.submit "Save" %>
 </div>

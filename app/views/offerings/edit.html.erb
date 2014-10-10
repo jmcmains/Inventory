@@ -27,9 +27,9 @@ $(function() {
 	<% n=1 %>
 <h2>Products</h2>
 	<%= f.fields_for(:offering_products, :html => { :class => "form-inline"}) do |builder| %>
-	<%= render "offering_product_fields", :f => builder %>
+	<%= render "offering_product_fields", :f => builder, show_offer: false %>
 <% end %>
-<p><%= link_to_add_fields "Add Product", f, :offering_products %></p>
+<p><%= link_to_add_fields "Add Product", f, :offering_products, false %></p>
 <div class="actions">
 	<%= f.submit "Save", class: "btn btn-success" %>
 </div>

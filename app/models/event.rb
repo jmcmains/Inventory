@@ -1,6 +1,7 @@
 class Event < ActiveRecord::Base
   has_many :product_counts, :foreign_key => "event_id", :dependent => :destroy
   has_many :products, through: :product_counts
+  has_many :offerings, through: :product_counts
   accepts_nested_attributes_for :product_counts, :reject_if => proc { |attributes| attributes['count'].blank?}, :allow_destroy => true
   belongs_to :supplier, :class_name => "Supplier"
   accepts_nested_attributes_for :supplier, :allow_destroy => true

@@ -17,6 +17,7 @@
 <th>Offer</th>
 <th>FBA Inventory</th>
 <th>Need (4 week lead time)</th>
+<th>Need (90 day lead time)</th>
 </tr>
 <%= render "amz_table", country: "CA", origin: "Amazon Canada" %>
 </table>

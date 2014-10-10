@@ -37,12 +37,22 @@ require 'csv'
  	end
  	
  	def self.shipworks_csv(row)
-		offering=Offering.find_or_initialize_by(name: row[4])
+		offering=Offering.where(name: row[4]).first_or_create
 		price=row[5].to_f
+		sku=row[6]
 		if (offering.price.blank? || offering.price < price) && (!price.blank?)
 			offering.update_attributes(price: price)
-		else
-    	offering.save
+    end
+    if !sku.blank? && (offering.sku != sku)
+			offering.update_attributes(sku: sku)
+    end
+    if offering.products.blank? && !offering.sku.blank?
+    	existing= Offering.where(sku: offering.sku).first
+    	if !existing.blank?
+		  	existing.offering_products.each do |op|
+		  		offering.offering_products.create(product_id: op.product_id, quantity: op.quantity)
+				end
+    	end
     end
     return Order.create(order_number: row[0], date: Date.strptime(row[2], '%m/%d/%Y'),offering_id: offering.id,quantity: row[3], origin: row[1])
 

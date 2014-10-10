@@ -1,6 +1,7 @@
 class ProductCount < ActiveRecord::Base
   belongs_to :event, :class_name => "Event"
 	belongs_to :product, :class_name => "Product"
+	belongs_to :offering, :class_name => "Offering"
 
   def self.import(file,date)
     spreadsheet = open_spreadsheet(file)
@@ -29,6 +30,14 @@ class ProductCount < ActiveRecord::Base
   
   def product_name=(name)
   	self.product = Product.where(name: name).first_or_create if name.present?
+  end
+  
+  def sku_name
+  	offering.try(:sku)
+  end
+  
+  def sku_name=(name)
+  	self.offering = Offering.where(sku: name).first_or_create if name.present?
   end
   
   def box_count=(bcount)

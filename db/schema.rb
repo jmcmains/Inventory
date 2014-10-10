@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140717162649) do
+ActiveRecord::Schema.define(version: 20140916164548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,20 @@ ActiveRecord::Schema.define(version: 20140717162649) do
     t.string   "discount"
     t.string   "delivery_method"
     t.string   "note"
+  end
+
+  create_table "errors", force: true do |t|
+    t.string   "usable_type"
+    t.integer  "usable_id"
+    t.text     "class_name"
+    t.text     "message"
+    t.text     "trace"
+    t.text     "target_url"
+    t.text     "referer_url"
+    t.text     "params"
+    t.text     "user_agent"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "events", force: true do |t|
@@ -129,9 +143,10 @@ ActiveRecord::Schema.define(version: 20140717162649) do
     t.integer  "product_id"
     t.float    "count"
     t.boolean  "is_box"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.float    "price"
+    t.integer  "offering_id"
   end
 
   add_index "product_counts", ["event_id"], name: "index_product_counts_on_event_id", using: :btree
