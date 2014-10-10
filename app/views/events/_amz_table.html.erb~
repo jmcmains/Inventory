@@ -1,4 +1,4 @@
-<% data=Offering.amazon(country) %>
+<% data=Offering.amazon(origin) %>
 <% data.sort_by { |name, a| name }.each do |kit| %>
 <% if !kit.blank? %>
 	<% need_28=Offering.amazon_need(kit[0],kit[1],origin,28).round(1) %>
