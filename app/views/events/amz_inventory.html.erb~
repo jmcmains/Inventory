@@ -7,7 +7,7 @@
 <th>Need (4 week lead time)</th>
 <th>Need (90 day lead time)</th>
 </tr>
-<%= render "amz_table", country: "US", origin: "Amazon US" %>
+<%= render "amz_table", origin: "Amazon US" %>
 </table>
 
 <h1>Canada Numbers</h1>
@@ -19,5 +19,5 @@
 <th>Need (4 week lead time)</th>
 <th>Need (90 day lead time)</th>
 </tr>
-<%= render "amz_table", country: "CA", origin: "Amazon Canada" %>
+<%= render "amz_table", origin: "Amazon Canada" %>
 </table>

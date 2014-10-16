@@ -23,7 +23,7 @@ class Customer < ActiveRecord::Base
 		package=Package.new(  (weight * 16),[],:units => :imperial)
 		origin = Location.new(:country => 'US',:state => 'NC',:city => 'Hillsborough',:zip => '27278')
 		destination = address
-    usps = USPS.new(:login => '970RUBBE0314')
+    usps = USPS.new(:login => ENV['usps_login'])
 		response = usps.find_rates(origin, destination, package)
 		usps_rates = response.rates.sort_by(&:price).collect {|rate| [rate.service_name, rate.price]}
 		return usps_rates

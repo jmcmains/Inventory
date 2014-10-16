@@ -1,0 +1,4 @@
+class RenameOldSku < ActiveRecord::Migration
+  def change
+  end
+end

@@ -311,7 +311,6 @@ class Product < ActiveRecord::Base
 	end
 	
 	def forcast_demand
-		
 		inv=get_last_count("Inventory")
 		start=inv.event.date
 		if inv.instance_of?(ProductCount) && inv.count

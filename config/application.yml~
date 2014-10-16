@@ -1,0 +1,22 @@
+# Add configuration values here, as shown below.
+#
+# pusher_app_id: "2954"
+# pusher_key: 7381a978f7dd7f9a1117
+# pusher_secret: abdc3b896a0ffb85d373
+# stripe_api_key: sk_test_2J0l093xOyW72XUYJHE4Dv2r
+# stripe_publishable_key: pk_test_ro9jV5SNwGb1yYlQfzG17LHK
+#
+# production:
+#   stripe_api_key: sk_live_EeHnL644i6zo4Iyq4v1KdV9H
+#   stripe_publishable_key: pk_live_9lcthxpSIHbGwmdO941O1XVU
+
+amazon_us_merchant_id: "A272UC6GQ1EK7B"
+amazon_us_marketplace_id: "ATVPDKIKX0DER"
+amazon_us_aws_access_key_id: "AKIAIQHK2FY7EEQKBENA"
+amazon_us_aws_secret_access_key: "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"
+amazon_ca_merchant_id: "A15J4ZSOBGZ08"
+amazon_ca_marketplace_id: "A2EUQ1WTGCTBG2"
+amazon_ca_aws_access_key_id: "AKIAIZHQAZCXWAFW7FQA"
+amazon_ca_aws_secret_access_key: "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"
+skuvault_company_token: "Vog4NZzneiHLCwVr5O+je4Lbdf9w+T7cq1WaGuSyYso="
+skuvault_user_token: "vwrf/pj+VFTo54w7pUtgQmTgMDZ+vdA5McBYyLnz4u4="

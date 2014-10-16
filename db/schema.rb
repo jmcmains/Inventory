@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140916164548) do
+ActiveRecord::Schema.define(version: 20141016163436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,7 +124,8 @@ ActiveRecord::Schema.define(version: 20140916164548) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float    "price"
-    t.string   "sku"
+    t.string   "oldsku"
+    t.integer  "sku_id"
   end
 
   create_table "orders", force: true do |t|
@@ -147,6 +148,7 @@ ActiveRecord::Schema.define(version: 20140916164548) do
     t.datetime "updated_at",  null: false
     t.float    "price"
     t.integer  "offering_id"
+    t.integer  "sku_id"
   end
 
   add_index "product_counts", ["event_id"], name: "index_product_counts_on_event_id", using: :btree
@@ -169,6 +171,16 @@ ActiveRecord::Schema.define(version: 20140916164548) do
     t.string   "term"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "skus", force: true do |t|
+    t.string   "name"
+    t.float    "weight"
+    t.float    "length"
+    t.float    "width"
+    t.float    "height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "supplier_prices", force: true do |t|

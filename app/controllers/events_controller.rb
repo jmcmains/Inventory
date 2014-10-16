@@ -39,12 +39,18 @@ class EventsController < ApplicationController
    	question = @event.product_counts.build
   end
   
-  def send_inventory
+  def new_fba
   	@event=Event.new(expected_date: Date.today+30,received_date: Date.today+30)
   	@title="New Inventory Transfer"
   	@subtitle=""
   	@show_offer = true
    	question = @event.product_counts.build
+  end
+  
+  def edit_fba
+  	@event=Event.find(params[:id])
+  	@show_offer = true
+  	@title = "Edit Event"
   end
   
   def receive_po_today
@@ -54,7 +60,11 @@ class EventsController < ApplicationController
   	else
   		flash[:error] = "Purchase Order Was Not Received"
   	end
-  	redirect_to po_events_path
+  	if @event.event_type="Purchase Order"
+  		redirect_to po_events_path
+  	else
+			redirect_to fba_events_path
+  	end
   end
   
   def inventory
@@ -80,7 +90,7 @@ class EventsController < ApplicationController
   end
   
   def fba
-  	title="FBA Shipments"
+  	@title="FBA Shipments"
   	@events=Event.where("event_type LIKE ? OR event_type LIKE ?","Amazon Canada", "Amazon US")
   	@events=@events.paginate(:page => params[:page], :per_page => 10)
   end
@@ -175,8 +185,10 @@ class EventsController < ApplicationController
     @event.update_attributes(event_params)
     if @event.event_type == "Inventory"
   	  redirect_to inventory_events_path
-  	else
+  	elsif @event.event_type =="Product Order"
   	  redirect_to po_events_path
+  	else
+  		redirect_to fba_events_path
   	end
   end
   

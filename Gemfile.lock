@@ -58,6 +58,8 @@ GEM
     erubis (2.7.0)
     excon (0.39.3)
     execjs (2.2.1)
+    figaro (1.0.0)
+      thor (~> 0.14)
     gyoku (1.2.2)
       builder (>= 2.1.2)
     highcharts-rails (4.0.1)
@@ -176,6 +178,7 @@ DEPENDENCIES
   bootstrap-sass (= 2.3.1)
   channeladvisor
   coffee-rails
+  figaro
   highcharts-rails
   iconv
   jquery-rails

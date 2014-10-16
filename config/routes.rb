@@ -57,10 +57,10 @@ Inventory::Application.routes.draw do
 		end
 	end
 	resources :product_counts
+	resources :skus
 	resources :events do
 		collection do
 			get :inventory
-			get :send_inventory
 			get :amz_inventory
 			get :po
 			get :fba
@@ -68,9 +68,11 @@ Inventory::Application.routes.draw do
 			get :new_inventory
 			get :new_po
 			post :load
+			get :new_fba
 		end
 		member do
 			get :receive_po_today
+			get :edit_fba
 		end
 	end
 	resources :orders do
