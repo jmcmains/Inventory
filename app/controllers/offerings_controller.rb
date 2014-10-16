@@ -173,7 +173,7 @@ private
 
 
     def offering_params
-      params.require(:offering).permit(:name,:price, :sku, offering_products_attributes: [:id, :offering_id, :product_id, :product_name, :quantity])
+      params.require(:offering).permit(:name,:price, :sku, :sku_id, :sku_name, offering_products_attributes: [:id, :offering_id, :product_id, :product_name, :quantity], sku_attributes: [:id, :name])
     end
     
 end

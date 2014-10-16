@@ -90,7 +90,7 @@ Entries shown: <%= @offerings.total_entries %>
 	<tr>
 	<td><%= link_to 'Edit', edit_offering_path(offer) %> | <%= link_to "Delete", offer, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{offer.name}" %></td>
-  <td><%= offer.sku %></td>
+  <td><%= offer.sku.blank? ? "" :offer.sku.name %></td>
   <td><%= link_to offer.name, offering_path(offer) %></td>
   <td>
   <div id="price_<%= offer.id %>">

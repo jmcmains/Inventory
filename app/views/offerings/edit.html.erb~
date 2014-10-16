@@ -21,8 +21,8 @@ $(function() {
 		<%= f.text_field :price %>
 	</div>
 		<div class="field">
-		<%= f.label :sku %>
-		<%= f.text_field :sku %>
+		<%= f.label :sku_name %>
+		<%= f.text_field :sku_name %>
 	</div>
 	<% n=1 %>
 <h2>Products</h2>

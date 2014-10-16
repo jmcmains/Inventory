@@ -18,8 +18,13 @@ require 'active_support'
   	return d[0]["purchases"].to_f
   end
    
-
+	def sku_name
+  	sku.try(:name)
+  end
   
+  def sku_name=(name)
+  	self.sku = Sku.where(name: name).first_or_create if name.present?
+  end
  
   def self.search(search,price)
   	if search

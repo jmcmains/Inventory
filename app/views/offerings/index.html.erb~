@@ -46,6 +46,12 @@
   <%= f.submit "Load Price Data", class: "btn btn-primary" %>
 <% end %>
 </td>
+<td>
+<%= form_for offerings_path, url: {controller: :offerings, action: :add_sku_csv, method: :patch} do |f| %>
+  <%= f.file_field :file %>
+  <%= f.submit "Load SKU Data", class: "btn btn-primary" %>
+<% end %>
+</td>
 </tr>
 </table>
 <%= link_to "Download to CSV", create_csv_offerings_path %><br>
@@ -84,7 +90,7 @@ Entries shown: <%= @offerings.total_entries %>
 	<tr>
 	<td><%= link_to 'Edit', edit_offering_path(offer) %> | <%= link_to "Delete", offer, :method => :delete, :confirm => "You sure?",
                                 :title => "Delete #{offer.name}" %></td>
-  <td><%= offer.sku %></td>
+  <td><%= offer.sku.name %></td>
   <td><%= link_to offer.name, offering_path(offer) %></td>
   <td>
   <div id="price_<%= offer.id %>">
