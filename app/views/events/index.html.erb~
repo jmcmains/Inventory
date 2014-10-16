@@ -1,112 +1,148 @@
 <% if @title == "Product Order" %>
-	Search: <%= form_tag(po_events_path, method: :get) do %>
-	<table class="table-condensed">
-	<tr>
-		<td>Invoice #:</td>
-		<td>Supplier Name:</td>
-		<td>Delivery Status:</td>
-		<td></td>
-	</tr>
-	<tr style="vertical-align:middle;">
-		<td style="vertical-align:top;"><%= text_field_tag :Invoice, @inv_num, placeholder: "Invoice #"  %></td>
-		<td style="vertical-align:top;"><%= text_field_tag :Supplier, @sup_name, placeholder: "Supplier Name", data: {autocomplete_source: autocomplete_suppliers_path}, class: "autocomplete_sup" %></td>
-		<td style="vertical-align:top;"><%= select_tag :event_type, options_for_select(["All Shipments", "Received", "In Transit","Late"], @event_type) %></td>
-		<td style="vertical-align:top;"><%= submit_tag "Submit", class: "btn btn-primary" %></td>
-	</tr>
-	</table>
+	Search:
+	<%= form_tag(po_events_path, method: :get) do %>
+		<table class="table-condensed">
+			<tr>
+				<td>Invoice #:</td>
+				<td>Supplier Name:</td>
+				<td>Delivery Status:</td>
+				<td></td>
+			</tr>
+			<tr style="vertical-align:middle;">
+				<td style="vertical-align:top;">
+					<%= text_field_tag :Invoice, @inv_num, placeholder: "Invoice #" %>
+				</td>
+				<td style="vertical-align:top;">
+					<%= text_field_tag :Supplier, @sup_name, placeholder: "Supplier Name", data: {autocomplete_source: autocomplete_suppliers_path}, class: "autocomplete_sup" %>
+				</td>
+				<td style="vertical-align:top;">
+					<%= select_tag :event_type, options_for_select(["All Shipments", "Received", "In Transit","Late"], @event_type) %>
+				</td>
+				<td style="vertical-align:top;">
+					<%= submit_tag "Submit", class: "btn btn-primary" %>
+				</td>
+			</tr>
+		</table>
 	<% end %>
-		<script>
-$(function() {
-	 $( ".autocomplete_sup" ).autocomplete({
-			source: $( ".autocomplete_sup" ).data('autocomplete-source')
-	});
-});
-
-</script>
+	<script>
+		$(function() {
+			$( ".autocomplete_sup" ).autocomplete({
+				source: $( ".autocomplete_sup" ).data('autocomplete-source')
+			});
+		});
+	</script>
 	<%= link_to "New Product Order", new_po_events_path %>
 	<div class="pagination">
-     <%= will_paginate @events, :container => false %>
-</div>
+		<%= will_paginate @events, :container => false %>
+	</div>
 <% elsif @title == "Inventory" %>
 	<%= link_to "New Inventory Count", new_inventory_events_path %>
 	<%= form_tag inventory_events_path, method: :get, class: "form-search form-inline" do  %>
-	<%= select_tag :date_id, options_for_select(Event.inventory.sort_by(&:date).collect {|a| [a.date, a.id]}, @date.id), class: "input-medium" %>
-	<%= submit_tag %>
+		<%= select_tag :date_id, options_for_select(Event.inventory.sort_by(&:date).collect {|a| [a.date, a.id]}, @date.id), class: "input-medium" %>
+		<%= submit_tag %>
 	<% end %>
 <% end %>
 
+
 <table class="table table-bordered table-striped table-condensed">
-<thead>
-<tr>
-	<th style="vertical-align:top;text-align:center">Modify Record</th>
-	<th style="vertical-align:top;text-align:center">Date Created<br><%= render "sort_buttons", name: "DC", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type %></th>
-<% if @title == "Product Order" %>
-	<th style="vertical-align:top;text-align:center">Invoice #<br><%= render "sort_buttons", name: "INV", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></th>
-	<th style="vertical-align:top;text-align:center">Supplier<br><%= render "sort_buttons", name: "SUP", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></th>
-	<th style="vertical-align:top;text-align:center">Expected Delivery<br><%= render "sort_buttons", name: "DE", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></th>
-	<th style="vertical-align:top;text-align:center">Actual Delivery<br><%= render "sort_buttons", name: "DA", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></th>
-<% end %>
-	<th style="vertical-align:top;text-align:center">Products</th>
-
-</tr>
-</thead>
-<tbody>
-
-<% @events.each do |event| %>
-<tr>
-	<td><%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, data: {confirm: "You sure?"}, :title => "Delete #{event.event_type}" %> 
-	<% if !event.received && @title != "Inventory" %>
- 		| <%= link_to 'Receive Today', receive_po_today_event_path(event) %> 
- 	<% end %>        
-  </td>
-  <td><%= event.date %></td>
-<% if @title == "Product Order" %>
-	<td><%= event.invoice %></td>
-	<td><%= event.supplier.blank? ? "" : (link_to event.supplier.name, supplier_path(event.supplier)) %></td>
-	<td><%= event.expected_date %></td>
-	<td><%= event.received_date if event.received %></td>
-<% end %>
-	<td>
-		<table class="table">
-		<% event.product_counts.sort_by(&:product_name).each do |pc| %>
-			<tr>
-			<% if pc.product.display? %>
-				<td><%= link_to pc.product.name, product_path(pc.product) %></td>
-				<td><% if event.event_type = "Inventory" %>
-					<%= pc.count.round %> peices
-					<% if pc.count > 0 %>
-						[<%= "#{pc.box_count.round} boxes" if pc.box_count.round>0 %><%= " #{pc.piece_count.round} pieces" if pc.piece_count.round>0 %>]
-					<% else %>
-						[0 boxes]
-					<% end %>
-				<% else %>
-					<%= pc.count.round %> 
-					<% if pc.is_box %>
-						boxes
-					<% else %>
-						pieces
-					<% end %>
-				<% end %></td>
-				<% if @title != "Product Order" %>
-					<td><%= number_to_currency(pc.product.get_value(event)) %></td>
-				<% end %>
+	<thead>
+		<tr>
+			<th style="vertical-align:top;text-align:center">Modify Record</th>
+			<th style="vertical-align:top;text-align:center">
+				Date Created<br>
+				<%= render "sort_buttons", name: "DC", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type %>
+			</th>
+			<% if @title == "Product Order" %>
+				<th style="vertical-align:top;text-align:center">
+					Invoice num<br>
+					<%= render "sort_buttons", name: "INV", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %>
+				</th>
+				<th style="vertical-align:top;text-align:center">
+					Supplier<br>
+					<%= render "sort_buttons", name: "SUP", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %>
+				</th>
+				<th style="vertical-align:top;text-align:center">
+					Expected Delivery<br>
+					<%= render "sort_buttons", name: "DE", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %>
+				</th>
+				<th style="vertical-align:top;text-align:center">
+					Actual Delivery<br>
+					<%= render "sort_buttons", name: "DA", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %>
+				</th>
+			<% elsif @title != "Inventory" %>
+				<th style="vertical-align:top;text-align:center">
+					Expected Delivery<br>
+					<%= render "sort_buttons", name: "DE", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %>
+				</th>
+				<th style="vertical-align:top;text-align:center">
+					Actual Delivery<br>
+					<%= render "sort_buttons", name: "DA", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %>
+				</th>
 			<% end %>
-			</tr>
-		<% end %>
-		<% if @title != "Product Order" %>
-					<tr>
-					<td></td><td>Total:</td>
-					<td><%= number_to_currency(Product.total_inventory_value(event)) %></td>
-					</tr>
-		<% end %>
-		</table>
-		</td>
+			<th style="vertical-align:top;text-align:center">
+				Products
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @events.each do |event| %>
+			<tr>
+				<td>
+					<%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, data: {confirm: "You sure?"}, :title => "Delete #{event.event_type}" %> 
+					<% if !event.received && @title != "Inventory" %>
+						| <%= link_to 'Receive Today', receive_po_today_event_path(event) %> 
+					<% end %>        
+				</td>
+				<td><%= event.date %></td>
+				<% if @title == "Product Order" %>
+					<td><%= event.invoice %></td>
+					<td><%= event.supplier.blank? ? "" : (link_to event.supplier.name, supplier_path(event.supplier)) %></td>
+					<td><%= event.expected_date %></td>
+					<td><%= event.received_date if event.received %></td>
+				<% end %>
+				<td>
+					<table class="table">
+<% event.product_counts.sort_by(&:product_name).each do |pc| %>
+<tr>
+<% if pc.product.display? %>
+<td><%= link_to pc.product.name, product_path(pc.product) %></td>
+<td>
+<% if event.event_type = "Inventory" %>
+<%= pc.count.round %> peices
+<% if pc.count > 0 %>
+[<%= "#{pc.box_count.round} boxes" if pc.box_count.round>0 %><%= " #{pc.piece_count.round} pieces" if pc.piece_count.round>0 %>]
+<% else %>
+[0 boxes]
+<% end %>
+<% else %>
+<%= pc.count.round %> 
+<% if pc.is_box %>
+boxes
+<% else %>
+pieces
+<% end %>
+<% end %>
+</td>
+<% if @title != "Product Order" %>
+<td><%= number_to_currency(pc.product.get_value(event)) %></td>
+<% end %>
+<% end %>
+</tr>
+<% end %>
+<% if @title == "Inventory"  %>
+<tr>
+<td></td><td>Total:</td>
+<td><%= number_to_currency(Product.total_inventory_value(event)) %></td>
+</tr>
+<% end %>
+</table>
+</td>
 </tr>
 <% end %>
 </tbody>
 </table>
 <% if @title == "Product Order" %>
 <div class="pagination">
-     <%= will_paginate @events, :container => false %>
+<%= will_paginate @events, :container => false %>
 </div>
 <% end %>

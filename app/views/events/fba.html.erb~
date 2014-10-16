@@ -1,0 +1,38 @@
+	<div class="pagination">
+		<%= will_paginate @events, :container => false %>
+	</div>
+<table class="table table-bordered table-striped table-condensed">
+	<thead>
+		<tr>
+			<th style="vertical-align:top;text-align:center">Modify Record</th>
+			<th style="vertical-align:top;text-align:center">Date Created</th>
+			<th style="vertical-align:top;text-align:center">Expected Date</th>
+			<th style="vertical-align:top;text-align:center">Actual Delivery<br><%= render "sort_buttons", name: "DA", inv_num: @inv_num, sup_name: @sup_name, event_type: @event_type  %></th>
+			<th style="vertical-align:top;text-align:center">Products</th>
+		</tr>
+	</thead>
+	<tbody>
+	<% @events.each do |event| %>
+		<tr>
+			<td><%= link_to 'Edit', edit_event_path(event) %> | <%= link_to "Delete", event, :method => :delete, data: {confirm: "You sure?"}, :title => "Delete #{event.event_type}" %> | <%= link_to 'Receive Today', receive_po_today_event_path(event) %> 
+			</td>
+			<td><%= event.date %></td>
+			<td><%= event.expected_date %></td>
+			<td><%= event.received_date if event.received %></td>
+			<td>
+				<table class="table">
+					<% event.product_counts.sort_by(&:sku_name).each do |pc| %>
+						<tr>
+							<td><%= link_to pc.offering.name, offering_path(pc.offering) %></td>
+							<td><%= pc.count.round %> peices</td>
+						</tr>
+					<% end %>
+				</table>
+			</td>
+		</tr>
+	<% end %>
+	</tbody>
+</table>
+	<div class="pagination">
+		<%= will_paginate @events, :container => false %>
+	</div>

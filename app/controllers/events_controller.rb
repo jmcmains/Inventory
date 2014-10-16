@@ -83,7 +83,6 @@ class EventsController < ApplicationController
   	title="FBA Shipments"
   	@events=Event.where("event_type LIKE ? OR event_type LIKE ?","Amazon Canada", "Amazon US")
   	@events=@events.paginate(:page => params[:page], :per_page => 10)
-  	render :index
   end
   
   def po
@@ -186,6 +185,6 @@ private
 
 
     def event_params
-      params.require(:event).permit( :id, :date, :event_type, :invoice, :received_date, :received, :expected_date, :additional_cost, :supplier_id, :product_name, :supplier_name,       product_counts_attributes: [:id, :event_id, :product_id, :count, :is_box, :price, :product_name, '_destroy', :box_count, :piece_count], supplier_attributes: [:id, :supplier_name, :name, '_destroy'] )
+      params.require(:event).permit( :id, :date, :event_type, :invoice, :received_date, :received, :expected_date, :additional_cost, :supplier_id, :product_name, :supplier_name,       product_counts_attributes: [:id, :event_id, :product_id, :count, :is_box, :price, :product_name, '_destroy', :box_count, :piece_count, :sku_name, :offering_id], supplier_attributes: [:id, :supplier_name, :name, '_destroy'] )
     end
 end
