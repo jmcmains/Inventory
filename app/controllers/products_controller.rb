@@ -39,8 +39,8 @@ class ProductsController < ApplicationController
   		@end_date = Date.today.end_of_year
   	end
   	output = @product.cogs(@start_date,@end_date)
-  	@value=output["value"]
-		@orders=output["purchases"]
+  	@value=output[:value]
+		@orders=output[:purchases]
 		respond_to do |format|
       format.js
     end
@@ -65,7 +65,7 @@ class ProductsController < ApplicationController
 			csv << ["Name", "Total Sales", "Total Cost of Goods Sold", "Average Inventory", "Average Price"]
 			Product.where(display:true).sort_by(&:name).each do |product|
 				output = product.cogs(start_date,end_date)
-				csv << [product.name, output["purchases"], output["value"], product.average_inventory(start_date,end_date), product.avg_price]
+				csv << [product.name, output[:purchases], output[:value], product.average_inventory(start_date,end_date), product.avg_price]
 			end
 		end
 		file ="accounting.txt"
@@ -80,8 +80,8 @@ class ProductsController < ApplicationController
 			csv << ["Product Name", "Product Cost", "Average Retail Price", "Margin", "Total Sales"]
 			Product.where(display: true).sort_by(&:name).each do |product|
 				output = product.cogs(start_date,end_date)
-        if output["purchases"] > 0
-				  csv << [product.name, output["value"]/output["purchases"], product.avg_price, product.avg_price-output["value"]/output["purchases"], output["purchases"]]
+        if output[:purchases] > 0
+				  csv << [product.name, output[:value]/output[:purchases], product.avg_price, product.avg_price-output[:value]/output[:purchases], output[:purchases]]
 				end
 			end
 		end
@@ -131,8 +131,8 @@ class ProductsController < ApplicationController
   	Product.all.sort_by(&:id).each_with_index do |product,i|
   		output=product.cogs(@start_date,@end_date)
   		@product[i]=product
-			@value[i]=output["value"]
-			@orders[i]=output["purchases"]
+			@value[i]=output[:value]
+			@orders[i]=output[:purchases]
 			@value_total=@value[i]+@value_total
 			@orders_total=@orders[i]+@orders_total
   	end
@@ -156,8 +156,8 @@ class ProductsController < ApplicationController
   		@end_date = Date.today
   	end
   	output = @product.cogs(@start_date,@end_date)
-  	@value=output["value"]
-		@orders=output["purchases"]
+  	@value=output[:value]
+		@orders=output[:purchases]
 		@ido=@product.inventory_days_outstanding(@start_date,@end_date)
 		@it=@product.inventory_turns(@start_date,@end_date)
 		@avg_price=@product.avg_price

@@ -1,0 +1,24 @@
+<%= form_for @sku do |f| %>
+
+	<div class="field">
+		<%= f.label :name %>
+		<%= f.text_area :name %>
+	</div>
+	<div class="field">
+		<%= f.label :weight %>
+		<%= f.text_field :weight %>
+	</div>
+	<div class="field">
+		<%= f.label :height %>
+		<%= f.text_field :height %>
+	</div>
+	<div class="field">
+		<%= f.label :length %>
+		<%= f.text_field :length %>
+	</div>
+	<div class="field">
+		<%= f.label :width %>
+		<%= f.text_field :width %>
+	</div>
+	<%= f.submit %>
+<% end %>

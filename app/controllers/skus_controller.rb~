@@ -8,7 +8,7 @@ class SkusController < ApplicationController
   def edit
   	@title = "Edit Sku"
   	@sku = Sku.find(params[:id])
-  	session[:last_page] = request.env['HTTP_REFERER'] || sku_url(@sku)
+  	session[:last_page] = request.env['HTTP_REFERER']
   end
   
   def update

@@ -39,12 +39,12 @@ require 'csv'
  	def self.shipworks_csv(row)
 		offering=Offering.where(name: row[4]).first_or_create
 		price=row[5].to_f
-		sku=row[6]
+		sku=Sku.where(name: row[6]).first_or_create
 		if (offering.price.blank? || offering.price < price) && (!price.blank?)
 			offering.update_attributes(price: price)
     end
     if !sku.blank? && (offering.sku != sku)
-			offering.update_attributes(sku: sku)
+			offering.update_attributes(sku_id: sku.id)
     end
     if offering.products.blank? && !offering.sku.blank?
     	existing= Offering.where(sku: offering.sku).first

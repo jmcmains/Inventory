@@ -2,10 +2,9 @@
 <% data.sort_by { |a| a[0] }.each do |kit| %>
 <% if !kit.blank? %>
 	<% sku=Sku.where(name: kit[0]).first %>
-	<% need_28=sku.amazon_need(origin,28).round(1) %>
-	<% need_90=sku.amazon_need(origin,90).round(1) %>
+	<% need_28=0 %>
+	<% need_90=0 %>
 	<tr class="<%= need_28 > 0 ? 'error' : '' %>">
-		<td><%= sku.name %></td>
 		<td><%= link_to sku.name, sku_path(sku) %></td>
 		<td><%= kit[1] %></td>
 		<td><%= need_28 %></td>

@@ -2,7 +2,6 @@ class Sku < ActiveRecord::Base
 	has_many :offerings, :foreign_key => "sku_id", :dependent => :destroy
 	has_many :product_counts, :foreign_key => "sku_id", :dependent => :destroy
 	has_many :events, through: :product_counts
-	
 	def amazon_trend(origin)
   	y = amazon_sales_count(origin)["y"]
 		d2 = amazon_sales_count(origin)["date"]
@@ -22,6 +21,18 @@ class Sku < ActiveRecord::Base
 			output["b"] = 0
 		end
 		return output
+  end
+  
+  def cogs
+  	start_date=1.year.ago
+  	end_date=Date.today
+  	total_cogs=0
+  	offerings.first.offering_products.each do |op|
+  		cost=op.product.cogs(start_date,end_date)
+  		part = cost[:purchases] > 0 ? (cost[:value]/cost[:purchases]) : 0
+  		total_cogs=total_cogs+op.quantity*part
+  	end
+  	return total_cogs
   end
   
   def self.amazon_id(location)
@@ -83,7 +94,7 @@ class Sku < ActiveRecord::Base
 		y=self.get_trend["y"]
 		dates=self.get_trend["dates"]
 		x=Array.new
-		levels=[inventory]
+		levels=[inv]
 		if y.count > 2
 			dates.each_with_index do |d,i|
 				x[i]=(d-dates[0]).to_i
@@ -98,12 +109,8 @@ class Sku < ActiveRecord::Base
 				levels[-1] -= (m*n+b)/7
 				Event.where(event_type: location, received: false).each do |po|
 					if po.expected_date == curdate
-						cnt=po.product_counts.find_by_product_id(self)
-						if cnt.is_box
-							levels[-1] += cnt.count*self.per_box
-						else
-							levels[-1] += cnt.count
-						end
+						cnt=po.product_counts.find_by_sku_id(self)
+						levels[-1] += cnt.count
 					end
 				end
 				curdate += 1
@@ -117,7 +124,97 @@ class Sku < ActiveRecord::Base
 		end
 	end
   
+  def fees
+  	size_tier=get_product_size_tier
+		if size_tier.include?("Standard")
+			order_handling = 1
+			pick_and_pack = 1.02
+			special_handling=0
+			if size_tier.include?("Small")
+				weight_handling = 0.46
+			elsif size_tier.include?("Large")
+				if weight <= 1
+					weight_handling = 0.55
+				elsif weight <= 2
+					weight_handling = 1.34
+				else
+					weight_handling = 1.34 + (weight-2).ceil*0.39
+				end
+			end
+		else
+			order_handling = 0
+			if size_tier.include?("Small")
+				pick_and_pack = 4.03
+				weight_handling = 1.34 + (weight-2).ceil*0.39
+				special_handling=0
+			elsif size_tier.include?("Medium")
+				pick_and_pack = 5.07
+				weight_handling = 1.91 + (weight-2).ceil*0.39
+				special_handling=0
+			elsif size_tier.include?("Large")
+				pick_and_pack = 8.12
+				weight_handling = 61.62 + (weight-90).ceil*0.80
+				special_handling=0
+			else
+				pick_and_pack = 10.25
+				weight_handling = 124.08 + (weight-90).ceil*0.92
+				special_handling=40
+			end
+		end
+		if Date.today.month < 10
+			inventory_fee = 0.48*(height*length*width)/(12**3)
+		else
+			inventory_fee = 0.64*(height*length*width)/(12**3)
+		end
+		
+		return {order_handling: order_handling,pick_and_pack: pick_and_pack,weight_handling: weight_handling,special_handling: special_handling,inventory_fee: inventory_fee}
+  end
   
+  def get_product_size_tier
+		weight_limit_small_standard = 12.0/16.0
+	 	max_side_limit_small_standard = 15
+	 	mean_side_limit_small_standard = 12
+	 	min_side_limit_small_standard = 0.75
+	 	
+		weight_limit_large_standard = 20
+	 	max_side_limit_large_standard = 18
+	 	mean_side_limit_large_standard = 14
+	 	min_side_limit_large_standard = 8
+
+		weight_limit_small_oversize = 70
+	 	max_side_limit_small_oversize = 60
+	 	mean_side_limit_small_oversize = 30
+	 	min_side_limit_small_oversize = nil
+	 	length_girth_limit_small_oversize = 130
+	 	
+	 	weight_limit_medium_oversize = 150
+	 	max_side_limit_medium_oversize = 108
+	 	mean_side_limit_medium_oversize = nil
+	 	min_side_limit_medium_oversize = nil
+	 	length_girth_limit_medium_oversize = 130
+	 	
+	 	weight_limit_large_oversize = 150
+	 	max_side_limit_large_oversize = 108
+	 	mean_side_limit_large_oversize = nil
+	 	min_side_limit_large_oversize = nil
+	 	length_girth_limit_large_oversize = 165
+	 	
+		dimensions = [length,height,width].sort
+		girth = 2*(dimensions[1] + dimensions[0])
+		if weight < weight_limit_small_standard && dimensions[0] < min_side_limit_small_standard && dimensions[1] < mean_side_limit_small_standard && dimensions[2] < max_side_limit_small_standard
+			size_tier = "Small Standard"
+		elsif weight < weight_limit_large_standard && dimensions[0] < min_side_limit_large_standard && dimensions[1] < mean_side_limit_large_standard && dimensions[2] < max_side_limit_large_standard
+			size_tier = "Large Standard"
+		elsif weight < weight_limit_small_oversize && dimensions[1] < mean_side_limit_small_oversize && dimensions[2] < max_side_limit_small_oversize && dimensions[2]+girth < length_girth_limit_small_oversize
+			size_tier = "Small Oversize"
+		elsif weight < weight_limit_medium_oversize && dimensions[2] < max_side_limit_medium_oversize && dimensions[2]+girth < length_girth_limit_medium_oversize
+			size_tier = "Medium Oversize"
+		elsif weight < weight_limit_large_oversize && dimensions[2] < max_side_limit_large_oversize && dimensions[2]+girth < length_girth_limit_large_oversize
+			size_tier = "Large Oversize"
+		else
+			size_tier = "Missing or Special"
+		end
+  end
   
   def self.inventory_client(location)
   	data=amazon_id(location)
@@ -192,9 +289,8 @@ class Sku < ActiveRecord::Base
 		return offer
   end
   
-   def amazon_need(origin,leadTime)
+   def amazon_need(currentInventory,origin,leadTime)
 		y = self.amazon_sales_count(origin)["y"]
-		currentInventory = inventory(origin)
 		pipeLine = self.get_orders(origin,leadTime)
 		(0..y.length-1).each do |n|
 			y[n] = 0 if !y[n]

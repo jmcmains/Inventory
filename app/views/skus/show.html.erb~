@@ -1,4 +1,6 @@
 <h1><%= @sku.name %></h1>
+<%= link_to "Edit", edit_sku_path(@sku) %><br>
+Dimensions: <%= @sku.length %> inches x <%= @sku.width %> inches x <%= @sku.height %> inches<br/>
 Total Weight: <%= @sku.weight %> lbs<br>
 Current FBA Inventory: <%= amz_inventory= @sku.inventory("Amazon US") %><br>
 <% y = @sku.amazon_sales_count("Amazon US")["y"] %><% d2 = @sku.amazon_sales_count("Amazon US")["dates"] %>
@@ -22,7 +24,67 @@ Current FBA Inventory: <%= amz_inventory= @sku.inventory("Amazon US") %><br>
 <% prediction_x = ((x.last.round(0))..(x.last.round(0)+leadTimeWeeks)).to_a %>
 <% prediction_y = prediction_x.map { |x| x*m+b } %>
 <% sigma = lineFit.sigma %>
+<table>
+<tr>
+<td rowspan="2" style="vertical-align:top">
+<h3>Amazon Fees</h3>
+<% fees = @sku.fees %>
+<table class="table table-compact">
+	<tr>
+		<td><strong>Size Tier</strong>:</td>
+		<td><%= size_tier = @sku.get_product_size_tier %></td>
+	<tr>
+	<tr>
+		<td><strong>Order Handling per order</strong>:</td>
+		<td><%= number_to_currency(fees[:order_handling]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Pick and Pack per unit</strong>:</td>
+		<td><%= number_to_currency(fees[:pick_and_pack]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Weight Handling per lb</strong>:</td>
+		<td><%= number_to_currency(fees[:weight_handling]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Special Handling</strong>:</td>
+		<td><%= number_to_currency(fees[:special_handling]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Inventory fee</strong>:</td>
+		<td><%= number_to_currency(fees[:inventory_fee]) %></td>
+	</tr>
+</table>
+<% [28,90].each do |leadTime| %>
+<h3><a href="#", style="color:#999">Assuming a <%= leadTime %> day lead time</a></h3>
+<blockquote>
+<% leadTimeWeeks = (leadTime/7.0).ceil %>
+Current Inventory: <%= ci = amz_inventory %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @sku.get_orders("Amazon US",leadTime) %><%= pl. round %><br>
+Slope of the Demand Line: <%= m.round %><br>
+Intercept of the Demand Line: <%= b.round %><br>
+StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
+StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
+Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
+Predicted Demand:
+<% weeks = (0..leadTimeWeeks).map { |w| w+y.length } %>
+<% predictedDemand = weeks.map { |x1| m*x1+b } %>
+<% pd= predictedDemand.sum - predictedDemand[0] %>
+<%= pd.round %><br>
+Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %>peices <br>
+</blockquote>
+<% end %>
+</td>
+<td>
 <div id="orders_chart"></div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="orders_chart1"></div>
+</td>
+</tr>
+</table>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
@@ -110,22 +172,63 @@ Current FBA Inventory: <%= amz_inventory= @sku.inventory("Amazon US") %><br>
     });
   });
 </script>
-<% [28,90].each do |leadTime| %>
-<h3><a href="#", style="color:#999">Assuming a <%= leadTime %> day lead time</a></h3>
-<blockquote>
-<% leadTimeWeeks = (leadTime/7.0).ceil %>
-Current Inventory: <%= ci = amz_inventory %><br>
-Sum of Orders Currently in the Pipeline: <% pl = 0 %><%= pl. round %><br>
-Slope of the Demand Line: <%= m.round %><br>
-Intercept of the Demand Line: <%= b.round %><br>
-StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
-StDev of the Demand for <%= leadTimeWeeks %> weeks: <% sdd=lineFit.sigma * Math.sqrt(leadTimeWeeks) %><%= sdd.round %><br>
-Service level of 99% requires safety stock to be 2 sigma, so the safety stock level is: <% ss=sdd*2 %><%= ss.round %><br>
-Predicted Demand:
-<% weeks = (0..leadTimeWeeks).map { |w| w+y.length } %>
-<% predictedDemand = weeks.map { |x1| m*x1+b } %>
-<% pd= predictedDemand.sum - predictedDemand[0] %>
-<%= pd.round %><br>
-Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %>peices <br>
-</blockquote>
-<% end %>
+
+
+
+<% lead28=Date.today+28 %>
+<% lead90=Date.today+90 %>
+<% start_prediction=Date.today %>
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    new Highcharts.Chart({
+     	chart: { renderTo: 'orders_chart1' },
+		  title: { text: 'Inventory and Supplier Orders' },
+		  xAxis: { 
+		  	type: 'datetime',
+				maxZoom: 14 * 24 * 3600000,
+		  	text: "Week Number",
+				plotBands: [{ 
+					from: Date.UTC(<%= lead28.year %>, <%= lead28.month-1 %>, <%= lead28.day %>),
+					to: Date.UTC(<%= lead90.year %>, <%= lead90.month-1 %>, <%= lead90.day+1 %>),
+					color: 'rgba(200, 200, 200, .2)'
+				}]
+		  },
+		  yAxis: {
+		    title: { text: 'Inventory'},
+		    floor: 0
+		  },
+		  series: [{
+				name: 'Supplier Orders',
+				type: 'column',
+				data: [
+					<% @sku.events.where(event_type: "Amazon US").sort_by(&:date).each do |po| %>
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_sku_id(@sku).count %>]<%= "," if po != @sku.events.where(event_type: "Amazon US").sort_by(&:date).last %>
+					<% end %>
+				]
+		  },{
+				name: 'Current Inventory',
+				data: [[Date.UTC(<%= Date.today.year %>, <%= Date.today.month-1 %>, <%= Date.today.day %>), <%= amz_inventory %>]]
+		  },{
+		  	type: 'line',
+		  	name: 'Predicted Inventory Line',
+		  	pointInterval: 24 * 3600 * 1000,
+		  	pointStart: Date.UTC(<%= start_prediction.year %>,<%= start_prediction.month-1 %>,<%= start_prediction.day %>),
+		  	data: <%= @sku.forcast_demand("Amazon US").map { |a| a.round(2) } %>,
+		  	marker: {
+					enabled: false
+				},
+				dashStyle: 'Dash'
+			}]
+    });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
