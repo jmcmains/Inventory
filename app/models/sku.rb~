@@ -27,10 +27,10 @@ class Sku < ActiveRecord::Base
   	start_date=1.year.ago
   	end_date=Date.today
   	total_cogs=0
-  	offerings.first.products.each do |product|
-  		cost=product.cogs(start_date,end_date)
+  	offerings.first.offering_products.each do |op|
+  		cost=op.product.cogs(start_date,end_date)
   		part = cost[:purchases] > 0 ? (cost[:value]/cost[:purchases]) : 0
-  		total_cogs=total_cogs+part
+  		total_cogs=total_cogs+op.quantity*part
   	end
   	return total_cogs
   end
@@ -109,7 +109,7 @@ class Sku < ActiveRecord::Base
 				levels[-1] -= (m*n+b)/7
 				Event.where(event_type: location, received: false).each do |po|
 					if po.expected_date == curdate
-						cnt=po.product_counts.find_by_sku_id(self)
+						cnt=po.product_counts.where(sku_id: id)
 						levels[-1] += cnt.count
 					end
 				end

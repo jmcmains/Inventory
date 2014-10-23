@@ -107,9 +107,9 @@ class Sku < ActiveRecord::Base
 			while curdate < start+max_lead_time
 				levels << levels.last
 				levels[-1] -= (m*n+b)/7
-				Event.where(event_type: location, received: false).each do |po|
+				events.where(event_type: location, received: false).each do |po|
 					if po.expected_date == curdate
-						cnt=po.product_counts.find_by_sku_id(self)
+						cnt=po.product_counts.where(sku_id: id).first
 						levels[-1] += cnt.count
 					end
 				end
