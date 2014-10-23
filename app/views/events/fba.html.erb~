@@ -11,6 +11,7 @@
 			<th style="vertical-align:top;text-align:center">Expected Date</th>
 			<th style="vertical-align:top;text-align:center">Actual Delivery</th>
 			<th style="vertical-align:top;text-align:center">Products</th>
+			<th style="vertical-align:top;text-align:center">Shipping and Handling</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -26,12 +27,13 @@
 				<table class="table">
 					<% event.product_counts.sort_by(&:sku_name).each do |pc| %>
 						<tr>
-							<td><%= link_to pc.sku.name, sku_path(pc.sku) %></td>
+							<td><%= link_to pc.sku.name, {controller: 'skus', action:"show", id: pc.sku.id} %></td>
 							<td><%= pc.count.round %> peices</td>
 						</tr>
 					<% end %>
 				</table>
 			</td>
+			<td><%= event.additional_cost %></td>
 		</tr>
 	<% end %>
 	</tbody>

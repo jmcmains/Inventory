@@ -27,7 +27,7 @@
 				<table class="table">
 					<% event.product_counts.sort_by(&:sku_name).each do |pc| %>
 						<tr>
-							<td><%= link_to pc.sku.name, sku_path(pc.sku) %></td>
+							<td><%= link_to pc.sku.name, {controller: 'skus', action:"show", id: pc.sku.id, origin: event.event_type} %></td>
 							<td><%= pc.count.round %> peices</td>
 						</tr>
 					<% end %>

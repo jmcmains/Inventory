@@ -1,9 +1,8 @@
 <h1><%= @sku.name %></h1>
 <%= link_to "Edit", edit_sku_path(@sku) %><br>
-Dimensions: <%= @sku.length %> inches x <%= @sku.width %> inches x <%= @sku.height %> inches<br/>
-Total Weight: <%= @sku.weight %> lbs<br>
-Current FBA Inventory: <%= amz_inventory= @sku.inventory("Amazon US") %><br>
-<% y = @sku.amazon_sales_count("Amazon US")["y"] %><% d2 = @sku.amazon_sales_count("Amazon US")["dates"] %>
+
+<% origin = "Amazon US" %>
+<% y = @sku.amazon_sales_count(origin)["y"] %><% d2 = @sku.amazon_sales_count(origin)["dates"] %>
 <% x = [] %>
 <% d2.each_with_index do |d,i| %>
 	<% x[i]=((d-d2[0])/7).to_f %>
@@ -28,11 +27,15 @@ Current FBA Inventory: <%= amz_inventory= @sku.inventory("Amazon US") %><br>
 <tr>
 <td rowspan="2" style="vertical-align:top">
 <h3>Amazon Fees</h3>
-<% fees = @sku.fees %>
+<% fees = @sku.fees(origin) %>
 <table class="table table-compact">
+<tr>
+		<td><strong>Current FBA Inventory</strong>:</td>
+		<td><%= amz_inventory= @sku.inventory(origin) %></td>
 	<tr>
-		<td><strong>Size Tier</strong>:</td>
-		<td><%= size_tier = @sku.get_product_size_tier %></td>
+	<tr>
+		<td><strong>Size Tier (<%= @sku.length %>" x <%= @sku.width %>" x <%= @sku.height %>", <%= @sku.weight %> lbs)</strong>:</td>
+		<td><%= size_tier = @sku.get_product_size_tier(origin) %></td>
 	<tr>
 	<tr>
 		<td><strong>Order Handling per order</strong>:</td>
@@ -51,12 +54,28 @@ Current FBA Inventory: <%= amz_inventory= @sku.inventory("Amazon US") %><br>
 		<td><%= number_to_currency(fees[:special_handling]) %></td>
 	</tr>
 	<tr>
+		<td><strong>Referral Fee</strong>:</td>
+		<td><%= number_to_currency(fees[:referral_fee]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Total Amazon Fees</strong>:</td>
+		<td><%= number_to_currency(fees[:amazon_cost]) %></td>
+	</tr>
+	<tr>
 		<td><strong>Inventory fee</strong>:</td>
 		<td><%= number_to_currency(fees[:inventory_fee]) %></td>
 	</tr>
 	<tr>
 		<td><strong>Product Cost</strong>:</td>
-		<td><%= number_to_currency(@sku.cogs) %></td>
+		<td><%= number_to_currency(fees[:product_cost]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Shipping Cost</strong>:</td>
+		<td><%= number_to_currency(fees[:shipping_cost]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Total Cost</strong>:</td>
+		<td><%= number_to_currency(fees[:total_cost]) %></td>
 	</tr>
 </table>
 <% [28,90].each do |leadTime| %>
@@ -64,7 +83,7 @@ Current FBA Inventory: <%= amz_inventory= @sku.inventory("Amazon US") %><br>
 <blockquote>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
 Current Inventory: <%= ci = amz_inventory %><br>
-Sum of Orders Currently in the Pipeline: <% pl = @sku.get_orders("Amazon US",leadTime) %><%= pl. round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @sku.get_orders(origin,leadTime) %><%= pl. round %><br>
 Slope of the Demand Line: <%= m.round %><br>
 Intercept of the Demand Line: <%= b.round %><br>
 StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
@@ -205,8 +224,8 @@ Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= 
 				name: 'Supplier Orders',
 				type: 'column',
 				data: [
-					<% @sku.events.where(event_type: "Amazon US").sort_by(&:date).each do |po| %>
-							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_sku_id(@sku).count %>]<%= "," if po != @sku.events.where(event_type: "Amazon US").sort_by(&:date).last %>
+					<% @sku.events.where(event_type: origin).sort_by(&:date).each do |po| %>
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_sku_id(@sku).count %>]<%= "," if po != @sku.events.where(event_type: origin).sort_by(&:date).last %>
 					<% end %>
 				]
 		  },{
@@ -217,7 +236,7 @@ Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= 
 		  	name: 'Predicted Inventory Line',
 		  	pointInterval: 24 * 3600 * 1000,
 		  	pointStart: Date.UTC(<%= start_prediction.year %>,<%= start_prediction.month-1 %>,<%= start_prediction.day %>),
-		  	data: <%= @sku.forcast_demand("Amazon US").map { |a| a.round(2) } %>,
+		  	data: <%= @sku.forcast_demand(origin).map { |a| a.round(2) } %>,
 		  	marker: {
 					enabled: false
 				},

@@ -2,6 +2,7 @@ class SkusController < ApplicationController
   
   def show
   	@sku = Sku.find(params[:id])
+  	@origin = params[:origin]
   	@title = @sku.name
   end
   

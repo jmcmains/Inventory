@@ -44,22 +44,20 @@ class Sku < ActiveRecord::Base
 		return output
   end
   
-  def get_trend
-		sql = ActiveRecord::Base.connection()
-		data= {}
-		data['y'] = []
-		data['dates'] = []
-		y=[]
-		dates=[]
-		d=sql.execute("SELECT SUM(orders.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id WHERE (offerings.sku_id = #{id}) GROUP BY year, week ORDER BY year, week ")
-			y=d.map { |a| a["sum"].to_i }
-			dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) if !a['year'].nil? && !a['week'].nil? }
+  def amazon_sales_count(origin)
+  	sql = ActiveRecord::Base.connection()
+  	d=sql.execute("SELECT SUM(orders.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id WHERE (offerings.sku_id = '#{id}') AND (orders.origin = '#{origin}') GROUP BY year, week ORDER BY year, week ")
+  	data=Hash.new()
+  	y=d.map { |a| a["sum"].to_i }
+		dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) if !a['year'].nil? && !a['week'].nil? }
 		if y.count > 0
 			if dates.last >= Date.today.beginning_of_week-1
 				dates.pop
 				y.pop	
 			end
 		end
+		data["dates"]=Hash.new()
+		data["y"]=Hash.new()
 		if !dates.blank?
 			data["dates"]=((dates.first..(Date.today.beginning_of_week-7)).step(7)).to_a
 			data["y"]=Array.new(data["dates"].length,0)
@@ -68,7 +66,7 @@ class Sku < ActiveRecord::Base
 			end
 		end
 		return data
-	end
+  end
   
   def get_orders(location,leadTime)
 		before_date=Date.today + leadTime
@@ -91,8 +89,8 @@ class Sku < ActiveRecord::Base
 		inv=inventory(location)
 		start=Date.today
 		max_lead_time=130.0;
-		y=self.get_trend["y"]
-		dates=self.get_trend["dates"]
+		y=self.amazon_sales_count(location)["y"]
+		dates=self.amazon_sales_count(location)["dates"]
 		x=Array.new
 		levels=[inv]
 		if y.count > 2
@@ -107,9 +105,9 @@ class Sku < ActiveRecord::Base
 			while curdate < start+max_lead_time
 				levels << levels.last
 				levels[-1] -= (m*n+b)/7
-				Event.where(event_type: location, received: false).each do |po|
+				events.where(event_type: location, received: false).each do |po|
 					if po.expected_date == curdate
-						cnt=po.product_counts.where(sku_id: id)
+						cnt=po.product_counts.where(sku_id: id).first
 						levels[-1] += cnt.count
 					end
 				end
@@ -124,40 +122,43 @@ class Sku < ActiveRecord::Base
 		end
 	end
   
-  def fees
-  	size_tier=get_product_size_tier
+  def fees(origin)
+  	size_tier=get_product_size_tier(origin)
 		if size_tier.include?("Standard")
+		 	outbound_shipping_weight=(weight + 4.0/16.0).ceil.to_f
 			order_handling = 1
 			pick_and_pack = 1.02
 			special_handling=0
 			if size_tier.include?("Small")
 				weight_handling = 0.46
 			elsif size_tier.include?("Large")
-				if weight <= 1
+				if outbound_shipping_weight <= 1
 					weight_handling = 0.55
-				elsif weight <= 2
+				elsif outbound_shipping_weight <= 2
 					weight_handling = 1.34
 				else
-					weight_handling = 1.34 + (weight-2).ceil*0.39
+					weight_handling = 1.34 + (outbound_shipping_weight-2.0).ceil*0.39
 				end
 			end
 		else
+			outbound_shipping_weight=([weight,(length*width*height)/166.0].max+16.0).ceil.to_f
 			order_handling = 0
 			if size_tier.include?("Small")
 				pick_and_pack = 4.03
-				weight_handling = 1.34 + (weight-2).ceil*0.39
+				weight_handling = 1.34 + (outbound_shipping_weight-2).ceil*0.39
 				special_handling=0
 			elsif size_tier.include?("Medium")
 				pick_and_pack = 5.07
-				weight_handling = 1.91 + (weight-2).ceil*0.39
+				weight_handling = 1.91 + (outbound_shipping_weight-2).ceil*0.39
 				special_handling=0
 			elsif size_tier.include?("Large")
 				pick_and_pack = 8.12
-				weight_handling = 61.62 + (weight-90).ceil*0.80
+				weight_handling = 61.62 + (outbound_shipping_weight-90).ceil*0.80
 				special_handling=0
 			else
 				pick_and_pack = 10.25
-				weight_handling = 124.08 + (weight-90).ceil*0.92
+				outbound_shipping_weight=(weight+16.0).ceil.to_f
+				weight_handling = 124.08 + (outbound_shipping_weight-90).ceil*0.92
 				special_handling=40
 			end
 		end
@@ -166,11 +167,29 @@ class Sku < ActiveRecord::Base
 		else
 			inventory_fee = 0.64*(height*length*width)/(12**3)
 		end
-		
-		return {order_handling: order_handling,pick_and_pack: pick_and_pack,weight_handling: weight_handling,special_handling: special_handling,inventory_fee: inventory_fee}
+		#shipping fee
+		costs=Array.new
+		amounts=Array.new
+		events.where(event_type: origin, received: true).each do |event|
+			shipment_weight=event.product_counts.map { |a| a.sku.weight*a.count }.sum
+			costs << weight/shipment_weight*event.additional_cost
+			amounts << event.product_counts.where(sku_id: id).first.count
+		end
+		shipping_cost=(0...costs.count).inject(0) {|r, i| r + costs[i]*amounts[i]}/amounts.sum
+		#amazon finders fee
+		offer=Sku.products_client(origin).get_my_price_for_sku(name).xml["GetMyPriceForSKUResponse"]["GetMyPriceForSKUResult"]["Product"]["Offers"]["Offer"]
+		if offer.count>1
+			current_price=offer[0]["BuyingPrice"]["ListingPrice"]["Amount"].to_f
+		else
+			current_price=offer["BuyingPrice"]["ListingPrice"]["Amount"].to_f
+		end
+		referral_fee = [0.15*current_price,1].max
+		amazon_cost=order_handling+pick_and_pack+weight_handling+special_handling+referral_fee
+		total_cost= amazon_cost+inventory_fee+shipping_cost+cogs
+		return {order_handling: order_handling,pick_and_pack: pick_and_pack,weight_handling: weight_handling,special_handling: special_handling,inventory_fee: inventory_fee,shipping_cost: shipping_cost,referral_fee: referral_fee,amazon_cost: amazon_cost, product_cost: cogs,total_cost: total_cost}
   end
   
-  def get_product_size_tier
+  def get_product_size_tier(origin)
 		weight_limit_small_standard = 12.0/16.0
 	 	max_side_limit_small_standard = 15
 	 	mean_side_limit_small_standard = 12
@@ -221,50 +240,27 @@ class Sku < ActiveRecord::Base
   	return MWS.fulfillment_inventory(data)
   end
   
-  def self.report(location)
+  def self.products_client(location)
   	data=amazon_id(location)
-  	return MWS.fulfillment_inventory(data)
+  	return MWS.products(data)
   end
   
-  def amazon_sales_count(origin)
-  	sql = ActiveRecord::Base.connection()
-  	d=sql.execute("SELECT SUM(orders.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id WHERE (offerings.sku_id = '#{id}') AND (orders.origin = '#{origin}') GROUP BY year, week ORDER BY year, week ")
-  	data=Hash.new()
-  	y=d.map { |a| a["sum"].to_i }
-		dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) if !a['year'].nil? && !a['week'].nil? }
-		if y.count > 0
-			if dates.last >= Date.today.beginning_of_week-1
-				dates.pop
-				y.pop	
-			end
-		end
-		data["dates"]=Hash.new()
-		data["y"]=Hash.new()
-		if !dates.blank?
-			data["dates"]=((dates.first..(Date.today.beginning_of_week-7)).step(7)).to_a
-			data["y"]=Array.new(data["dates"].length,0)
-			dates.each_with_index do |d,i|
-				data["y"][data["dates"].index(d)]=y[i]
-			end
-		end
-		return data
-  end
+
   
   def self.inventory(skus,location)
   	ic=inventory_client(location)
-    resp = ic.list_inventory_supply seller_skus: skus
-    items = resp.xml['ListInventorySupplyResponse']['ListInventorySupplyResult']['InventorySupplyList']['member']
+    items = ic.list_inventory_supply(seller_skus: skus).xml['ListInventorySupplyResponse']['ListInventorySupplyResult']['InventorySupplyList']['member']
     if items.class == Array
     	items=items.reject { |a| a["ASIN"].blank? }
     	if items.length == 1
-    		{items[0]['SellerSKU'] => items[0]['TotalSupplyQuantity'].to_i}
+    		{items[0]['SellerSKU'] => items[0]['InStockSupplyQuantity'].to_i}
 		  else
 				items.inject Hash.new(0) do |inv,item|
-				  	inv.merge(item['SellerSKU'] => item['TotalSupplyQuantity'].to_i)
+				  	inv.merge(item['SellerSKU'] => item['InStockSupplyQuantity'].to_i)
 				end
 			end
     elsif items.class == Hash
-    	{items['SellerSKU'] => items['TotalSupplyQuantity'].to_i}
+    	{items['SellerSKU'] => items['InStockSupplyQuantity'].to_i}
     end
   end
   
@@ -272,7 +268,7 @@ class Sku < ActiveRecord::Base
   	ic=Sku.inventory_client(location)
     resp = ic.list_inventory_supply seller_skus: [name]
     items = resp.xml['ListInventorySupplyResponse']['ListInventorySupplyResult']['InventorySupplyList']['member']
-   	items['TotalSupplyQuantity'].to_i
+   	items['InStockSupplyQuantity'].to_i
   end
   
   def self.amazon(location)

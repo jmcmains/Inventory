@@ -1,8 +1,7 @@
 <h1><%= @sku.name %></h1>
 <%= link_to "Edit", edit_sku_path(@sku) %><br>
-Dimensions: <%= @sku.length %> inches x <%= @sku.width %> inches x <%= @sku.height %> inches<br/>
-Total Weight: <%= @sku.weight %> lbs<br>
-Current FBA Inventory: <%= amz_inventory= @sku.inventory("Amazon US") %><br>
+
+
 <% y = @sku.amazon_sales_count("Amazon US")["y"] %><% d2 = @sku.amazon_sales_count("Amazon US")["dates"] %>
 <% x = [] %>
 <% d2.each_with_index do |d,i| %>
@@ -28,11 +27,15 @@ Current FBA Inventory: <%= amz_inventory= @sku.inventory("Amazon US") %><br>
 <tr>
 <td rowspan="2" style="vertical-align:top">
 <h3>Amazon Fees</h3>
-<% fees = @sku.fees %>
+<% fees = @sku.fees("Amazon US") %>
 <table class="table table-compact">
+<tr>
+		<td><strong>Current FBA Inventory</strong>:</td>
+		<td><%= amz_inventory= @sku.inventory("Amazon US") %></td>
 	<tr>
-		<td><strong>Size Tier</strong>:</td>
-		<td><%= size_tier = @sku.get_product_size_tier %></td>
+	<tr>
+		<td><strong>Size Tier (<%= @sku.length %>" x <%= @sku.width %>" x <%= @sku.height %>", <%= @sku.weight %> lbs)</strong>:</td>
+		<td><%= size_tier = @sku.get_product_size_tier("Amazon US") %></td>
 	<tr>
 	<tr>
 		<td><strong>Order Handling per order</strong>:</td>
@@ -51,8 +54,28 @@ Current FBA Inventory: <%= amz_inventory= @sku.inventory("Amazon US") %><br>
 		<td><%= number_to_currency(fees[:special_handling]) %></td>
 	</tr>
 	<tr>
+		<td><strong>Referral Fee</strong>:</td>
+		<td><%= number_to_currency(fees[:referral_fee]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Total Amazon Fees</strong>:</td>
+		<td><%= number_to_currency(fees[:amazon_cost]) %></td>
+	</tr>
+	<tr>
 		<td><strong>Inventory fee</strong>:</td>
 		<td><%= number_to_currency(fees[:inventory_fee]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Product Cost</strong>:</td>
+		<td><%= number_to_currency(fees[:product_cost]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Shipping Cost</strong>:</td>
+		<td><%= number_to_currency(fees[:shipping_cost]) %></td>
+	</tr>
+	<tr>
+		<td><strong>Total Cost</strong>:</td>
+		<td><%= number_to_currency(fees[:total_cost]) %></td>
 	</tr>
 </table>
 <% [28,90].each do |leadTime| %>
