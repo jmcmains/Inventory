@@ -1,8 +1,7 @@
 <h1>US Numbers</h1>
 <table class="table">
 <tr>
-<th>SKU</th>
-<th>Offer</th>
+<th>Sku</th>
 <th>FBA Inventory</th>
 <th>Need (4 week lead time)</th>
 <th>Need (90 day lead time)</th>
@@ -14,7 +13,6 @@
 <table class="table">
 <tr>
 <th>SKU</th>
-<th>Offer</th>
 <th>FBA Inventory</th>
 <th>Need (4 week lead time)</th>
 <th>Need (90 day lead time)</th>

@@ -1,10 +1,19 @@
 <% data=Sku.amazon(origin) %>
+<table class="table">
+<tr>
+<th>Modify</th>
+<th>SKU</th>
+<th>FBA Inventory</th>
+<th>Need (4 week lead time)</th>
+<th>Need (90 day lead time)</th>
+</tr>
 <% data.sort_by { |a| a[0] }.each do |kit| %>
 <% if !kit.blank? %>
 	<% sku=Sku.where(name: kit[0]).first %>
 	<% need_28=sku.amazon_need(kit[1],origin,28).round(1) %>
 	<% need_90=sku.amazon_need(kit[1],origin,90).round(1) %>
 	<tr class="<%= need_28 > 0 ? 'error' : '' %>">
+		<td><%= link_to "Edit", edit_sku_path(sku) %></td>
 		<td><%= link_to sku.name, {controller: 'skus', action:"show", id: sku.id, origin: origin} %></td>
 		<td><%= kit[1] %></td>
 		<td><%= need_28 %></td>
@@ -12,3 +21,4 @@
 		</tr>
 	<% end %>
 <% end %>
+</table>
