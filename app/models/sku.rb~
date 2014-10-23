@@ -2,6 +2,7 @@ class Sku < ActiveRecord::Base
 	has_many :offerings, :foreign_key => "sku_id", :dependent => :destroy
 	has_many :product_counts, :foreign_key => "sku_id", :dependent => :destroy
 	has_many :events, through: :product_counts
+	
 	def amazon_trend(origin)
   	y = amazon_sales_count(origin)["y"]
 		d2 = amazon_sales_count(origin)["date"]
@@ -37,11 +38,10 @@ class Sku < ActiveRecord::Base
   
   def self.amazon_id(location)
 		if location == "Amazon US"
-			output = {merchant_id: ENV["amazon_us_merchant_id"],marketplace_id: ENV["amazon_us_marketplace_id"], aws_access_key_id: ENV["amazon_us_aws_access_key_id"], aws_secret_access_key: ENV["amazon_us_aws_secret_access_key"]}
+			{merchant_id: ENV["amazon_us_merchant_id"],marketplace_id: ENV["amazon_us_marketplace_id"], aws_access_key_id: ENV["amazon_us_aws_access_key_id"], aws_secret_access_key: ENV["amazon_us_aws_secret_access_key"]}
 		elsif location == "Amazon Canada"
-			output = {merchant_id: ENV["amazon_ca_merchant_id"],marketplace_id: ENV["amazon_ca_marketplace_id"], aws_access_key_id: ENV["amazon_ca_aws_access_key_id"], aws_secret_access_key: ENV["amazon_ca_aws_secret_access_key"]}
+			{merchant_id: ENV["amazon_ca_merchant_id"],marketplace_id: ENV["amazon_ca_marketplace_id"], aws_access_key_id: ENV["amazon_ca_aws_access_key_id"], aws_secret_access_key: ENV["amazon_ca_aws_secret_access_key"]}
 		end
-		return output
   end
   
   def amazon_sales_count(origin)
@@ -123,49 +123,77 @@ class Sku < ActiveRecord::Base
 	end
   
   def fees(origin)
-  	size_tier=get_product_size_tier(origin)
-		if size_tier.include?("Standard")
-		 	outbound_shipping_weight=(weight + 4.0/16.0).ceil.to_f
-			order_handling = 1
-			pick_and_pack = 1.02
-			special_handling=0
-			if size_tier.include?("Small")
-				weight_handling = 0.46
-			elsif size_tier.include?("Large")
-				if outbound_shipping_weight <= 1
-					weight_handling = 0.55
-				elsif outbound_shipping_weight <= 2
-					weight_handling = 1.34
-				else
-					weight_handling = 1.34 + (outbound_shipping_weight-2.0).ceil*0.39
-				end
-			end
-		else
-			outbound_shipping_weight=([weight,(length*width*height)/166.0].max+16.0).ceil.to_f
-			order_handling = 0
-			if size_tier.include?("Small")
-				pick_and_pack = 4.03
-				weight_handling = 1.34 + (outbound_shipping_weight-2).ceil*0.39
+    size_tier=get_product_size_tier(origin)
+  	if origin == "Amazon Canada"
+  		dimensional_weight=((length*width*height).to_unit("in^3").convert_to("cm^3")/6000).scalar.to_f.to_unit('g')
+    	usable_weight=[dimensional_weight,weight.to_unit("lbs").convert_to("g")].max
+			if size_tier == "Envelope"
+				pick_and_pack = 1.55
+				outbound_shipping_weight=((usable_weight + Unit('25 g'))/100.0).ceil*100.0
+				weight_handling = 1.90 + (outbound_shipping_weight-Unit('100 g')).scalar.to_f*0.25
 				special_handling=0
-			elsif size_tier.include?("Medium")
-				pick_and_pack = 5.07
-				weight_handling = 1.91 + (outbound_shipping_weight-2).ceil*0.39
-				special_handling=0
-			elsif size_tier.include?("Large")
-				pick_and_pack = 8.12
-				weight_handling = 61.62 + (outbound_shipping_weight-90).ceil*0.80
+			elsif size_tier == "Parcel"
+				pick_and_pack = 1.55
+				outbound_shipping_weight=((usable_weight + Unit('25 g'))/500.0).ceil*500.0
+				weight_handling = 3.75 + (outbound_shipping_weight-Unit('500 g')).scalar.to_f*0.37
 				special_handling=0
 			else
-				pick_and_pack = 10.25
-				outbound_shipping_weight=(weight+16.0).ceil.to_f
-				weight_handling = 124.08 + (outbound_shipping_weight-90).ceil*0.92
-				special_handling=40
+				pick_and_pack = 2.65
+				outbound_shipping_weight=((usable_weight + Unit('25 g'))/500.0).ceil*500.0
+				weight_handling = 3.75 + (outbound_shipping_weight-Unit('500 g')).scalar.to_f*0.37
+				special_handling=125
 			end
-		end
-		if Date.today.month < 10
-			inventory_fee = 0.48*(height*length*width)/(12**3)
-		else
-			inventory_fee = 0.64*(height*length*width)/(12**3)
+			volume=(length*width*height).to_unit("in^3").convert_to("m^3").scalar.to_f
+			if Date.today.month < 10
+				inventory_fee = 16*volume
+			else
+				inventory_fee = 23*volume
+			end
+  	else
+			if size_tier.include?("Standard")
+			 	outbound_shipping_weight=(weight + 4.0/16.0).ceil.to_f
+				order_handling = 1
+				pick_and_pack = 1.02
+				special_handling=0
+				if size_tier.include?("Small")
+					weight_handling = 0.46
+				elsif size_tier.include?("Large")
+					if outbound_shipping_weight <= 1
+						weight_handling = 0.55
+					elsif outbound_shipping_weight <= 2
+						weight_handling = 1.34
+					else
+						weight_handling = 1.34 + (outbound_shipping_weight-2.0).ceil*0.39
+					end
+				end
+			else
+				outbound_shipping_weight=([weight,(length*width*height)/166.0].max+16.0).ceil.to_f
+				order_handling = 0
+				if size_tier.include?("Small")
+					pick_and_pack = 4.03
+					weight_handling = 1.34 + (outbound_shipping_weight-2).ceil*0.39
+					special_handling=0
+				elsif size_tier.include?("Medium")
+					pick_and_pack = 5.07
+					weight_handling = 1.91 + (outbound_shipping_weight-2).ceil*0.39
+					special_handling=0
+				elsif size_tier.include?("Large")
+					pick_and_pack = 8.12
+					weight_handling = 61.62 + (outbound_shipping_weight-90).ceil*0.80
+					special_handling=0
+				else
+					pick_and_pack = 10.25
+					outbound_shipping_weight=(weight+16.0).ceil.to_f
+					weight_handling = 124.08 + (outbound_shipping_weight-90).ceil*0.92
+					special_handling=40
+				end
+			end
+			if Date.today.month < 10
+				inventory_fee = 0.48*(height*length*width)/(12**3)
+			else
+				inventory_fee = 0.64*(height*length*width)/(12**3)
+			end
+			
 		end
 		#shipping fee
 		costs=Array.new
@@ -175,63 +203,88 @@ class Sku < ActiveRecord::Base
 			costs << weight/shipment_weight*event.additional_cost
 			amounts << event.product_counts.where(sku_id: id).first.count
 		end
-		shipping_cost=(0...costs.count).inject(0) {|r, i| r + costs[i]*amounts[i]}/amounts.sum
+		if costs.count > 0
+			shipping_cost=(0...costs.count).inject(0) {|r, i| r + costs[i]*amounts[i]}/amounts.sum
+		else
+			shipping_cost=0
+		end
 		#amazon finders fee
 		offer=Sku.products_client(origin).get_my_price_for_sku(name).xml["GetMyPriceForSKUResponse"]["GetMyPriceForSKUResult"]["Product"]["Offers"]["Offer"]
-		if offer.count>1
+		if offer.count==2
 			current_price=offer[0]["BuyingPrice"]["ListingPrice"]["Amount"].to_f
 		else
 			current_price=offer["BuyingPrice"]["ListingPrice"]["Amount"].to_f
 		end
 		referral_fee = [0.15*current_price,1].max
+			
 		amazon_cost=order_handling+pick_and_pack+weight_handling+special_handling+referral_fee
 		total_cost= amazon_cost+inventory_fee+shipping_cost+cogs
 		return {order_handling: order_handling,pick_and_pack: pick_and_pack,weight_handling: weight_handling,special_handling: special_handling,inventory_fee: inventory_fee,shipping_cost: shipping_cost,referral_fee: referral_fee,amazon_cost: amazon_cost, product_cost: cogs,total_cost: total_cost}
   end
   
   def get_product_size_tier(origin)
-		weight_limit_small_standard = 12.0/16.0
-	 	max_side_limit_small_standard = 15
-	 	mean_side_limit_small_standard = 12
-	 	min_side_limit_small_standard = 0.75
-	 	
-		weight_limit_large_standard = 20
-	 	max_side_limit_large_standard = 18
-	 	mean_side_limit_large_standard = 14
-	 	min_side_limit_large_standard = 8
-
-		weight_limit_small_oversize = 70
-	 	max_side_limit_small_oversize = 60
-	 	mean_side_limit_small_oversize = 30
-	 	min_side_limit_small_oversize = nil
-	 	length_girth_limit_small_oversize = 130
-	 	
-	 	weight_limit_medium_oversize = 150
-	 	max_side_limit_medium_oversize = 108
-	 	mean_side_limit_medium_oversize = nil
-	 	min_side_limit_medium_oversize = nil
-	 	length_girth_limit_medium_oversize = 130
-	 	
-	 	weight_limit_large_oversize = 150
-	 	max_side_limit_large_oversize = 108
-	 	mean_side_limit_large_oversize = nil
-	 	min_side_limit_large_oversize = nil
-	 	length_girth_limit_large_oversize = 165
-	 	
-		dimensions = [length,height,width].sort
+  	dimensions = [length,height,width].sort
 		girth = 2*(dimensions[1] + dimensions[0])
-		if weight < weight_limit_small_standard && dimensions[0] < min_side_limit_small_standard && dimensions[1] < mean_side_limit_small_standard && dimensions[2] < max_side_limit_small_standard
-			size_tier = "Small Standard"
-		elsif weight < weight_limit_large_standard && dimensions[0] < min_side_limit_large_standard && dimensions[1] < mean_side_limit_large_standard && dimensions[2] < max_side_limit_large_standard
-			size_tier = "Large Standard"
-		elsif weight < weight_limit_small_oversize && dimensions[1] < mean_side_limit_small_oversize && dimensions[2] < max_side_limit_small_oversize && dimensions[2]+girth < length_girth_limit_small_oversize
-			size_tier = "Small Oversize"
-		elsif weight < weight_limit_medium_oversize && dimensions[2] < max_side_limit_medium_oversize && dimensions[2]+girth < length_girth_limit_medium_oversize
-			size_tier = "Medium Oversize"
-		elsif weight < weight_limit_large_oversize && dimensions[2] < max_side_limit_large_oversize && dimensions[2]+girth < length_girth_limit_large_oversize
-			size_tier = "Large Oversize"
-		else
-			size_tier = "Missing or Special"
+  	if origin == "Amazon Canada"
+  		weight_limit_envelope = Unit("500 g").convert_to('lbs').scalar.to_f
+		 	max_side_limit_envelope = Unit("38 cm").convert_to('in').scalar.to_f
+		 	mean_side_limit_envelope = Unit("27 cm").convert_to('in').scalar.to_f
+		 	min_side_limit_envelope = Unit("2 cm").convert_to('in').scalar.to_f
+
+  		weight_limit_parcel = Unit("9 kg").convert_to('lbs').scalar.to_f
+		 	max_side_limit_parcel = Unit("45 cm").convert_to('in').scalar.to_f
+		 	mean_side_limit_parcel = Unit("35 cm").convert_to('in').scalar.to_f
+		 	min_side_limit_parcel = Unit("20 cm").convert_to('in').scalar.to_f
+		 	
+		 	if weight < weight_limit_envelope && dimensions[0] < min_side_limit_envelope && dimensions[1] < mean_side_limit_envelope && dimensions[2] < max_side_limit_envelope
+				size_tier = "Envelope"
+			elsif weight < weight_limit_parcel && dimensions[0] < min_side_limit_parcel && dimensions[1] < mean_side_limit_parcel && dimensions[2] < max_side_limit_parcel
+				size_tier = "Parcel"
+			else
+				size_tier = "Oversize"
+			end
+  	else
+			weight_limit_small_standard = 12.0/16.0
+		 	max_side_limit_small_standard = 15
+		 	mean_side_limit_small_standard = 12
+		 	min_side_limit_small_standard = 0.75
+		 	
+			weight_limit_large_standard = 20
+		 	max_side_limit_large_standard = 18
+		 	mean_side_limit_large_standard = 14
+		 	min_side_limit_large_standard = 8
+
+			weight_limit_small_oversize = 70
+		 	max_side_limit_small_oversize = 60
+		 	mean_side_limit_small_oversize = 30
+		 	min_side_limit_small_oversize = nil
+		 	length_girth_limit_small_oversize = 130
+		 	
+		 	weight_limit_medium_oversize = 150
+		 	max_side_limit_medium_oversize = 108
+		 	mean_side_limit_medium_oversize = nil
+		 	min_side_limit_medium_oversize = nil
+		 	length_girth_limit_medium_oversize = 130
+		 	
+		 	weight_limit_large_oversize = 150
+		 	max_side_limit_large_oversize = 108
+		 	mean_side_limit_large_oversize = nil
+		 	min_side_limit_large_oversize = nil
+		 	length_girth_limit_large_oversize = 165
+		 	
+			if weight < weight_limit_small_standard && dimensions[0] < min_side_limit_small_standard && dimensions[1] < mean_side_limit_small_standard && dimensions[2] < max_side_limit_small_standard
+				size_tier = "Small Standard"
+			elsif weight < weight_limit_large_standard && dimensions[0] < min_side_limit_large_standard && dimensions[1] < mean_side_limit_large_standard && dimensions[2] < max_side_limit_large_standard
+				size_tier = "Large Standard"
+			elsif weight < weight_limit_small_oversize && dimensions[1] < mean_side_limit_small_oversize && dimensions[2] < max_side_limit_small_oversize && dimensions[2]+girth < length_girth_limit_small_oversize
+				size_tier = "Small Oversize"
+			elsif weight < weight_limit_medium_oversize && dimensions[2] < max_side_limit_medium_oversize && dimensions[2]+girth < length_girth_limit_medium_oversize
+				size_tier = "Medium Oversize"
+			elsif weight < weight_limit_large_oversize && dimensions[2] < max_side_limit_large_oversize && dimensions[2]+girth < length_girth_limit_large_oversize
+				size_tier = "Large Oversize"
+			else
+				size_tier = "Missing or Special"
+			end
 		end
   end
   

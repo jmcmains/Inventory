@@ -125,6 +125,7 @@ GEM
       rubyzip
       spreadsheet (> 0.6.4)
     ruby-ole (1.2.11.7)
+    ruby-units (1.4.5)
     rubyzip (1.1.6)
     sass (3.2.19)
     sass-rails (4.0.3)
@@ -191,6 +192,7 @@ DEPENDENCIES
   rails_12factor
   rake
   roo
+  ruby-units
   sass-rails
   soap4r
   uglifier

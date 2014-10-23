@@ -1,8 +1,7 @@
 <h1><%= @sku.name %></h1>
 <%= link_to "Edit", edit_sku_path(@sku) %><br>
 
-<% origin = "Amazon US" %>
-<% y = @sku.amazon_sales_count(origin)["y"] %><% d2 = @sku.amazon_sales_count(origin)["dates"] %>
+<% y = @sku.amazon_sales_count(@origin)["y"] %><% d2 = @sku.amazon_sales_count(@origin)["dates"] %>
 <% x = [] %>
 <% d2.each_with_index do |d,i| %>
 	<% x[i]=((d-d2[0])/7).to_f %>
@@ -27,20 +26,22 @@
 <tr>
 <td rowspan="2" style="vertical-align:top">
 <h3>Amazon Fees</h3>
-<% fees = @sku.fees(origin) %>
+<% fees = @sku.fees(@origin) %>
 <table class="table table-compact">
 <tr>
 		<td><strong>Current FBA Inventory</strong>:</td>
-		<td><%= amz_inventory= @sku.inventory(origin) %></td>
+		<td><%= amz_inventory= @sku.inventory(@origin) %></td>
 	<tr>
 	<tr>
 		<td><strong>Size Tier (<%= @sku.length %>" x <%= @sku.width %>" x <%= @sku.height %>", <%= @sku.weight %> lbs)</strong>:</td>
-		<td><%= size_tier = @sku.get_product_size_tier(origin) %></td>
+		<td><%= size_tier = @sku.get_product_size_tier(@origin) %></td>
 	<tr>
+	<% if fees[:order_handling]>0 %>
 	<tr>
 		<td><strong>Order Handling per order</strong>:</td>
 		<td><%= number_to_currency(fees[:order_handling]) %></td>
 	</tr>
+	<% end %>
 	<tr>
 		<td><strong>Pick and Pack per unit</strong>:</td>
 		<td><%= number_to_currency(fees[:pick_and_pack]) %></td>
@@ -49,10 +50,12 @@
 		<td><strong>Weight Handling per lb</strong>:</td>
 		<td><%= number_to_currency(fees[:weight_handling]) %></td>
 	</tr>
+	<% if fees[:special_handling]>0 %>
 	<tr>
 		<td><strong>Special Handling</strong>:</td>
 		<td><%= number_to_currency(fees[:special_handling]) %></td>
 	</tr>
+	<% end %>
 	<tr>
 		<td><strong>Referral Fee</strong>:</td>
 		<td><%= number_to_currency(fees[:referral_fee]) %></td>
@@ -83,7 +86,7 @@
 <blockquote>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
 Current Inventory: <%= ci = amz_inventory %><br>
-Sum of Orders Currently in the Pipeline: <% pl = @sku.get_orders(origin,leadTime) %><%= pl. round %><br>
+Sum of Orders Currently in the Pipeline: <% pl = @sku.get_orders(@origin,leadTime) %><%= pl. round %><br>
 Slope of the Demand Line: <%= m.round %><br>
 Intercept of the Demand Line: <%= b.round %><br>
 StDev of the Orders: <% sigma=lineFit.sigma %><%= sigma.round %><br>
@@ -224,8 +227,8 @@ Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= 
 				name: 'Supplier Orders',
 				type: 'column',
 				data: [
-					<% @sku.events.where(event_type: origin).sort_by(&:date).each do |po| %>
-							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_sku_id(@sku).count %>]<%= "," if po != @sku.events.where(event_type: origin).sort_by(&:date).last %>
+					<% @sku.events.where(event_type: @origin).sort_by(&:date).each do |po| %>
+							[Date.UTC(<%= po.date.year %>, <%= po.date.month-1 %>, <%= po.date.day %>),<%= po.product_counts.find_by_sku_id(@sku).count %>]<%= "," if po != @sku.events.where(event_type: @origin).sort_by(&:date).last %>
 					<% end %>
 				]
 		  },{
@@ -236,7 +239,7 @@ Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= 
 		  	name: 'Predicted Inventory Line',
 		  	pointInterval: 24 * 3600 * 1000,
 		  	pointStart: Date.UTC(<%= start_prediction.year %>,<%= start_prediction.month-1 %>,<%= start_prediction.day %>),
-		  	data: <%= @sku.forcast_demand(origin).map { |a| a.round(2) } %>,
+		  	data: <%= @sku.forcast_demand(@origin).map { |a| a.round(2) } %>,
 		  	marker: {
 					enabled: false
 				},
