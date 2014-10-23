@@ -125,6 +125,7 @@ class Sku < ActiveRecord::Base
   def fees(origin)
     size_tier=get_product_size_tier(origin)
   	if origin == "Amazon Canada"
+  		order_handling = 0
   		dimensional_weight=((length*width*height).to_unit("in^3").convert_to("cm^3")/6000).scalar.to_f.to_unit('g')
     	usable_weight=[dimensional_weight,weight.to_unit("lbs").convert_to("g")].max
 			if size_tier == "Envelope"

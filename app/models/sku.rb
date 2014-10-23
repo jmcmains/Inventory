@@ -223,6 +223,11 @@ class Sku < ActiveRecord::Base
 		return {order_handling: order_handling,pick_and_pack: pick_and_pack,weight_handling: weight_handling,special_handling: special_handling,inventory_fee: inventory_fee,shipping_cost: shipping_cost,referral_fee: referral_fee,amazon_cost: amazon_cost, product_cost: cogs,total_cost: total_cost}
   end
   
+  def asin(origin)
+  	p=Sku.products_client(origin)
+  	return p.get_my_price_for_sku(name).xml["GetMyPriceForSKUResponse"]["GetMyPriceForSKUResult"]["Product"]["Identifiers"]["MarketplaceASIN"]["ASIN"]
+  end
+  
   def get_product_size_tier(origin)
   	dimensions = [length,height,width].sort
 		girth = 2*(dimensions[1] + dimensions[0])
