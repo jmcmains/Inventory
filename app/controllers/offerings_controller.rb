@@ -10,6 +10,7 @@ class OfferingsController < ApplicationController
   	@offering=Offering.find(params[:id])
   	@title = "Edit Offering"
   	@offering.offering_products.build
+  	session[:last_page] = request.env['HTTP_REFERER'] || offerings_url
   end
   
   def destroy
@@ -21,10 +22,8 @@ class OfferingsController < ApplicationController
 		@offering = Offering.find(params[:id])
 	  @offering.update_attributes(offering_params)
 	  @title = "Current Offerings and their products"
-	  @offerings=Offering.includes(:products).where("products.id IS NULL").references(:products).paginate(:page => params[:page], :per_page => 10)
-	  @blank = true
 	  respond_to do |format|
-			format.html { render :index }
+			format.html { redirect_to session[:last_page] }
 			format.js
 		end
 	end

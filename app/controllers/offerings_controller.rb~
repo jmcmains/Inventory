@@ -86,7 +86,7 @@ class OfferingsController < ApplicationController
 	
 	def autocomplete_sku
 		@skus = Sku.search(params[:term])
-		render json: @skus.map(&:sku).uniq
+		render json: @skus.map(&:name).uniq
 	end
 	
 	def autocomplete_no_price
