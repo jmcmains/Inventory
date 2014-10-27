@@ -304,7 +304,31 @@ class Sku < ActiveRecord::Base
   	return MWS.products(data)
   end
   
-
+	def next_sku(origin)
+		data=Sku.alphabetized(origin)
+		loc=data.find_index(name)
+		return Sku.where(name: (loc < data.length-1 ? data[loc+1] : data[0])).first
+	end
+	
+	def prev_sku(origin)
+		data=Sku.alphabetized(origin)
+		loc=data.find_index(name)
+		return Sku.where(name: (loc > 0 ? data[loc-1] : data[data.length-1])).first
+	end
+	
+	def self.alphabetized(location)
+		skus=all.map(&:name).uniq.reject { |c| c.blank? }
+		offer = Array.new()
+		ic=inventory_client(location)
+		count=(skus.length/50.0).ceil
+		(1..count).to_a.each do |i|
+			resp = ic.list_inventory_supply seller_skus: skus[((i-1)*50)..[((i*50)-1),skus.length].min]
+			items = resp.xml['ListInventorySupplyResponse']['ListInventorySupplyResult']['InventorySupplyList']['member']
+			items=items.reject { |a| a["ASIN"].blank? }
+			offer.concat(items.map{ |a| a["SellerSKU"] })
+		end
+		return offer.sort!
+  end
   
   def self.inventory(skus,location)
   	ic=inventory_client(location)

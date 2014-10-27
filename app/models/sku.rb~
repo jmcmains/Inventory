@@ -223,6 +223,11 @@ class Sku < ActiveRecord::Base
 		return {order_handling: order_handling,pick_and_pack: pick_and_pack,weight_handling: weight_handling,special_handling: special_handling,inventory_fee: inventory_fee,shipping_cost: shipping_cost,referral_fee: referral_fee,amazon_cost: amazon_cost, product_cost: cogs,total_cost: total_cost}
   end
   
+  def asin(origin)
+  	p=Sku.products_client(origin)
+  	return p.get_my_price_for_sku(name).xml["GetMyPriceForSKUResponse"]["GetMyPriceForSKUResult"]["Product"]["Identifiers"]["MarketplaceASIN"]["ASIN"]
+  end
+  
   def get_product_size_tier(origin)
   	dimensions = [length,height,width].sort
 		girth = 2*(dimensions[1] + dimensions[0])
@@ -299,13 +304,37 @@ class Sku < ActiveRecord::Base
   	return MWS.products(data)
   end
   
-
+	def next_sku(origin)
+		data=Sku.alphabetized(origin)
+		loc=data.find_index(name)
+		return Sku.where(name: (loc < data.length-1 ? data[loc+1] : data[0])).first
+	end
+	
+	def prev_sku(origin)
+		data=Sku.alphabetized(origin)
+		loc=data.find_index(name)
+		return Sku.where(name: (loc > 0 ? data[loc-1] : data[data.length-1])).first
+	end
+	
+	def self.alphabetized(location)
+		skus=all.map(&:name).uniq.reject { |c| c.blank? }
+		offer = Array.new()
+		ic=inventory_client(location)
+		count=(skus.length/50.0).ceil
+		(1..count).to_a.each do |i|
+			resp = ic.list_inventory_supply seller_skus: skus[((i-1)*50)..[((i*50)-1),skus.length].min]
+			items = resp.xml['ListInventorySupplyResponse']['ListInventorySupplyResult']['InventorySupplyList']['member']
+			items=items.reject { |a| a["ASIN"].blank? || a["EarliestAvailability"].blank? }
+			offer.concat(items.map{ |a| a["SellerSKU"] })
+		end
+		return offer.sort!
+  end
   
   def self.inventory(skus,location)
   	ic=inventory_client(location)
     items = ic.list_inventory_supply(seller_skus: skus).xml['ListInventorySupplyResponse']['ListInventorySupplyResult']['InventorySupplyList']['member']
     if items.class == Array
-    	items=items.reject { |a| a["ASIN"].blank? }
+    	items=items.reject { |a| a["ASIN"].blank? || a["EarliestAvailability"].blank? }
     	if items.length == 1
     		{items[0]['SellerSKU'] => items[0]['InStockSupplyQuantity'].to_i}
 		  else

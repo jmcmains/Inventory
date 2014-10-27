@@ -1,3 +1,9 @@
+<div style="float:left">
+<%= link_to "< Previous", {controller: 'skus', action:"show", id: @sku.prev_sku(@origin), origin: @origin}, class: "btn" %>
+</div>
+<div style="float:right">
+<%= link_to "Next >", {controller: 'skus', action:"show", id: @sku.next_sku(@origin), origin: @origin}, class: "btn" %>
+</div>
 <h1><%= @sku.name %></h1>
 <%= link_to "Edit", edit_sku_path(@sku) %><br>
 

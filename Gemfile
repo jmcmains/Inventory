@@ -29,10 +29,10 @@ gem 'figaro'
 
 gem 'jquery-ui-rails'
 gem 'peddler'
-gem 'channeladvisor'
 gem 'highcharts-rails'
 gem 'soap4r'
 gem 'ruby-units'
+gem 'savon', '~> 2.0'
 
 group :production do
 	ruby '2.1.2'
