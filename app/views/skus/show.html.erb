@@ -31,7 +31,30 @@
 <table>
 <tr>
 <td rowspan="2" style="vertical-align:top">
-<h3>Amazon Fees</h3>
+<div id="accordion">
+<h3><a href="#", style="color:#999">Offerings</a></h3>
+<blockquote>
+<table>
+<tr>
+	<th>Modify</th>
+	<th>Name</th>
+	<th>Most recent Sale</th>
+</tr>
+<% @sku.offerings.each do |o| %>
+<tr>
+	<td><%= link_to "edit", edit_offering_path(o) %></td>
+	<td><%= o.name %></td>
+	<% if o.orders.count>0 %>
+	<td><%= o.orders.sort_by(&:date).last.date %></td>
+	<% else %>
+	<td>never</td>
+	<% end %>
+</tr>
+<% end %>
+</table>
+</blockquote>
+<h3><a href="#", style="color:#999">Amazon Fees</a></h3>
+<blockquote>
 <% fees = @sku.fees(@origin) %>
 <table class="table table-compact">
 <tr>
@@ -87,6 +110,7 @@
 		<td><%= number_to_currency(fees[:total_cost]) %></td>
 	</tr>
 </table>
+</blockquote>
 <% [28,90].each do |leadTime| %>
 <h3><a href="#", style="color:#999">Assuming a <%= leadTime %> day lead time</a></h3>
 <blockquote>
@@ -106,6 +130,7 @@ Predicted Demand:
 Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= <%= ss.round %> + <%= pd.round %> - (<%= ci.round %> + <%= pl.round %>) = <% need = (ss + pd - (ci+pl)) %><%= need.round %>peices <br>
 </blockquote>
 <% end %>
+</div>
 </td>
 <td>
 <div id="orders_chart"></div>
@@ -253,6 +278,11 @@ Need (Safety stock + Predicted Demand - (Current Inventory + Pipeline Orders))= 
 			}]
     });
   });
+</script>
+<script>
+$(function() {
+	$("#accordion").accordion({ active: false, collapsible: true, heightStyle: "content"});
+});
 </script>
 
 
