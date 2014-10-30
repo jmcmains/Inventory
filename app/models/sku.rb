@@ -210,12 +210,7 @@ class Sku < ActiveRecord::Base
 			shipping_cost=0
 		end
 		#amazon finders fee
-		offer=Sku.products_client(origin).get_my_price_for_sku(name).xml["GetMyPriceForSKUResponse"]["GetMyPriceForSKUResult"]["Product"]["Offers"]["Offer"]
-		if offer.count==2
-			current_price=offer[0]["BuyingPrice"]["ListingPrice"]["Amount"].to_f
-		else
-			current_price=offer["BuyingPrice"]["ListingPrice"]["Amount"].to_f
-		end
+		current_price=offerings.first.price
 		referral_fee = [0.15*current_price,1].max
 			
 		amazon_cost=order_handling+pick_and_pack+weight_handling+special_handling+referral_fee

@@ -210,12 +210,7 @@ class Sku < ActiveRecord::Base
 			shipping_cost=0
 		end
 		#amazon finders fee
-		offer=Sku.products_client(origin).get_my_price_for_sku(name).xml["GetMyPriceForSKUResponse"]["GetMyPriceForSKUResult"]["Product"]["Offers"]["Offer"]
-		if offer.count==2
-			current_price=offer[0]["BuyingPrice"]["ListingPrice"]["Amount"].to_f
-		else
-			current_price=offer["BuyingPrice"]["ListingPrice"]["Amount"].to_f
-		end
+		offer=offerings.first.price
 		referral_fee = [0.15*current_price,1].max
 			
 		amazon_cost=order_handling+pick_and_pack+weight_handling+special_handling+referral_fee
@@ -324,7 +319,7 @@ class Sku < ActiveRecord::Base
 		(1..count).to_a.each do |i|
 			resp = ic.list_inventory_supply seller_skus: skus[((i-1)*50)..[((i*50)-1),skus.length].min]
 			items = resp.xml['ListInventorySupplyResponse']['ListInventorySupplyResult']['InventorySupplyList']['member']
-			items=items.reject { |a| a["ASIN"].blank? || a["EarliestAvailability"].blank? }
+			items=items.reject { |a| a["ASIN"].blank? }
 			offer.concat(items.map{ |a| a["SellerSKU"] })
 		end
 		return offer.sort!
@@ -334,7 +329,7 @@ class Sku < ActiveRecord::Base
   	ic=inventory_client(location)
     items = ic.list_inventory_supply(seller_skus: skus).xml['ListInventorySupplyResponse']['ListInventorySupplyResult']['InventorySupplyList']['member']
     if items.class == Array
-    	items=items.reject { |a| a["ASIN"].blank? || a["EarliestAvailability"].blank? }
+    	items=items.reject { |a| a["ASIN"].blank? }
     	if items.length == 1
     		{items[0]['SellerSKU'] => items[0]['InStockSupplyQuantity'].to_i}
 		  else

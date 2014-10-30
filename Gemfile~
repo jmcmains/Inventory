@@ -29,7 +29,6 @@ gem 'figaro'
 
 gem 'jquery-ui-rails'
 gem 'peddler'
-gem 'channeladvisor'
 gem 'highcharts-rails'
 gem 'soap4r'
 gem 'ruby-units'

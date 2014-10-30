@@ -1,8 +1,8 @@
 <div style="float:left">
-<%= link_to "< Previous", {controller: 'skus', action:"show", id: @sku.prev_sku(@origin), origin: @origin}, class: "btn" %>
+<%= link_to "< Previous", {controller: 'skus', action:"show", name: @sku.prev_sku(@origin).name, origin: @origin}, class: "btn" %>
 </div>
 <div style="float:right">
-<%= link_to "Next >", {controller: 'skus', action:"show", id: @sku.next_sku(@origin), origin: @origin}, class: "btn" %>
+<%= link_to "Next >", {controller: 'skus', action:"show", name: @sku.next_sku(@origin).name, origin: @origin}, class: "btn" %>
 </div>
 <h1><%= @sku.name %></h1>
 <%= link_to "Edit", edit_sku_path(@sku) %><br>
@@ -28,7 +28,7 @@
 <% prediction_x = ((x.last.round(0))..(x.last.round(0)+leadTimeWeeks)).to_a %>
 <% prediction_y = prediction_x.map { |x| x*m+b } %>
 <% sigma = lineFit.sigma %>
-<table style="width:100%">
+<table>
 <tr>
 <td rowspan="2" style="vertical-align:top">
 <div id="accordion">

@@ -1,8 +1,8 @@
 class SkusController < ApplicationController
   
   def show
-  	@sku = Sku.find(params[:id])
-  	@origin = params[:origin])
+  	@sku = Sku.where(name: params[:name])
+  	@origin = params[:origin]
   	@title = @sku.name
   end
   
