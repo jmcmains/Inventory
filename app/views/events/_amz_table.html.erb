@@ -13,7 +13,7 @@
 	<% need_28=sku.amazon_need(kit[1],origin,28).round(1) %>
 	<% need_90=sku.amazon_need(kit[1],origin,90).round(1) %>
 	<tr class="<%= need_28 > 0 ? 'error' : '' %>">
-		<td><%= link_to "Edit", edit_sku_path(sku) %></td>
+		<td><%= link_to "Edit", edit_sku_path(sku) %> | <%= link_to "Fees", {controller: 'skus', action:"fees", id: sku.id, origin: origin} %></td>
 		<td><%= link_to sku.name, {controller: 'skus', action:"show", id: sku.id, origin: origin} %></td>
 		<td><%= kit[1] %></td>
 		<td><%= need_28 %></td>

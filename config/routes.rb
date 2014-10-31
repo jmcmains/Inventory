@@ -57,7 +57,11 @@ Inventory::Application.routes.draw do
 		end
 	end
 	resources :product_counts
-	resources :skus
+	resources :skus do
+		member do
+			get :fees
+		end
+	end
 	resources :events do
 		collection do
 			get :inventory

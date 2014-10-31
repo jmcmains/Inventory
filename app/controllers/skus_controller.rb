@@ -6,6 +6,12 @@ class SkusController < ApplicationController
   	@title = @sku.name
   end
   
+  def fees
+  	@sku = Sku.find(params[:id])
+  	@origin = params[:origin]
+  	@title = @sku.name
+  end
+  
   def edit
   	@title = "Edit Sku"
   	@sku = Sku.find(params[:id])

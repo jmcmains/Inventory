@@ -4,7 +4,7 @@ class SkuVault
 	headers 'Accept' => 'application/json'
 	
 	def initialize()
-		@options = { query: {"pageNumber" => 1, "tenantToken" => ENV["tenant_token"], "userToken" => ENV["user_token"]} }
+		@options = { query: {"pageNumber" => 0, "tenantToken" => ENV["tenant_token"], "userToken" => ENV["user_token"], "WarehouseId" => ENV["warehouse_id"]} }
 	end
 
 	def get_item_quantities
@@ -12,18 +12,15 @@ class SkuVault
 	end
 
 	def get_kit_quantities
-		self.class.post("https://app.skuvault.com/api/inventory/getKitQuantities", @options)
+		self.class.post("https://app.skuvault.com/api/inventory/getKitQuantities", @options).parsed_response["Kits"]
 	end
 	
 	def get_warehouse_item_quantities
-		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantities", @options)
+		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantities", @options).parsed_response["IntemQuantities"]
 	end
 	
-	def get_warehouse_item_quantity(options = {})
-	  options = {warehouse_id: 225, sku:"A1", page_number: 1}.merge(options)
-		@options[:query]["WarehouseId"]=options[:warehouse_id]
-		@options[:query]["Sku"]= options[:sku]
-		@options[:query]["pageNumber"]= options[:page_number]
+	def get_warehouse_item_quantity(sku)
+		@options[:query]["Sku"]= sku
 		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantity", @options).parsed_response["TotalQuantityOnHand"]
 	end
 

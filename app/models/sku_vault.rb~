@@ -4,7 +4,7 @@ class SkuVault
 	headers 'Accept' => 'application/json'
 	
 	def initialize()
-		@options = { query: {"pageNumber" => 1, "tenantToken" => ENV["tenant_token"], "userToken" => ENV["user_token"],"WarehouseId" => 225, "Sku" => "A1"} }
+		@options = { query: {"pageNumber" => 0, "tenantToken" => ENV["tenant_token"], "userToken" => ENV["user_token"], "WarehouseId" => ENV["warehouse_id"]} }
 	end
 
 	def get_item_quantities
@@ -16,11 +16,12 @@ class SkuVault
 	end
 	
 	def get_warehouse_item_quantities
-		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantities", @options)
+		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantities", @options).parsed_response["IntemQuantities"]
 	end
 	
-	def get_warehouse_item_quantity
-		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantity", @options)
+	def get_warehouse_item_quantity(sku)
+		@options[:query]["Sku"]= sku
+		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantity", @options).parsed_response["TotalQuantityOnHand"]
 	end
 
 

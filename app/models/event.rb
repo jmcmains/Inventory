@@ -24,6 +24,15 @@ def per_unit_cost
 	return (additional_cost ? additional_cost : 0) /count
 end
 
+def self.update_inventory
+	event=new(date: Date.today, event_type: "Inventory")
+  inv=Product.get_sv_inventory
+  Product.all.sort_by(&:name).each do |p|
+    event.product_counts.build(attributes: { product_id: p.id, count: inv["#{p.id}"], is_box: false })
+  end
+  event.save!
+end
+
 def supplier_name
   	supplier.try(:name)
   end

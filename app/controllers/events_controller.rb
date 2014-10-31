@@ -16,7 +16,7 @@ class EventsController < ApplicationController
 		@title="Amazon Inventory"
 	end
   
-  def new_inventory
+  def new_inventory2
   	@event=Event.new
   	@event.event_type="Inventory"
   	@title="Inventory Log"
@@ -28,6 +28,16 @@ class EventsController < ApplicationController
     	i=i+1;
   	end
   	render :new
+  end
+  
+  def new_inventory
+  	event=Event.new(date: Date.today, event_type: "Inventory")
+  	inv=Product.get_sv_inventory
+  	Product.all.sort_by(&:name).each do |p|
+    	event.product_counts.build(attributes: { product_id: p.id, count: inv["#{p.id}"], is_box: false })
+  	end
+  	event.save!
+  	redirect_to inventory_events_path
   end
   
   def new_po

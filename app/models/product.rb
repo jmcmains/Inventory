@@ -94,6 +94,17 @@ class Product < ActiveRecord::Base
 		return output[:purchases] > 0 ? avg_price - output[:value]/output[:purchases] : avg_price
 	end
 	
+	def get_sv_inventory
+		SkuVault.new().get_warehouse_item_quantity(sku.name)
+	end
+	
+	def self.get_sv_inventory
+		all_inv=SkuVault.new().get_warehouse_item_quantities
+		all.inject Hash.new(0) do |inv,item|
+			inv.merge("#{item.id}" => (all_inv["#{item.sku}"].blank? ? 0 : all_inv["#{item.sku}"]))
+		end
+	end
+	
 	def cogs(start_date,end_date)
 	 	output={}
 	 	sql = ActiveRecord::Base.connection()
