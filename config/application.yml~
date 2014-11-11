@@ -23,5 +23,6 @@ skuvault_user_token: "vwrf/pj+VFTo54w7pUtgQmTgMDZ+vdA5McBYyLnz4u4="
 usps_login: "970RUBBE0314"
 tenant_token: "4gswmDXQC6L6IIm0PHSkUcJY633BkD1IyJwmMF/SZbc="
 user_token: "+Kh9kxVBPkxJ4stPdNsmPCTcb/GwQxGbVTtAFfwjYdE="
-warehouse_id: 174
+warehouse_id: "174"
+ca_developer_key: "4ba1859b-55f2-476d-bf51-898272861a80"
 
