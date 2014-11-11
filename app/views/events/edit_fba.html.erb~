@@ -1,7 +1,7 @@
 <%= form_for @event do |f| %>
 		<p>
 		<%= f.label :event_type, "Inventory Location" %>
-		<%= f.select :event_type, options_for_select(["Amazon Canada", "Amazon US"]), @event.event_type %>
+		<%= f.select :event_type, options_for_select(["Amazon Canada", "Amazon US"],@event.event_type) %>
 		<%= f.label :date %>
 		<%= f.date_select :date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
 		<%= f.label :expected_date %>

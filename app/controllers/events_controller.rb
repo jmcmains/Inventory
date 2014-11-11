@@ -49,6 +49,15 @@ class EventsController < ApplicationController
    	question = @event.product_counts.build
   end
   
+  def load_fba_shipment
+  	infile = params[:event][:file].read
+  	origin = params[:event][:event_type]
+  	date=Date.new(params[:event]["date(1i)"].to_i,params[:event]["date(2i)"].to_i,params[:event]["date(3i)"].to_i)
+  	Event.load_fba_shipment(infile,origin,date)
+		flash[:success] = "Shipment Loaded"
+		redirect_to fba_events_path
+  end
+  
   def new_fba
   	@event=Event.new(expected_date: Date.today+30,received_date: Date.today+30)
   	@title="New Inventory Transfer"
@@ -101,7 +110,7 @@ class EventsController < ApplicationController
   
   def fba
   	@title="FBA Shipments"
-  	@events=Event.where("event_type LIKE ? OR event_type LIKE ?","Amazon Canada", "Amazon US")
+  	@events=Event.where("event_type LIKE ? OR event_type LIKE ?","Amazon Canada", "Amazon US").sort_by(&:created_at).reverse
   	@events=@events.paginate(:page => params[:page], :per_page => 10)
   end
   

@@ -58,7 +58,7 @@ Inventory::Application.routes.draw do
 	end
 	resources :product_counts
 	resources :skus do
-		collection do
+		member do
 			get :fees
 		end
 	end
@@ -77,6 +77,7 @@ Inventory::Application.routes.draw do
 		member do
 			get :receive_po_today
 			get :edit_fba
+			post :load_fba_shipment
 		end
 	end
 	resources :orders do

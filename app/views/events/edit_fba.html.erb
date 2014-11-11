@@ -2,6 +2,8 @@
 		<p>
 		<%= f.label :event_type, "Inventory Location" %>
 		<%= f.select :event_type, options_for_select(["Amazon Canada", "Amazon US"],@event.event_type) %>
+		<%= f.label :invoice %>
+		<%= f.text_field :invoice %>
 		<%= f.label :date %>
 		<%= f.date_select :date, {order: [:month, :day, :year]}, {:class => "input-small"} %>
 		<%= f.label :expected_date %>

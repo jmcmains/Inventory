@@ -73,6 +73,7 @@ Inventory::Application.routes.draw do
 			get :new_po
 			post :load
 			get :new_fba
+			post :load_fba_shipment
 		end
 		member do
 			get :receive_po_today

@@ -34,7 +34,7 @@ class EventsController < ApplicationController
   	event=Event.new(date: Date.today, event_type: "Inventory")
   	inv=Product.get_sv_inventory
   	Product.all.sort_by(&:name).each do |p|
-    	event.product_counts.build(attributes: { product_id: p.id, count: inv["#{p.id}"] })
+    	event.product_counts.build(attributes: { product_id: p.id, count: inv["#{p.id}"], is_box: false })
   	end
   	event.save!
   	redirect_to inventory_events_path
@@ -47,6 +47,15 @@ class EventsController < ApplicationController
   	@subtitle=""
   	@show_offer = false
    	question = @event.product_counts.build
+  end
+  
+  def load_fba_shipment
+  	infile = params[:event][:file].read
+  	origin = params[:event][:event_type]
+  	date=Date.new(params[:event]["date(1i)"],params[:event]["date(2i)"],params[:event]["date(3i)"])
+  	Event.load_fba_shipment(infile,origin,date)
+		flash[:success] = "Shipment Loaded"
+		redirect_to fba_events_path
   end
   
   def new_fba
@@ -101,7 +110,7 @@ class EventsController < ApplicationController
   
   def fba
   	@title="FBA Shipments"
-  	@events=Event.where("event_type LIKE ? OR event_type LIKE ?","Amazon Canada", "Amazon US")
+  	@events=Event.where("event_type LIKE ? OR event_type LIKE ?","Amazon Canada", "Amazon US").sort_by(&:created_at).reverse
   	@events=@events.paginate(:page => params[:page], :per_page => 10)
   end
   
