@@ -1,10 +1,22 @@
-<%= link_to 'New FBA Shipment', new_fba_events_path %> 
 <%= form_for :event, url: {controller: "events", action: "load_fba_shipment", class: "form-inline"} do |f| %>
-  <%= f.file_field :file %>
-  <%= f.date_select :date, { :order => [:month, :day, :year]}, {:class => "input-small"} %>
-	<%= f.select :event_type, options_for_select(["Amazon US", "Amazon Canada"]) %>
-  <%= f.submit "Load Data", class: "btn btn-primary" %>
+<table>
+	<tr>
+		<th>Select Shipment File:</th>
+		<th>Setup Date:</th>
+		<th>Additional Cost:</th>
+		<th>Shipment Going to:</th>
+	<th></th>
+	</tr>
+	<tr>
+		<td><%= f.file_field :file %></td>
+		<td><%= f.date_select :date, { :order => [:month, :day, :year]}, {:class => "input-small"} %></td>
+		<td><%= f.text_field :additional_cost %></td>
+		<td><%= f.select :event_type, options_for_select(["Amazon US", "Amazon Canada"]) %></td>
+		<td><%= f.submit "Load Data", class: "btn btn-primary" %></td>
+	</tr>
+</table>
 <% end %>
+<%= link_to 'Manually load FBA Shipment', new_fba_events_path %> 
 	<div class="pagination">
 		<%= will_paginate @events, :container => false %>
 	</div>
@@ -12,7 +24,7 @@
 	<thead>
 		<tr>
 			<th style="vertical-align:top;text-align:center">Modify Record</th>
-			<th style="vertical-align:top;text-align:center">Warehouse</th>
+			<th style="vertical-align:top;text-align:center">Location</th>
 			<th style="vertical-align:top;text-align:center">Dates</th>
 			<th style="vertical-align:top;text-align:center">Invoice</th>
 			<th style="vertical-align:top;text-align:center">Products</th>
