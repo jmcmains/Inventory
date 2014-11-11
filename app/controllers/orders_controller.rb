@@ -23,10 +23,7 @@ class OrdersController < ApplicationController
 	def create
 		infile = params[:order][:file].read
 		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
-			order = Order.shipworks_csv(row)
-			if order.valid?
-				order.save
-			end
+			Order.shipworks_csv(row)
 		end
 		flash[:success] = "Orders Loaded"
 		redirect_to new_order_path

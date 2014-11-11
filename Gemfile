@@ -34,7 +34,7 @@ gem 'soap4r'
 gem 'ruby-units'
 gem 'savon', '~> 2.0'
 gem 'httparty'
-gem 'rack-timeout'
+
 
 group :production do
 	ruby '2.1.2'
