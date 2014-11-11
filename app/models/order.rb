@@ -70,7 +70,7 @@ end
  	
  	def self.load_from_feed
  	  last_date=Order.all.sort_by(&:date).last.date
-		CSV.parse(open('http://rubberbanditz.com/DailyOrders.txt'), headers: true, quote_char: '"', col_sep: "\t") do |row|
+		CSV.parse(open('http://rubberbanditz.com/MonthlyOrders.txt'), headers: true, quote_char: '"', col_sep: "\t") do |row|
 			Order.shipworks_csv(row)
 		end
  	end
