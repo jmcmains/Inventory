@@ -26,8 +26,11 @@ end
 
 def self.load_fba_shipment(infile,event_type,date)
 	i=0
-	event=Event.create!(date: date, event_type: event_type, expected_date: date+1.month, received_date: date+1.month, received: false,)
+	event=Event.create!(date: date, event_type: event_type, expected_date: date+1.month, received_date: date+1.month, received: false)
 	CSV.parse(infile, col_sep: "\t") do |row|
+		if i == 0
+			event.update_attributes(invoice: row[1])
+		end
 		if i>7
 			#Merchant SKU		Title		ASIN		FNSKU		external-id		Condition		Shipped
 			sku=Sku.where(name: row[0]).first_or_create

@@ -24,9 +24,9 @@ def per_unit_cost
 	return (additional_cost ? additional_cost : 0) /count
 end
 
-def self.load_fba_shipment(infile,event_type,date)
+def self.load_fba_shipment(infile,event_type,date,add_cost)
 	i=0
-	event=Event.create!(date: date, event_type: event_type, expected_date: date+1.month, received_date: date+1.month, received: false)
+	event=Event.create!(date: date, event_type: event_type, expected_date: date+1.month, received_date: date+1.month, received: false,additional_cost: add_cost)
 	CSV.parse(infile, col_sep: "\t") do |row|
 		if i == 0
 			event.update_attributes(invoice: row[1])

@@ -53,7 +53,8 @@ class EventsController < ApplicationController
   	infile = params[:event][:file].read
   	origin = params[:event][:event_type]
   	date=Date.new(params[:event]["date(1i)"].to_i,params[:event]["date(2i)"].to_i,params[:event]["date(3i)"].to_i)
-  	Event.load_fba_shipment(infile,origin,date)
+  	add_cost=params[:event][:additional_cost]
+  	Event.load_fba_shipment(infile,origin,date,add_cost)
 		flash[:success] = "Shipment Loaded"
 		redirect_to fba_events_path
   end
