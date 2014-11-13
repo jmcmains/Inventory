@@ -21,8 +21,8 @@ class OrdersController < ApplicationController
 	end
 	
 	def load_data
-		infile=request.body
-		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
+		infile=request
+		infile.each do |row|
 			Order.shipworks_csv(row)
 		end
 		redirect_to new_order_path
