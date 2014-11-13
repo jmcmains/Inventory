@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
 	end
 	
 	def load_data
-		infile=request
+		infile=request.body.read
 		infile.each do |row|
 			Order.shipworks_csv(row)
 		end
