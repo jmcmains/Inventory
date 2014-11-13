@@ -22,6 +22,7 @@ class OrdersController < ApplicationController
 	
 	def load_data
 		@data=request
+		log(request.body.read)
 	end
 	
 	def create
