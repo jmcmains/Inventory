@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
 	end
 	
 	def load_data
-		@data=params
+		@data=request
 	end
 	
 	def create
