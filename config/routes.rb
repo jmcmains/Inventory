@@ -83,6 +83,7 @@ Inventory::Application.routes.draw do
 	resources :orders do
 	member do
 		post :replace
+		post :load_data
 	end
 		collection do
 			get :new_phone
@@ -91,7 +92,6 @@ Inventory::Application.routes.draw do
 		  post :destroy_range
 			get :combo
 			get :orphans
-			post :load_data
 		end
 	end
 	resources :offerings do
