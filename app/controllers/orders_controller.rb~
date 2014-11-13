@@ -22,6 +22,9 @@ class OrdersController < ApplicationController
 	
 	def load_data
 		infile=request
+		infile.each do |row|
+			Order.shipworks_csv(row)
+		end
 		redirect_to new_order_path
 	end
 	
