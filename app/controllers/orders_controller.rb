@@ -20,21 +20,16 @@ class OrdersController < ApplicationController
     redirect_to new_order_path
 	end
 	
-	def load_individual
-		infile = File.read(params[:file])
-		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
-			Order.shipworks_csv(row)
-		end
-		flash[:success] = "Orders Loaded"
-		redirect_to new_order_path
+	def load
+		@data=params
 	end
 	
 	def create
 		infile = params[:order][:file].read
-		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
-			Order.shipworks_csv(row)
-		end
-		flash[:success] = "Orders Loaded"
+		#CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
+		#	Order.shipworks_csv(row)
+		#end
+		#flash[:success] = "Orders Loaded"
 		redirect_to new_order_path
 	end
 
