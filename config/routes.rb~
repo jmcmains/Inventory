@@ -73,11 +73,11 @@ Inventory::Application.routes.draw do
 			get :new_po
 			post :load
 			get :new_fba
+			post :load_fba_shipment
 		end
 		member do
 			get :receive_po_today
 			get :edit_fba
-			post :load_fba_shipment
 		end
 	end
 	resources :orders do
@@ -91,6 +91,7 @@ Inventory::Application.routes.draw do
 		  post :destroy_range
 			get :combo
 			get :orphans
+			post :load_individual
 		end
 	end
 	resources :offerings do

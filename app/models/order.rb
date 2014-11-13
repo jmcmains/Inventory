@@ -42,30 +42,30 @@ require 'csv'
  		#<Offering id: nil, name: nil, created_at: nil, updated_at: nil, price: nil, oldsku: nil, sku_id: nil> 
 		#<Sku id: nil, name: nil, weight: nil, length: nil, width: nil, height: nil, created_at: nil, updated_at: nil> 
 
-order_number = row[0]
-origin=row[1]
-order_date=row[2]
-quantity=row[3]
-offering_name=row[4]
-price=row[5]
-sku=row[6]
-fba=row[7]
-offering=Offering.where(name: offering_name).first_or_create do |offer|
-offer.sku_id=Sku.where(name: sku).first_or_create.id
-offer.price=price
-existing= Offering.where(sku: offer.sku).first
-if !existing.blank?
-existing.offering_products.each do |op|
-offer.offering_products.create(product_id: op.product_id, quantity: op.quantity)
-end
-end
-end
-date=order_date.blank? ? Date.new(2000,1,1) : Date.strptime(order_date, '%m/%d/%Y')
-order = Order.where(order_number: order_number, offering_id: offering.id, origin: origin).first_or_create do |order1|
-order1.fba=fba
-order1.quantity= quantity
-order1.date=date
-end
+		order_number = row[0]
+		origin=row[1]
+		order_date=row[2]
+		quantity=row[3]
+		offering_name=row[4]
+		price=row[5]
+		sku=row[6]
+		fba=row[7]
+		offering=Offering.where(name: offering_name).first_or_create do |offer|
+		offer.sku_id=Sku.where(name: sku).first_or_create.id
+		offer.price=price
+		existing= Offering.where(sku: offer.sku).first
+		if !existing.blank?
+		existing.offering_products.each do |op|
+		offer.offering_products.create(product_id: op.product_id, quantity: op.quantity)
+		end
+		end
+		end
+		date=order_date.blank? ? Date.new(2000,1,1) : Date.strptime(order_date, '%m/%d/%Y')
+		order = Order.where(order_number: order_number, offering_id: offering.id, origin: origin).first_or_create do |order1|
+		order1.fba=fba
+		order1.quantity= quantity
+		order1.date=date
+		end
  	end
  	
  	def self.load_from_feed
