@@ -21,8 +21,10 @@ class OrdersController < ApplicationController
 	end
 	
 	def load_data
-		@data=request
-		log(request.body.read)
+		infile=request.body.read
+		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
+			Order.shipworks_csv(row)
+		end
 	end
 	
 	def create
