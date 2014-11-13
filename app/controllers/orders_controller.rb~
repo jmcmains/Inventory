@@ -21,7 +21,6 @@ class OrdersController < ApplicationController
 	end
 	
 	def load_data
-		@data=request
 		infile=request.body.read
 		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
 			Order.shipworks_csv(row)
