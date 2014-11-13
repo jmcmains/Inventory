@@ -25,6 +25,7 @@ class OrdersController < ApplicationController
 		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
 			Order.shipworks_csv(row)
 		end
+		redirect_to new_order_path
 	end
 	
 	def create
