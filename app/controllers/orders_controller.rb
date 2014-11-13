@@ -20,7 +20,7 @@ class OrdersController < ApplicationController
     redirect_to new_order_path
 	end
 	
-	def load
+	def load_data
 		@data=params
 	end
 	

@@ -91,7 +91,7 @@ Inventory::Application.routes.draw do
 		  post :destroy_range
 			get :combo
 			get :orphans
-			post :load
+			post :load_data
 		end
 	end
 	resources :offerings do
