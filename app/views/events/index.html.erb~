@@ -102,47 +102,47 @@
 				<% end %>
 				<td>
 					<table class="table">
-<% event.product_counts.sort_by(&:product_name).each do |pc| %>
-<tr>
-<% if pc.product.display? %>
-<td><%= link_to pc.product.name, product_path(pc.product) %></td>
-<td>
-<% if event.event_type = "Inventory" %>
-<%= pc.count.round %> peices
-<% if pc.count > 0 %>
-[<%= "#{pc.box_count.round} boxes" if pc.box_count.round>0 %><%= " #{pc.piece_count.round} pieces" if pc.piece_count.round>0 %>]
-<% else %>
-[0 boxes]
-<% end %>
-<% else %>
-<%= pc.count.round %> 
-<% if pc.is_box %>
-boxes
-<% else %>
-pieces
-<% end %>
-<% end %>
-</td>
-<% if @title != "Product Order" %>
-<td><%= number_to_currency(pc.product.get_value(event)) %></td>
-<% end %>
-<% end %>
-</tr>
-<% end %>
-<% if @title == "Inventory"  %>
-<tr>
-<td></td><td>Total:</td>
-<td><%= number_to_currency(Product.total_inventory_value(event)) %></td>
-</tr>
-<% end %>
-</table>
-</td>
-</tr>
-<% end %>
-</tbody>
+						<% event.product_counts.sort_by(&:product_name).each do |pc| %>
+							<tr>
+								<% if pc.product.display? %>
+									<td><%= link_to pc.product.name, product_path(pc.product) %></td>
+									<td>
+										<% if event.event_type == "Inventory" %>
+											<%= pc.count.round %> peices
+											<% if pc.count > 0 %>
+												[<%= "#{pc.box_count.round} boxes" if pc.box_count.round>0 %><%= " #{pc.piece_count.round} pieces" if pc.piece_count.round>0 %>]
+											<% else %>
+												[0 boxes]
+											<% end %>
+										<% else %>
+											<%= pc.count.round %> 
+											<% if pc.is_box %>
+												boxes
+											<% else %>
+												pieces
+											<% end %>
+										<% end %>
+									</td>
+									<% if @title != "Product Order" %>
+										<td><%= number_to_currency(pc.product.get_value(event)) %></td>
+									<% end %>
+								<% end %>
+							</tr>
+						<% end %>
+						<% if @title == "Inventory"  %>
+							<tr>
+								<td></td><td>Total:</td>
+								<td><%= number_to_currency(Product.total_inventory_value(event)) %></td>
+							</tr>
+						<% end %>
+					</table>
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
 </table>
 <% if @title == "Product Order" %>
-<div class="pagination">
-<%= will_paginate @events, :container => false %>
-</div>
+	<div class="pagination">
+		<%= will_paginate @events, :container => false %>
+	</div>
 <% end %>

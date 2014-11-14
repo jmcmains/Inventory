@@ -104,7 +104,6 @@
 					<table class="table">
 						<% event.product_counts.sort_by(&:product_name).each do |pc| %>
 							<tr>
-								<% if pc.product.display? %>
 									<td><%= link_to pc.product.name, product_path(pc.product) %></td>
 									<td>
 										<% if event.event_type == "Inventory" %>
@@ -126,7 +125,6 @@
 									<% if @title != "Product Order" %>
 										<td><%= number_to_currency(pc.product.get_value(event)) %></td>
 									<% end %>
-								<% end %>
 							</tr>
 						<% end %>
 						<% if @title == "Inventory"  %>
