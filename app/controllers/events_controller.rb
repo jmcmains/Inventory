@@ -130,16 +130,16 @@ class EventsController < ApplicationController
   	if @event_type == "Late"
     	if @sup_name.length > 0
     		@supplier = Supplier.where("LOWER(name) LIKE ?","%#{@sup_name.downcase}%").first
-			  @events=Event.where("#{received} LOWER(invoice) LIKE ? AND supplier_id = ?",Date.today,"%#{@inv_num.downcase}%",@supplier.id)
+			  @events=Event.where("#{received} LOWER(invoice) LIKE ? AND supplier_id = ? AND event_type='Product Order'",Date.today,"%#{@inv_num.downcase}%",@supplier.id)
 		  else
-			  @events=Event.where("#{received} LOWER(invoice) LIKE ?",Date.today,"%#{@inv_num.downcase}%")
+			  @events=Event.where("#{received} LOWER(invoice) LIKE ? AND event_type='Product Order'",Date.today,"%#{@inv_num.downcase}%")
 		  end
 		else
 		  if @sup_name.length > 0
     		@supplier = Supplier.where("LOWER(name) LIKE ?","%#{@sup_name.downcase}%").first
-			  @events=Event.where("#{received} LOWER(invoice) LIKE ? AND supplier_id = ?","%#{@inv_num.downcase}%",@supplier.id)
+			  @events=Event.where("#{received} LOWER(invoice) LIKE ? AND supplier_id = ? AND event_type='Product Order'","%#{@inv_num.downcase}%",@supplier.id)
 		  else
-			  @events=Event.where("#{received} LOWER(invoice) LIKE ?","%#{@inv_num.downcase}%")
+			  @events=Event.where("#{received} LOWER(invoice) LIKE ? AND event_type='Product Order'","%#{@inv_num.downcase}%")
 		  end
 		end
 		if @inv_num == ""

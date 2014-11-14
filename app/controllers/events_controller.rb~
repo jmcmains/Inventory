@@ -99,14 +99,11 @@ class EventsController < ApplicationController
   end
   
   def destroy
+  	session[:last_page] = request.env['HTTP_REFERER'] || po_events_url
   	@event=Event.find(params[:id])
   	event_type=@event.event_type
   	@event.destroy
-  	if event_type == "Inventory"
-  	  redirect_to inventory_events_path
-  	else
-  	  redirect_to po_events_path
-  	end
+  	redirect_to session[:last_page]
   end
   
   def fba
