@@ -1,7 +1,7 @@
 <%= form_for :order, url: {controller: "orders", action: "create", class: "form-inline"} do |f| %>
   <%= f.file_field :file %>
 	<%= f.hidden_field :origin, value: "Shipworks" %><br>
-	last order: <%= Order.first.date %><br>
+	last order: <%= Order.sort_by(&:created_at).last.created_at %><br>
   <%= f.submit "Load Data", class: "btn btn-primary" %>
 <% end %>
 <% start_day = Date.today - 1.month %>
@@ -15,7 +15,7 @@
 <% dates.each_with_index do |d,i| %>
   <% cnt2[dates2.index(d)]=cnt[i] %>
 <% end %>
-
+<h2>Remove Bad Data</h2>
 <%= form_tag destroy_range_orders_path do %>
 		Start Range: <%= date_select :start_date, "day", order: [:month, :day, :year], html: {class: "input-small"} %><br>
 		End Range: <%= date_select :end_date, "day", order: [:month, :day, :year], html: {class: "input-small"} %>

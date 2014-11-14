@@ -31,7 +31,7 @@
 </div>
 
 <%= f.fields_for(:supplier_prices, :html => { :class => "form-inline"}) do |builder| %>
-	<%= render "supplier_price_fields", :f => builder %>
+	<%= render "supplier_price_fields", :f => builder, show_offer: false %>
 <% end %>
-<p><%= link_to_add_fields "Add Supplier Price", f, :supplier_prices %></p>
+<p><%= link_to_add_fields "Add Supplier Price", f, :supplier_prices, false %></p>
 
