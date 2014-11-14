@@ -25,7 +25,8 @@ class OrdersController < ApplicationController
 		CSV.parse(infile, headers: true, quote_char: '"', col_sep: "\t") do |row|
 			Order.shipworks_csv(row)
 		end
-		respond_to head :ok
+		respond_to do |format|
+    format.text { head :ok }
 	end
 	
 	def create
