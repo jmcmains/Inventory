@@ -202,6 +202,10 @@ class Product < ActiveRecord::Base
 		self.events.where(event_type: "Product Order", received: false)
 	end
 	
+	def get_received_shipments
+		self.events.where(event_type: "Product Order", received: true)
+	end
+	
 	def get_cust_orders
 		return Order.joins(:offering => {:offering_products => :product}).where(["products.id = ? AND offering_products.quantity > 0",id])
 	end

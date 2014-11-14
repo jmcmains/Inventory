@@ -54,29 +54,53 @@ Average Margin: <span id="averageprice"><%= number_to_currency(@margin) %></span
 <h2><a href="#", style="color:#999">Orders Currently Out</a></h2>
 <blockquote>
 <% oco = 0 %>
+<table class="table">
+	<tr>
+		<th>Modify</th>
+		<th>Made</th>
+		<th>Expected</th>
+		<th>Quantity (pcs)</th>
+	</tr>
 <% @product.get_current_shipments.each do |co| %>
 	<% pc=co.product_counts.find_by_product_id(@product) %>
 	<% if pc.count > 0 %>
 		<% if co.expected_date < Date.today && !co.received && co.event_type == "Product Order" %>
-			<p style="color:red">
+			<tr class="error">
 		<% else %> 
-			<p>
+			<tr>
 		<% end %>
-		Order Made on: <%= co.date %> <br>
-		Order Expected on: <%= co.expected_date %> <br>
-		Quantity ordered: <%= pc.count %>
-		<% if pc.is_box %>
-			boxes<br>
-			<% oco = oco + (pc.count*@product.per_box) %>
-		<% else %>
-			peices<br>
-			<% oco = oco + pc.count %>
-		<% end %>
-		<%= link_to "edit", edit_event_path(co) %>
-		</p><br>
+		<td><%= link_to "edit", edit_event_path(co) %></td>
+		<td><%= co.date %></td>
+		<td><%= co.expected_date %></td>
+		<td><%= pc.count %></td>
+		<% oco = oco + pc.count %>
+	</tr>
 	<% end %>
 <% end %>
+</table>
 <%= oco %><br>
+</blockquote>
+<h2><a href="#", style="color:#999">Purchase Orders Received</a></h2>
+<blockquote>
+<table class="table">
+	<tr>
+		<th>Modify</th>
+		<th>Made</th>
+		<th>Received</th>
+		<th>Quantity (pcs)</th>
+	</tr>
+<% @product.get_received_shipments.each do |co| %>
+	<% pc=co.product_counts.find_by_product_id(@product) %>
+	<% if pc.count > 0 %>
+		<tr>
+		<td><%= link_to "edit", edit_event_path(co) %></td>
+		<td><%= co.date %></td>
+		<td><%= co.received_date %></td>
+		<td><%= pc.count %></td>
+	</tr>
+	<% end %>
+<% end %>
+</table>
 </blockquote>
 <h2><a href="#", style="color:#999">Customer Orders</a></h2>
 <blockquote>
