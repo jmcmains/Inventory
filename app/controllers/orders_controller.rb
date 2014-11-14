@@ -26,7 +26,8 @@ class OrdersController < ApplicationController
 			Order.shipworks_csv(row)
 		end
 		respond_to do |format|
-    format.text { head :ok }
+    	format.text { head :ok }
+    end
 	end
 	
 	def create
