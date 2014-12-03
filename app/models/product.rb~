@@ -200,7 +200,8 @@ class Product < ActiveRecord::Base
 	
 	def get_current_shipments
 		self.events.where(event_type: "Product Order", received: false)
-
+	end
+	
 	def get_received_shipments
 		self.events.where(event_type: "Product Order", received: true)
 	end

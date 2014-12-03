@@ -16,7 +16,7 @@ class SkuVault
 	end
 	
 	def get_warehouse_item_quantities
-		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantities", @options).parsed_response["IntemQuantities"]
+		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantities", @options).parsed_response["ItemQuantities"]
 	end
 	
 	def get_warehouse_item_quantity(sku)

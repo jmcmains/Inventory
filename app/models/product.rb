@@ -114,32 +114,32 @@ class Product < ActiveRecord::Base
 		inv=d.map { |a| a["count"].to_i }.reverse
 		price = d.map { |a| a["price"].to_f }.reverse
 		event_id = d.map { |a| a["id"].to_i }.reverse
-			inv.each_with_index do |c,i| 
-				price[i] = price[i]/inv[i] + Event.find(event_id[i]).per_unit_cost
-			end
-			i=0
-			total = purchases
-			value = 0;
-			if inv.sum > total
-				while total > 0
-					if total >= inv[i]
-						total = total-inv[i]
-						value = value + inv[i]*price[i]
-					elsif total < inv[i]
-						value = value + total*price[i]
-						total = 0
-					end
-					i=i+1
+		inv.each_with_index do |c,i| 
+			price[i] = price[i]/inv[i] + Event.find(event_id[i]).per_unit_cost
+		end
+		i=0
+		total = purchases
+		value = 0;
+		if inv.sum > total
+			while total > 0
+				if total >= inv[i]
+					total = total-inv[i]
+					value = value + inv[i]*price[i]
+				elsif total < inv[i]
+					value = value + total*price[i]
+					total = 0
 				end
-			else
-				if inv.sum > 0
-					val = 0
-					inv.each_with_index do |c,i|
-						val = inv[i]*price[i] + val
-					end
-					value = (val/inv.sum) * purchases
-				end
+				i=i+1
 			end
+		else
+			if inv.sum > 0
+				val = 0
+				inv.each_with_index do |c,i|
+					val = inv[i]*price[i] + val
+				end
+				value = (val/inv.sum) * purchases
+			end
+		end
 			
 		return { value: value, purchases: purchases }
 	end

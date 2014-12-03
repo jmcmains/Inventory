@@ -32,7 +32,6 @@ gem 'peddler'
 gem 'highcharts-rails'
 gem 'soap4r'
 gem 'ruby-units'
-gem 'savon', '~> 2.0'
 gem 'httparty'
 
 

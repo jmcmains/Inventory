@@ -6,9 +6,13 @@ task :update_feed => :environment do
 end
 
 task :update_inventory => :environment do
-  puts "Updating Inventory..."
-  Event.update_inventory
-  puts "done."
+  if Time.now.friday?
+		puts "Updating Inventory..."
+		Event.update_inventory
+		puts "done."
+	else
+		puts "inventory only updated on fridays"
+	end
 end
 
 

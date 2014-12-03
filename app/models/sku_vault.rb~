@@ -12,11 +12,11 @@ class SkuVault
 	end
 
 	def get_kit_quantities
-		self.class.post("https://app.skuvault.com/api/inventory/getKitQuantities", @options)
+		self.class.post("https://app.skuvault.com/api/inventory/getKitQuantities", @options).parsed_response["Kits"]
 	end
 	
 	def get_warehouse_item_quantities
-		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantities", @options).parsed_response["IntemQuantities"]
+		self.class.post("https://app.skuvault.com/api/inventory/GetWarehouseItemQuantities", @options)
 	end
 	
 	def get_warehouse_item_quantity(sku)

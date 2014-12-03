@@ -210,7 +210,7 @@ class Sku < ActiveRecord::Base
 			shipping_cost=0
 		end
 		#amazon finders fee
-		current_price=offerings.first.price
+		current_price=offerings.first.blank? ? 0 : offerings.first.price
 		referral_fee = [0.15*current_price,1].max
 			
 		amazon_cost=order_handling+pick_and_pack+weight_handling+special_handling+referral_fee
