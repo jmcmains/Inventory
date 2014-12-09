@@ -189,7 +189,8 @@
 	<td id='td9'>Need (lead Time: 90 days)</td>
 	<td id='td10'>Need (lead Time: 120 days)</td>
 </tr>
-	<%= render @products.sort_by(&:name) %>
+<% inv=Product.get_sv_inventory %>
+	<%= render @products.sort_by(&:name), inv: inv %>
 </table>
 </center>
 <div id='floater' style="background-color:#fff;position:fixed;top:40px;">

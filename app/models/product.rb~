@@ -51,7 +51,7 @@ class Product < ActiveRecord::Base
 		if event.product_counts.find_by(product_id: id)
 		  inventory_count=event.product_counts.find_by(product_id: id).count
 		else
-			inventory_count = 0
+			inventory_count = self.get_sv_inventory
 		end
 		total = inventory_count
 		value = 0
@@ -96,9 +96,11 @@ class Product < ActiveRecord::Base
 	
 	def self.get_sv_inventory
 		all_inv=SkuVault.new().get_warehouse_item_quantities
-		all.inject Hash.new(0) do |inv,item|
-			inv.merge("#{item.id}" => (all_inv["#{item.sku}"].blank? ? 0 : all_inv["#{item.sku}"]))
+		output = Array.new()
+		all.each do |product|
+			output[product.id]= all_inv["#{product.sku}"].blank? ? 0 : all_inv["#{product.sku}"]
 		end
+		return output
 	end
 	
 	def cogs(start_date,end_date)
@@ -352,7 +354,7 @@ class Product < ActiveRecord::Base
 		# Orders from Suppliers
 		oco = 0
 		self.get_current_shipments.each do |co|
-			pc=co.product_counts.where(product_id: self)
+			pc=co.product_counts.where(product_id: self).first
 			if co.expected_date < before_date
 					oco = oco + pc.count
 			end
@@ -360,8 +362,7 @@ class Product < ActiveRecord::Base
 		return oco
 	end
 	
-	def need(leadTime)
-		currentInventory = self.get_sv_inventory
+	def need(leadTime,currentInventory)
 		pipeLine = self.get_orders(leadTime)
 		# Customer Orders
 		y=self.get_trend["y"]

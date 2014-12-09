@@ -21,33 +21,33 @@
 		<%= product.per_box %>
 	</td>
 	<td class="number">
-		<%= product.get_Inventory.round %>
+		<%= inv["#{product.id}"].round %>
 	</td>
 	<td class="number">
 		<%= product.get_orders(1000).round %>
 	</td>
 	<td class="number">
-		<% if product.need(60).round > 0 %>
+		<% if product.need(60,inv[product.id]).round > 0 %>
 			<span style="color:red;font-weight:bold">
 		<% else %>
 			<span>
 		<% end %>
-		<%= product.need(60).round %></span>
+		<%= product.need(60,inv[product.id]).round %></span>
 	</td>
 	<td class="number">
-		<% if product.need(90).round > 0 %>
+		<% if product.need(90,inv[product.id]).round > 0 %>
 			<span style="color:red;font-weight:bold">
 		<% else %>
 			<span>
 		<% end %>
-		<%= product.need(90).round %></span>
+		<%= product.need(90,inv[product.id]).round %></span>
 	</td>
 	<td class="number">
-	<% if product.need(120).round > 0 %>
+	<% if product.need(120,inv[product.id]).round > 0 %>
 			<span style="color:red;font-weight:bold">
 		<% else %>
 			<span>
 		<% end %>
-		<%= product.need(120).round %></span>
+		<%= product.need(120,inv[product.id]).round %></span>
 	</td>
 </tr>
