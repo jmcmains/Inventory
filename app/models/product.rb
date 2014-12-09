@@ -40,22 +40,18 @@ class Product < ActiveRecord::Base
 	
 	def get_value(event)
 		sql = ActiveRecord::Base.connection()
-		d=sql.execute("SELECT product_counts.count as count, product_counts.is_box as box, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{id}) AND events.received AND events.received_date <= '#{event.date}'::date ORDER BY events.received_date")
+		d=sql.execute("SELECT product_counts.count as count, events.id as id, product_counts.price as price from product_counts INNER JOIN events ON events.id = product_counts.event_id WHERE (product_counts.product_id = #{id}) AND events.received AND events.received_date <= '#{event.date}'::date ORDER BY events.received_date")
 		cnt=d.map { |a| a["count"].to_i }.reverse
-		box=d.map { |a| a["box"]=="t" }.reverse
 		price = d.map { |a| a["price"].to_f }.reverse
 		event_id = d.map { |a| a["id"].to_i }.reverse
 		cnt.each_with_index do |c,i| 
-			if box[i]
-				cnt[i] = per_box * c
-			end
 			price[i] = price[i]/cnt[i] + Event.find(event_id[i]).per_unit_cost
 		end
 		i=0
 		if event.product_counts.find_by(product_id: id)
 		  inventory_count=event.product_counts.find_by(product_id: id).count
 		else
-			inventory_count = 0
+			inventory_count = self.get_sv_inventory
 		end
 		total = inventory_count
 		value = 0
@@ -95,7 +91,7 @@ class Product < ActiveRecord::Base
 	end
 	
 	def get_sv_inventory
-		SkuVault.new().get_warehouse_item_quantity(sku.name)
+		SkuVault.new().get_warehouse_item_quantity(sku)
 	end
 	
 	def self.get_sv_inventory
@@ -304,14 +300,8 @@ class Product < ActiveRecord::Base
 		d=sql.execute("SELECT SUM(orders.quantity * offering_products.quantity), EXTRACT(ISOYEAR FROM orders.date) AS year, EXTRACT(WEEK FROM orders.date) AS week FROM orders INNER JOIN offerings ON offerings.id = orders.offering_id INNER JOIN offering_products ON offering_products.offering_id = offerings.id INNER JOIN products ON products.id = offering_products.product_id GROUP BY year, week ORDER BY year, week ")
 		y=d.map { |a| a["sum"].to_i }
 		dates = d.map { |a| Date.commercial(a["year"].to_i,a["week"].to_i,1) }
-
-		if dates.last >= Date.today.beginning_of_week-1
-			dates.pop
-			y.pop	
-		end
-		
 		if !dates.blank?
-			data["dates"]=((dates.first..(Date.today.beginning_of_week-7)).step(7)).to_a
+			data["dates"]=((dates.first..(Date.today)).step(7)).to_a
 			data["y"]=Array.new(data["dates"].length,0)
 			dates.each_with_index do |d,i|
 				data["y"][data["dates"].index(d)]=y[i]
@@ -321,17 +311,8 @@ class Product < ActiveRecord::Base
 	end
 	
 	def forcast_demand
-		inv=get_last_count("Inventory")
-		start=inv.event.date
-		if inv.instance_of?(ProductCount) && inv.count
-			if inv.is_box
-				inventory = inv.count*self.per_box
-			else
-				inventory = inv.count
-			end
-		else
-			inventory=0
-		end
+		inventory=get_sv_inventory
+		start=Date.today
 		max_lead_time=130.0;
 		y=self.get_trend["y"]
 		dates=self.get_trend["dates"]
@@ -344,24 +325,15 @@ class Product < ActiveRecord::Base
 			lineFit = LineFit.new
 			lineFit.setData(x,y)
 			b, m = lineFit.coefficients
-			
-			curdate = Date.today.beginning_of_week + 1
-			if Date.today.beginning_of_week == inv.event.date.beginning_of_week
-				n = x.last + 1
-			else
-				n = x.last + (Date.today.beginning_of_week-inv.event.date.beginning_of_week)
-			end
+			curdate = Date.today
+			n = x.last + 1
 			while curdate < start+max_lead_time
 				levels << levels.last
 				levels[-1] -= (m*n+b)/7
 				unreceived.each do |po|
 					if po.expected_date == curdate
 						cnt=po.product_counts.find_by_product_id(self)
-						if cnt.is_box
-							levels[-1] += cnt.count*self.per_box
-						else
-							levels[-1] += cnt.count
-						end
+						levels[-1] += cnt.count
 					end
 				end
 				curdate += 1
@@ -375,40 +347,21 @@ class Product < ActiveRecord::Base
 		end
 	end
 	
-	def get_Inventory
-		# Inventory
-		last_inv=self.get_last_count("Inventory");
-		if last_inv != 0
-			if last_inv.is_box
-				li = last_inv.count*(self.per_box? ? self.per_box : 0 )
-			else
-				li = last_inv.count
-			end
-		else
-			li = 0
-		end
-		return li
-	end
-
 	def get_orders(leadTime)
 		before_date=Date.today + leadTime
 		# Orders from Suppliers
 		oco = 0
 		self.get_current_shipments.each do |co|
-			pc=co.product_counts.find_by_product_id(self)
+			pc=co.product_counts.where(product_id: self)
 			if co.expected_date < before_date
-				if pc.is_box
-					oco = oco + (pc.count*(self.per_box? ? self.per_box : 0 ))
-				else
 					oco = oco + pc.count
-				end
 			end
 		end
 		return oco
 	end
 	
 	def need(leadTime)
-		currentInventory = self.get_Inventory
+		currentInventory = self.get_sv_inventory
 		pipeLine = self.get_orders(leadTime)
 		# Customer Orders
 		y=self.get_trend["y"]

@@ -1,7 +1,7 @@
 <h3><a href="#", style="color:#999">Assuming a <%= leadTime %> day lead time</a></h3>
 <blockquote>
 <% leadTimeWeeks = (leadTime/7.0).ceil %>
-Current Inventory: <% ci = product.get_Inventory %><%= ci.round %><br>
+Current Inventory: <% ci = product.get_sv_inventory %><%= ci.round %><br>
 Sum of Orders Currently in the Pipeline: <% pl = product.get_orders(leadTime) %><%= pl. round %><br>
 Slope of the Demand Line: <%= m.round %><br>
 Intercept of the Demand Line: <%= b.round %><br>

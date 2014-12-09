@@ -27,7 +27,7 @@
 		<%= product.get_orders(1000).round %>
 	</td>
 	<td class="number">
-		<% if product.need(60).round < 0 %>
+		<% if product.need(60).round > 0 %>
 			<span style="color:red;font-weight:bold">
 		<% else %>
 			<span>
@@ -35,7 +35,7 @@
 		<%= product.need(60).round %></span>
 	</td>
 	<td class="number">
-		<% if product.need(60).round < 0 %>
+		<% if product.need(90).round > 0 %>
 			<span style="color:red;font-weight:bold">
 		<% else %>
 			<span>
@@ -43,7 +43,7 @@
 		<%= product.need(90).round %></span>
 	</td>
 	<td class="number">
-	<% if product.need(60).round < 0 %>
+	<% if product.need(120).round > 0 %>
 			<span style="color:red;font-weight:bold">
 		<% else %>
 			<span>
