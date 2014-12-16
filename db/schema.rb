@@ -24,25 +24,11 @@ ActiveRecord::Schema.define(version: 20141111142324) do
     t.float    "total_cost"
     t.string   "payment_method"
     t.string   "transaction_number"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "discount"
     t.string   "delivery_method"
     t.string   "note"
-  end
-
-  create_table "errors", force: true do |t|
-    t.string   "usable_type"
-    t.integer  "usable_id"
-    t.text     "class_name"
-    t.text     "message"
-    t.text     "trace"
-    t.text     "target_url"
-    t.text     "referer_url"
-    t.text     "params"
-    t.text     "user_agent"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "events", force: true do |t|
@@ -51,68 +37,20 @@ ActiveRecord::Schema.define(version: 20141111142324) do
     t.string   "invoice"
     t.date     "received_date"
     t.boolean  "received"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "oldsup"
     t.date     "expected_date"
     t.float    "additional_cost"
     t.integer  "supplier_id"
   end
 
-  create_table "inventory_entries", force: true do |t|
-    t.date     "date"
-    t.string   "entry_type"
-    t.string   "invoice_number"
-    t.float    "light_count"
-    t.boolean  "light_box"
-    t.float    "medium_count"
-    t.boolean  "medium_box"
-    t.float    "heavy_count"
-    t.boolean  "heavy_box"
-    t.float    "robust_count"
-    t.boolean  "robust_box"
-    t.float    "power_count"
-    t.boolean  "power_box"
-    t.float    "strong_count"
-    t.boolean  "strong_box"
-    t.float    "monster_count"
-    t.boolean  "monster_box"
-    t.float    "agility_count"
-    t.boolean  "agility_box"
-    t.float    "explosive_count"
-    t.boolean  "explosive_box"
-    t.float    "hand_grip_count"
-    t.boolean  "hand_grip_box"
-    t.float    "ankle_grip_count"
-    t.boolean  "ankle_grip_box"
-    t.float    "door_strap_count"
-    t.boolean  "door_strap_box"
-    t.float    "small_metal_biner_count"
-    t.boolean  "small_metal_biner_box"
-    t.float    "small_rb_biner_count"
-    t.boolean  "small_rb_biner_box"
-    t.float    "large_biner_count"
-    t.boolean  "large_biner_box"
-    t.float    "hand_strap_count"
-    t.boolean  "hand_strap_box"
-    t.float    "travel_bag_count"
-    t.boolean  "travel_bag_box"
-    t.float    "dvd_count"
-    t.boolean  "dvd_box"
-    t.float    "sleeve_count"
-    t.boolean  "sleeve_box"
-    t.float    "manual_count"
-    t.boolean  "manual_box"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
-
   create_table "offering_products", force: true do |t|
     t.integer  "offering_id"
     t.integer  "product_id"
     t.integer  "quantity"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "offering_products", ["offering_id", "product_id"], name: "index_offering_products_on_offering_id_and_product_id", unique: true, using: :btree
@@ -121,8 +59,8 @@ ActiveRecord::Schema.define(version: 20141111142324) do
 
   create_table "offerings", force: true do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.float    "price"
     t.string   "oldsku"
     t.integer  "sku_id"
@@ -133,8 +71,8 @@ ActiveRecord::Schema.define(version: 20141111142324) do
     t.date     "date"
     t.integer  "offering_id"
     t.integer  "quantity"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "origin"
     t.integer  "customer_id"
     t.boolean  "fba",          default: false
@@ -145,8 +83,8 @@ ActiveRecord::Schema.define(version: 20141111142324) do
     t.integer  "product_id"
     t.float    "count"
     t.boolean  "is_box"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.float    "price"
     t.integer  "offering_id"
     t.integer  "sku_id"
@@ -159,8 +97,8 @@ ActiveRecord::Schema.define(version: 20141111142324) do
     t.string   "name"
     t.string   "description"
     t.integer  "per_box"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "imloc"
     t.float    "weight"
     t.boolean  "display",     default: true
@@ -170,8 +108,8 @@ ActiveRecord::Schema.define(version: 20141111142324) do
 
   create_table "ship_terms", force: true do |t|
     t.string   "term"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "skus", force: true do |t|
@@ -191,8 +129,8 @@ ActiveRecord::Schema.define(version: 20141111142324) do
     t.integer  "ship_term_id"
     t.float    "quantity"
     t.float    "price"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "suppliers", force: true do |t|
@@ -200,8 +138,8 @@ ActiveRecord::Schema.define(version: 20141111142324) do
     t.string   "contact_name"
     t.string   "email"
     t.string   "payment_terms"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "phone_number"
     t.float    "shore_a_durometer"
     t.float    "tensile_strength"
@@ -212,8 +150,8 @@ ActiveRecord::Schema.define(version: 20141111142324) do
   create_table "users", force: true do |t|
     t.string   "name"
     t.string   "email"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "password_digest"
     t.string   "remember_token"
     t.boolean  "admin",           default: false

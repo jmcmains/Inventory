@@ -36,5 +36,5 @@ gem 'httparty'
 
 
 group :production do
-	ruby '2.1.2'
+	ruby '2.1.4'
 end
